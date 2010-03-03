@@ -1,0 +1,43 @@
+
+<% if !@option_groups.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Min</th>
+			<th>Max</th>
+			<th>Quantity Price Increase</th>
+			<th>Price Increase Amount</th>
+			<th>Action</th>
+		</tr>
+	
+		<% @option_groups.each do |option_group| %>
+		
+			<tr>
+				<td><%= link_to option_group.name, :controller => "option_group", :action => "showOptionGroup", :optionGroupId => option_group.id %>&nbsp;</td>
+				<td><%= abbreviate(option_group.description, 30) %>&nbsp;</td>
+				<td><%= option_group.min_selected %>&nbsp;</td>
+				<td><%= option_group.max_selected %>&nbsp;</td>
+				<td><%= option_group.quantity_price_increase %>&nbsp;</td>
+				<td><%= number_to_currency(option_group.price_increase) %>&nbsp;</td>
+				<td>
+					<%=link_to_remote( "Unlink", :url=>{
+						:action => 'deleteItemOptionGroup', :id => option_group.id
+						},
+						:update => "optionGroups",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();") %>
+					&nbsp;
+				</td>
+			</tr>
+		
+		<% end %>
+	
+	</table>
+
+<% else %>
+	<div class="indent">
+		No option groups are linked.
+	</div>
+<% end %>

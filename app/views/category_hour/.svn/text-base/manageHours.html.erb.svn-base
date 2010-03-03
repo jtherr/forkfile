@@ -1,0 +1,25 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<div class="indent">
+			<b>Category: <%= @category.name %></b>
+			<%= link_to "Show All Categories", :controller => "category", :action => "showCategories" %>
+		</div>
+		
+		<div id="hoursList">
+			<%= render "category_hour/hours" %>
+		</div>
+				
+		<div class="indent">
+			<%=link_to_remote( "Add", :url=>{
+					:action => "addHour"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	
+	<% end %>
+</div>

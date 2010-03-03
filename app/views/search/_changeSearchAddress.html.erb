@@ -1,0 +1,43 @@
+<div class="title"><%= @title %></div>
+	
+<% if @address_invalid %>
+	<div class="errorExplanation">
+		<ul><li>Address is invalid or no restaurants were found. Please try again.</li></ul>
+	</div>
+<% end %>
+
+<% form_tag "/search/basicSearch", :method => :get, :id => "reloadForm" do %><% end %>
+
+
+<%= form_remote_tag( :url => {:controller => 'search', :action => 'updateSearchAddress'},
+    :update => { :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "jQuery('#reloadForm').submit();" )%>
+			
+	<%= text_field :search, "address", :value => @address, :class => "searchAddress" %>
+	
+	<div class="spacer">e.g. '19283' or '123 Main St, Somewhere, ST, 19283'</div>
+	
+	<div class="spacer bold">
+		<%=link_to_remote( "Where are our restaurants?", :url=>{
+				:controller => 'main', :action => 'showCityMap'
+			},
+			:update => "popupFormDiv",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "displayPopup('');",
+			:complete => "updateSizes();" ) %>
+	</div>
+	
+	<div class="actions">
+		<% primaryButton do %>
+			<%= submit_tag 'Update' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+
+</form>

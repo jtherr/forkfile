@@ -1,0 +1,242 @@
+
+<%= javascript_include_tag 'order.js' %>
+
+<% shadowBox @title do %>
+
+	<%= error_messages_for :order, :header_message => nil, :message => nil %>
+
+	<% form_for :order, :url => { :action => 'submitOrder' }, :html => { :class => "captcha" } do |f| -%>
+
+		<%= hidden_field_tag :contact_info_entered, @contact_info_entered %>
+		<%= hidden_field_tag :delivery_address_entered, @delivery_address_entered %>
+		<%= hidden_field_tag :credit_card_info_entered, @credit_card_info_entered %>
+
+		<div class="subtitle">Contact Information</div>
+	
+		<div id="contactInfoStaticDiv" style="display: none;">
+			<div class="readonly">
+				<label>Your Name</label>
+				<div class="text"><%= @order.name %></div>
+			</div>
+		
+			<div class="readonly">
+				<label>Phone</label>
+				<div class="text"><%= number_to_phone(@order.phone) %></div>
+			</div>
+					
+			<div class="actions">
+				<%= link_to_function "Change Contact Information", "showContactInfoUpdate();" %>
+			</div>
+		</div>
+		
+		<div id="contactInfoUpdateDiv" style="display: none;">
+			<div class="field">
+				<label for="full_name">Your Name</label>
+				<%= text_field :order, :name %>
+				<span class="red">*</span>
+			</div>
+		
+			<div class="field">
+				<label for="phone">Phone</label>
+				<%= text_field :order, :phone %>
+				<span class="red">*</span>
+			</div>
+		
+			<% if !logged_in? %>
+				<div class="field">
+					<label for="email">Email</label>
+					<%= text_field :order, :email %>
+					<span class="red">*</span>
+				</div>
+			<% end %>
+		</div>
+		
+	
+		<div class="subtitle">Order Type</div>
+	
+		<% delivery_available = isDeliveryAvailable(@restaurant) %>
+		<% take_out_available = isTakeOutAvailable(@restaurant) %>
+	
+	
+		<div class="field">
+			<label for="first_name">Order Type</label>
+			<%= radio_button :order, 'order_type', "delivery", :onclick => "showDelivery();", :checked => @order.order_type == "delivery" && delivery_available, :disabled => !delivery_available %> Delivery
+			<% if !@restaurant.delivery %>
+				(unavailable)
+			<% elsif session[:order][:total_price] != nil && @restaurant.delivery_minimum != nil && session[:order][:total_price].to_f < @restaurant.delivery_minimum  %>
+				(<%= number_to_currency(@restaurant.delivery_minimum) %> minimum not met)
+			<% elsif @restaurant.delivery_charge == 0.00 && (@restaurant.delivery_percent == nil || @restaurant.delivery_percent == 0.00) %>
+				(free)
+			<% elsif @restaurant.delivery_charge != 0.00 && @restaurant.delivery_percent != nil && @restaurant.delivery_percent != 0.00 %>
+				(charge: <%= number_to_currency(@restaurant.delivery_charge)%> and <%= @restaurant.delivery_percent %>%)
+			<% elsif @restaurant.delivery_percent != nil && @restaurant.delivery_percent != 0.00 %>
+				(charge: <%= @restaurant.delivery_percent %>% of total)
+			<% elsif @restaurant.delivery_charge != 0.00 %>
+				(charge: <%= number_to_currency(@restaurant.delivery_charge) %>)
+			<% end %>
+						
+			<%= radio_button :order, 'order_type', "take_out", :onclick => "hideDelivery();", :checked => @order.order_type == "take_out" && take_out_available, :disabled => !take_out_available %> Take Out
+			<% if !@restaurant.take_out %>
+				(unavailable)
+			<% end %>
+		</div>
+	
+		
+		<div id="deliveryDiv" style="display: none;">
+			<div id="deliveryAddressStaticDiv" style="display: none;">
+				<% if @delivery_address_entered %>
+					<div class="readonly">
+						<label>Delivery Address</label>
+						<div class="text">
+							<%= @order.delivery_street1 %>
+						
+							<% if !@order.delivery_street2.empty? %>
+								, <%= @order.delivery_street2 %>
+							<% end %>
+							<br />
+							
+							<%= @order.delivery_city %>, 
+							<%= @delivery_state.abbr %> 
+							<%= @order.delivery_zip %>
+						</div>
+					</div>
+		
+					<div class="actions">
+						<%= link_to_function "Change Delivery Address", "showDeliveryAddressUpdate();" %>
+					</div>
+				<% end %>
+			</div>
+			
+			<div id="deliveryAddressUpdateDiv" style="display: none;">
+				<div class="field">
+					<label for="street1">Delivery Street 1</label>
+					<%= text_field :order, :delivery_street1 %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="street2">Delivery Street 2</label>
+					<%= text_field :order, :delivery_street2 %>
+				</div>
+				
+				<div class="field">
+					<label for="city">Delivery City</label>
+					<%= text_field :order, :delivery_city %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="state">Delivery State</label>
+					<%= select(:order, :delivery_state_id, @states.collect {|p| [ p.name, p.id ] }, { :include_blank => true }) %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="zip">Delivery Zip</label>
+					<%= text_field :order, :delivery_zip %>
+					<span class="red">*</span>
+				</div>
+			</div>
+		</div>
+			
+		
+		<div class="subtitle">Payment Type</div>
+		
+		<div class="field">
+			<label for="payment_type">Payment Type</label>
+			<%= radio_button :order, 'payment_type', "credit_card", :onclick => "showCreditCard();", :checked => @order.payment_type == "credit_card", :disabled => session[:order][:total_price].to_f < @restaurant.credit_card_minimum %> Credit Card
+	
+			<% if session[:order][:total_price].to_f < @restaurant.credit_card_minimum %>
+				(credit card minimum: <%= number_to_currency(@restaurant.credit_card_minimum) %>)
+			<% end %>
+	
+			<%= radio_button :order, 'payment_type', "cash", :onclick => "hideCreditCard();", :checked => @order.payment_type == "cash" %> Cash
+		</div>
+		
+		<div id="creditCardDiv" style="display: none;">
+			<div id="creditCardStaticDiv" style="display: none;">
+				<% if @credit_card_info_entered %>
+					<div class="readonly">
+						<label>Credit Card</label>
+						<div class="text">
+							<%= @existing_credit_card_type.name %> 
+							XXXXXXXXXXXX<%= @existing_credit_card_number.slice(-4..-1) %>  
+							(Exp: <%= @existing_credit_card_expiration_month %> / <%= @existing_credit_card_expiration_year %>)
+						</div>
+					</div>
+					
+					<div class="actions">
+						<%= link_to_function "Change Credit Card", "showCreditCardUpdate();" %>
+					</div>
+				<% end %>
+			</div>
+			
+			<div id="creditCardUpdateDiv" style="display: none;">
+				<div class="field">
+					<label for="payment_type">Credit Card Type</label>
+					<%= select(:order, :credit_card_type_id, @credit_card_types.collect {|p| [ p.name, p.id ] }, { :include_blank => true }) %>
+					<span class="red">*</span>
+				</div>
+			
+				<div class="field">
+					<label for="credit_card_number">Credit Card Number</label>
+					<%= f.text_field :credit_card_number %>
+					<span class="red">*</span>
+				</div>
+			
+				<div class="field">
+					<label for="credit_card_expiration_month">Credit Card Expiration</label>
+					<%= f.select :credit_card_expiration_month, @months, { :include_blank => true } %> / 
+					<%= f.select :credit_card_expiration_year, @years, { :include_blank => true } %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="credit_card_code">Credit Card Security Code (CVV)</label>
+					<%= f.text_field :credit_card_code %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="payment_type">First Name on Credit Card</label>
+					<%= f.text_field :credit_card_first_name %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="payment_type">Last Name on Credit Card</label>
+					<%= f.text_field :credit_card_last_name %>
+					<span class="red">*</span>
+				</div>
+				
+				<% if logged_in? %>
+					<div class="field">
+						<label for="save_to_user_profile">Save Credit Card to My Profile</label>
+						<%= check_box_tag :save_to_user_profile, true, @save_to_user_profile %>
+					</div>
+				<% end %>
+			</div>
+		</div>
+		
+
+		<div class="subtitle">Disclaimer</div>
+	
+		<div class="field">
+			<label>
+				I agree with the <%= link_to "disclaimer", { :controller => "main", :action => "disclaimer" }, { :target => "_blank" } %>.
+			</label>
+			<%= f.check_box :disclaimer_read %>
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag "Confirm Order" %>
+			<% end %>
+		</div>
+	<% end -%>
+
+	<div class="actions small">
+		<label></label>
+		Your order will be submitted to this restaurant once "Confirm Order" is clicked.
+	</div>
+<% end %>

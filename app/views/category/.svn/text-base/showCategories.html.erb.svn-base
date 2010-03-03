@@ -1,0 +1,59 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<% if !@categories.empty? %>
+	
+			<table border="0" cellspacing="0" cellpadding="0">
+				
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Custom Hours</th>
+					<th>Actions</th>
+				</tr>
+				
+				
+				<% @categories.each do |category| %>
+					<tr>
+						<td><%= category.name %>&nbsp;</td>
+						<td><%= abbreviate(category.description, 50) %>&nbsp;</td>
+						
+						<td>
+							<% if !category.category_hours.empty? %>
+								YES
+							<% end %>&nbsp;
+						</td>
+						
+						<td>
+							<%=link_to "Edit", :action => "editCategory", :id => category.id %> | 
+							<%=link_to "Hours", :controller => "category_hour", :action => "manageHours", :id => category.id %>
+							
+							<% if Item.find(:all, :conditions => "category_id = #{category.id}").empty? %>
+								 | <%=link_to "Delete", { :action => "deleteCategory", :id => category.id }, :confirm => "Are you sure you want to delete this category?" %>
+							<% end %>
+						</td>
+					</tr>
+				
+				<% end %>
+					
+			</table>
+		<% end %>
+	
+		<div class="indent">
+			<%=link_to "Add Category", :action => "addCategory" %> | 
+		
+			<%=link_to_remote( "Reorder Categories", 
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');",
+				:url=>{
+					:controller => "category", :action => "reorderCategories"
+				}) %>
+			
+		</div>
+	
+	
+	<% end %>
+</div>

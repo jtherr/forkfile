@@ -1,0 +1,68 @@
+
+<%= javascript_include_tag 'admin.js' %>
+<%= javascript_include_tag 'item.js' %>
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+
+		<% if @item_action_error %>
+			<div class="errorExplanation"><ul><li><%= @item_action_error %></li></ul></div>
+		<% end %>
+
+		<div class="indent">
+			<%=link_to_remote( "Add Menu Item", :url=>{
+					:controller => 'item', :action => 'addItemAdmin'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %> | 
+				
+			<%= link_to "Reorder Items", :controller => "item", :action => "reorderItems" %> | 
+			
+			<%= link_to "Import Items", :controller => "restaurant_import", :action => "selectFile" %> | 
+			
+			<%= link_to "Export Items", :controller => "restaurant_import", :action => "exportToCsv" %>
+		</div>
+
+		<% form_for :restaurant, :url => { :controller => 'item', :action => 'showAllItems' }, :html => { :method => :get } do |f| -%>
+	
+			<div class="indent floatLeft">
+				<div class="searchLeft">
+					<label>Search Menu Items</label>
+					<%= text_field_tag "item_search", @item_search %>
+					
+					Status
+					<%= select(:item, :status, $DB_STATUSES.collect { |key,status| [status[:name], key] }, :selected => @status.to_i) %>
+	
+					Category
+					<%= select(:item, :category, @categories.collect { |category| [category.name, category.id] }, :include_blank => true, :selected => @category_search.to_i) %>
+				</div>
+				
+				<% primaryButtonSmall do %>
+					<%= submit_tag 'Search' %>
+				<% end %>
+			</div>
+			
+		<% end -%>
+	
+	
+		<div id="itemList">
+			<%= render :partial => "itemListAdmin" %>
+		</div>
+	
+		<div class="indent">
+			<%=link_to_remote( "Add Menu Item", :url=>{
+					:controller => 'item', :action => 'addItemAdmin'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %> | 
+				
+			<%= link_to "Reorder Items", :controller => "item", :action => "reorderItems" %> | 
+			
+			<%= link_to "Import Items", :controller => "restaurant_import", :action => "selectFile" %>
+		</div>
+	<% end %>
+</div>

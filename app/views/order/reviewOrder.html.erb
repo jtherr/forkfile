@@ -1,0 +1,133 @@
+
+<%= render "layouts/stepBar" %>
+
+<% shadowBox @title do %>
+
+	<%= error_messages_for :order, :header_message => nil, :message => nil %>
+
+
+	<div class="subtitle">Order Type</div>
+
+	<div class="readonly">
+		<label>Name</label>
+		<div class="text"><%= session[:order][:name] %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Phone</label>
+		<div class="text"><%= number_to_phone(session[:order][:phone]) %></div>
+	</div>
+
+	<div class="readonly">
+		<label>Order Type</label>
+		<div class="text">
+			<% if session[:order][:order_type] == "delivery" %>
+				Delivery
+			<% else %>
+				Take Out
+			<% end %>
+		</div>
+	</div>
+
+	
+	<% if session[:order][:order_type] == "delivery" %>
+		<div class="readonly">
+			<label>Delivery Street 1</label>
+			<div class="text"><%= session[:order][:delivery_street1] %></div>
+		</div>
+
+		<div class="readonly">
+			<label>Delivery Street 2</label>
+			<div class="text"><%= session[:order][:delivery_street2] %></div>
+		</div>
+		
+		<div class="readonly">
+			<label>Delivery City</label>
+			<div class="text"><%= session[:order][:delivery_city] %></div>
+		</div>
+	
+		<div class="readonly">
+			<label>Delivery State ID</label>
+			<div class="text"><%= @delivery_state.abbr %></div>
+		</div>
+	
+		<div class="readonly">
+			<label>Delivery ZIP</label>
+			<div class="text"><%= session[:order][:delivery_zip] %></div>
+		</div>
+	<% end %>
+	
+	<div class="actions">
+		<%= link_to "Change Order Type", :controller => "order", :action => "selectOrderType" %>
+	</div>
+	
+	
+	<div class="subtitle">Payment Type</div>
+	
+	<div class="readonly">
+		<label>Payment Type</label>
+		<div class="text">
+			<% if session[:order][:payment_type] == "credit_card" %>
+				Credit Card
+			<% else %>
+				Cash
+			<% end %>
+		</div>
+	</div>
+	
+	
+	<% if session[:order][:payment_type] == "credit_card" %>
+		<div class="readonly">
+			<label>Credit Card Type</label>
+			<div class="text"><%= @credit_card_type.name %></div>
+		</div>
+		
+		<div class="readonly">
+			<label>Credit Card Number</label>
+			<div class="text">XXXXXXXXXXXX<%= session[:order][:credit_card_number].slice(-4..-1) %></div>
+		</div>		
+	
+		<div class="readonly">
+			<label>Credit Card Expiration</label>
+			<div class="text"><%= session[:order][:credit_card_expiration_month] %> / <%= session[:order][:credit_card_expiration_year] %></div>
+		</div>
+		
+		<div class="readonly">
+			<label>Credit Card Code</label>
+			<div class="text"><%= session[:order][:credit_card_code] %></div>
+		</div>
+
+		<div class="readonly">
+			<label>Credit Card Name</label>
+			<div class="text"><%= session[:order][:credit_card_first_name] %> <%= session[:order][:credit_card_last_name] %></div>
+		</div>
+
+	<% end %>
+	
+	<div class="actions">
+		<%= link_to "Change Payment Type", :controller => "order", :action => "selectPaymentType" %>
+	</div>	
+	
+	<div class="subtitle">Disclaimer</div>
+	
+	<% form_for :order, :url => { :action => 'confirmOrder' }, :html => { :class => "captcha" } do |f| -%>
+		
+		<div class="field">
+			<label>
+				I agree with the <%= link_to "disclaimer", { :controller => "main", :action => "disclaimer" }, { :target => "_blank" } %>.
+			</label>
+			<%= f.check_box :disclaimer_read %>
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag "Confirm Order" %>
+			<% end %>
+		</div>
+	<% end -%>
+
+	<div class="actions small">
+		<label></label>
+		Your order will be submitted to this restaurant once "Confirm Order" is clicked.
+	</div>
+<% end %>

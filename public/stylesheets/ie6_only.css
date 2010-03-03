@@ -1,0 +1,49 @@
+
+#loadingMsg { position: absolute; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/loading-ajax.png'); background: none; }
+#blockingCover { width: 100%; }
+
+
+.popupBox .back { filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/popup-right.png', sizingMethod='scale'); background: none; }
+.popupBox .top .left { filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/popup-top-left.png'); background: none; }
+.popupBox .top .right { filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/popup-top-right.png'); background: none; }
+.popupBox .bottom .left { filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/popup-bottom-left.png'); background: none; }
+.popupBox .bottom .right { filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/popup-bottom-right.png'); background: none; }
+.popupBox .bottom .middle .bottom { filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/popup-bottom.png', sizingMethod='scale'); background: none; }
+
+
+.shadowBox .topLeft { position: relative; }
+.shadowBox .topRight { position: relative; }
+.shadowBox .bottom { position: relative; }
+.shadowBox .bottomRight { position: relative; }
+.shadowBox .bottomLeft { position: relative; }
+
+
+
+.pagination { margin: 4px 0px 5px 0px; }
+
+.heading { margin: 5px 0px 5px 3px; }
+
+
+.popupBox .content { margin-top: 0px; width: 571px; }
+.popupBox .top { height: 14px; }
+.popupBox .top .left { margin-right: 0px; }
+.popupBox .top .right { position: absolute; }
+.popupBox .bottom .left { margin-right: 0px; }
+
+.actions .secondaryButton { width: 200px; }
+
+
+
+
+.sidebarLarge .sidebar { margin-left: 0px; }
+
+.body.large { margin-left: 5px; }
+.body.medium { margin-left: 6px; }
+
+.body.medium .shadowBox { width: 670px; }
+.body.medium .shadowBox .front { width: 668px; }
+.body.medium .shadowBox .content { width: 648px; }
+.body.medium .tableBox .shadowBox .content { width: 668px; }
+
+.header .mainNav a.selected { position: relative; }
+

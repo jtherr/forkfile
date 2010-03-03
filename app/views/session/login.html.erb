@@ -1,0 +1,68 @@
+<% shadowBox @title do %>
+	
+	<% if @login_error %>
+		<div class="errorExplanation">
+			<ul><li><%= @login_error %></li></ul>
+		</div>
+	<% end %>	
+	
+	<% if ENV['RAILS_ENV'] != 'development' %>
+		<%= form_tag ({ :controller => 'session', :action => 'create', :protocol => "https://", :only_path => false }) %>
+	<% else %>
+		<%= form_tag ({ :controller => 'session', :action => 'create' }) %>
+	<% end %>
+			
+		<% if logged_in? %>
+			<div class="spacer">
+				Please re-enter your password for security purposes.
+			</div>
+		<% end %>
+				
+		<div class="field">
+			<label for="email">Email</label>
+			<%= text_field :session, 'email', :value => @user_email, :class => "fixed_width" %>
+		</div>
+		
+		<div class="field">
+			<label for="password">Password</label>
+			<%= password_field :session, 'password', :class => "fixed_width" %>
+		</div>
+		
+		
+		<% if cookies[:auth_token] == nil %>
+			<div class="field">
+				<label>Remember Me</label>
+				<%= check_box :session, 'remember_me' %>
+			</div>
+		<% end %>
+		
+		<div class="actions medium">						
+			<% primaryButton do %>
+				<% if session[:next_controller] == "order" %>
+					<%= submit_tag 'Login & Checkout' %>
+				<% else %>
+					<%= submit_tag 'Login' %>
+				<% end %>
+			<% end %>
+
+			<% secondaryButton do %>
+				<%= submit_tag 'Cancel' %>
+			<% end %>
+		</div>
+		
+		
+		<div class="actions">
+			<%= link_to_remote ( "Forgot Password?", :url=>{
+						:controller => "users", :action => "forgotPassword"
+					},
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');") %> |
+					
+			<%= link_to "Sign Up", :controller => 'users', :action => 'register' %>
+		</div>
+
+	</form>
+
+<% end %>

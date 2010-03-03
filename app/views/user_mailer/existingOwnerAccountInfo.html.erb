@@ -1,0 +1,15 @@
+Hello <%= @user.full_name %>,
+<br /><br />
+Thank you for adding your restaurant to forkfile.com! We have updated your Forkfile account to enable web
+access for <%= @restaurant.name %>. This means that you can access your orders online from our website.
+<br /><br />
+To access your orders from the forkfile.com website, login using your email and password, and then click on 
+"My Profile" at the top right of any page. There is a section called "You are the owner of the following restaurants". 
+<%= @restaurant.name %> will be listed here. When you click on the restaurant link, you will be navigated to your orders 
+page. Select an order to see more information.
+<br /><br />
+As always, please contact us if you have any questions.
+<br /><br />
+Thank you,<br />
+The Forkfile Team<br />
+support@forkfile.com

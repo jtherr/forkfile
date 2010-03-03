@@ -1,0 +1,28 @@
+
+<div class="title"><%= @title %></div>
+
+<%= error_messages_for :item_size_name, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'createItemSizeName'},
+    :update => { :success => "itemSizeNameList", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= text_field :item_size_name, :name %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="actions">				
+		<% primaryButton do %>
+			<%= submit_tag "Create" %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+
+</form>

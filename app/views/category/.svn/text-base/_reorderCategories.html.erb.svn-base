@@ -1,0 +1,19 @@
+
+<div class="title"><%= @title %></div>
+	
+<div class="reorderCategories">
+
+	<div id="categoryList">
+		<% @categories.each do |category| %>
+			<div id="category_<%=category.id %>" class="handle">
+				<%= category.name %>
+			</div>
+		<% end %>
+	</div>
+	
+	<%= sortable_element 'categoryList', :url => { :controller => "category", :action => "updateOrder" }, :handle => :handle, :tag => 'div' %>
+
+	<div class="field">
+		<%=button_to_function "Finished", "window.location.reload(true);" %>
+	</div>
+</div>

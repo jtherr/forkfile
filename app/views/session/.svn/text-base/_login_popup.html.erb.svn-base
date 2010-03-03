@@ -1,0 +1,58 @@
+<div class="title"><%= @title %></div>
+	
+<% if @login_error %>
+	<div class="errorExplanation">
+		<ul><li><%= @login_error %></li></ul>
+	</div>
+<% end %>
+
+<% if ENV['RAILS_ENV'] != 'development' %>
+	<%= form_tag ({ :controller => 'session', :action => 'create', :protocol => "https://", :only_path => false }) %>
+<% else %>
+	<%= form_tag ({ :controller => 'session', :action => 'create' }) %>
+<% end %>
+
+	<% if logged_in? %>
+		<div class="spacer">
+			Please re-enter your password for security purposes.
+		</div>
+	<% end %>
+
+	<div class="field">
+		<label for="email">Email</label>
+		<%= text_field :session, 'email', :value => @user_email, :class => "fixed_width" %>
+	</div>
+	
+	<div class="field">
+		<label for="password">Password</label>
+		<%= password_field :session, 'password', :class => "fixed_width" %>
+	</div>
+	
+	<div class="field">
+		<label>Remember Me</label>
+		<%= check_box :session, 'remember_me' %>
+	</div>
+	
+	<div class="actions">						
+		<% primaryButton do %>
+			<%= submit_tag 'Login' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+	
+	<div class="actions">
+		<%= link_to_remote ( "Forgot Password?", :url=>{
+					:controller => "users", :action => "forgotPassword"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %> |
+				
+		<%= link_to "Sign Up", :controller => 'users', :action => 'register' %>
+	</div>
+
+</form>

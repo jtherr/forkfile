@@ -1,0 +1,53 @@
+<div class="title">Edit Item</div>
+	
+<%= error_messages_for :item, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'updateItem', :id => @item.id },
+    :update => { :success => "itemInfo", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= text_field :item, :name %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="description">Description</label>
+		<%= text_area :item, :description, :cols => 30, :rows => 3 %>
+	</div>
+	
+	<div class="field">
+		<label for="state">Category</label>
+		<%= collection_select(:item, :category_id, @categories, :id, :name, { :prompt => true }) %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="spicy">Spicy</label>
+		<%= check_box :item, :spicy %>
+	</div>
+	
+	<div class="field">
+		<label for="vegetarian">Vegetarian</label>
+		<%= check_box :item, :vegetarian %>
+	</div>
+	
+	<div class="field">
+		<label for="featured">Featured</label>
+		<%= check_box :item, :featured %>
+	</div>
+	
+
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag 'Update' %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

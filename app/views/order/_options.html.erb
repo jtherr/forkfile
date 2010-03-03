@@ -1,0 +1,66 @@
+
+
+		
+<% if !@option_groups.empty? %>
+	<div class="subtitle">Select Options</div>
+<% end %>
+
+<% current_price = @item_size.current_price %>
+
+<% @option_groups.each do |option_group| %>
+	<div class="field">
+		
+		<label>
+			<%= getSelectOptionsMessage(option_group.min_selected, option_group.max_selected) %>
+	
+			<span class="normal">
+				<% if option_group.quantity_price_increase && option_group.price_increase %>
+					<% if option_group.quantity_price_increase == 0 %>
+						<br /><br />Each option will cost an additional <%= number_to_currency(option_group.price_increase) %>.
+					<% else %>
+						<br /><br />After <%= option_group.quantity_price_increase %> options, each option will cost an additional <%= number_to_currency(option_group.price_increase) %>.
+					<% end %>
+				<% end %>
+			</span>
+		</label>
+		<div class="text">
+			<% if optionGroupInError(option_group.id, @option_groups_in_error) %>
+				<span class="red">Invalid number of options selected<br /><br /></span>
+			<% end %>
+					
+			<% option_group.options.each do |option| %>
+				<% optionSelected = isSelected(option, @all_selected_options) %>
+			
+				<% if !option_group.min_selected || option_group.min_selected == 0 || !option_group.max_selected || option_group.max_selected > 1 %>
+					<%= check_box :option, 'selected', { :id => "option_#{option_group.id}_#{option.id}_selected", :name => "option[#{option_group.id}][#{option.id}][selected]", :checked => optionSelected, :onclick => "displayOptionQuantity(this, #{option.id});" }  %>
+					<% radio = false %>
+				<% else %>
+					<%= radio_button :option, 'selected', option.id, { :id => "option_#{option_group.id}_selected", :name => "option[#{option_group.id}][selected]", :checked => optionSelected, :onclick => "displayOptionQuantity(this, #{option.id});" }  %>
+					<% radio = true %>
+				<% end %>
+				<%= option.name %>
+	
+				<% item_size_name_id = @item_size.item_size_name.id %>
+				<% if option.additional_price_for_option(item_size_name_id) > 0 %>
+					(+ <%= number_to_currency(option.additional_price_for_option(item_size_name_id)) %>)
+				<% end %>
+				
+				<% if option.allow_quantity && !radio %>
+				
+					<% optionQuantityDisplay = "display: none;" %>
+					<% if optionSelected %>
+						<% optionQuantityDisplay = "display: inline;" %>
+					<% end %>
+				
+					<span id="option_quantity_<%= option.id %>_div" class="option_quantity" style="<%= optionQuantityDisplay %>">
+						...... How Many? 
+						<%= select :option, :quantity, 1..10, { :selected => getQuantity(option, @all_selected_options) }, { :id => "option_#{option_group.id}_#{option.id}_quantity", :name => "option[#{option_group.id}][#{option.id}][quantity]" } %>
+	
+					</span>
+				<% end %>
+	
+				<br />
+			<% end %>
+		</div>
+	</div>
+<% end %>

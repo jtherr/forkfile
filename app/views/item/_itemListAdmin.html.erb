@@ -1,0 +1,84 @@
+
+<%= will_paginate @items, :params => { :item_search => @item_search } %>
+
+<% if !@items.empty? %>
+
+	<% form_tag '/item/showItem', :method => :get, :id => "showItemForm" do -%>
+
+		<%= hidden_field_tag "id" %>
+	
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<th width="24"></th>
+				<th>Category</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Price</th>
+				<th>Option Groups</th>
+			</tr>
+		
+			<% @items.each do |item| %>
+				<% if item.category != nil %>
+					<tr>
+						<td width="24"><%= check_box_tag "item_select_#{item.id}", "1", false, { :class => "item_checkbox" } %>&nbsp;</td>
+						<td class="clickable" onclick="showItem(<%= item.id %>)"><%= item.category.name %>&nbsp;</td>					<td class="clickable" onclick="showItem(<%= item.id %>)"><%= item.name %></td>
+						<td class="clickable" onclick="showItem(<%= item.id %>)"><%= abbreviate(item.description, 30) %>&nbsp;</td>
+	
+						<td class="clickable" onclick="showItem(<%= item.id %>)">
+							<% item.item_sizes.each do |item_size| %>
+								<% item_size_name = item_size.item_size_name %>
+							
+								<% if !item_size_name.name.empty? %>
+									<b><%= item_size_name.name %>:</b>
+								<% end %>
+								
+								<% if item_size.available? %>
+									<%= number_to_currency(item_size.price) %>
+								<% else %>
+									(SO)
+								<% end %>
+								
+								<% if !item_size.special_hours.empty? %>
+									<span class="red">(S)</span>
+								<% end %>
+							<% end %>&nbsp;
+						</td>
+						
+						<td class="clickable" onclick="showItem(<%= item.id %>)">
+							<%= abbreviate(item.option_groups.collect { |option_group| option_group.name }.join(", "), 20) %>&nbsp;
+						</td>
+					</tr>
+				<% end %>
+			<% end %>
+	
+		</table>
+	
+		<div class="indent floatLeft">
+			Select: 
+			<%= link_to_function "All", "selectAllItems();" %> | 
+			<%= link_to_function "None", "deselectAllItems();" %>			
+			&nbsp;&nbsp;
+			
+			Action
+			<%= select(:item_action, :action_id, $ITEM_ACTIONS.collect { |key,action| [action[:name], key] }, { :include_blank => true }, { :onchange => "selectAction();" }) %>
+			
+			<span id="action_1" style="display: none;">
+				Change Status To
+				<%= select(:item_update, :new_status, $DB_STATUSES.collect { |key,status| [status[:name], key] }, { :include_blank => true }) %>
+				<%= submit_tag "Update Status", :onclick => 'jQuery("#showItemForm").attr("action", "/item/changeStatus")' %>
+			</span>
+			
+			<span id="action_2" style="display: none;">
+				Link Option Group
+				<%= select(:item_update, :option_group_id, @option_groups.collect { |option_group| [option_group.name, option_group.id] }, { :include_blank => true }) %>
+				<%= submit_tag "Link", :onclick => 'jQuery("#showItemForm").attr("action", "/item/linkItemsToOptionGroup")' %>
+			</span>
+		</div>
+		
+	<% end -%>
+<% else %>
+	<div class="indent">
+		No items found.
+	</div>
+<% end %>
+		

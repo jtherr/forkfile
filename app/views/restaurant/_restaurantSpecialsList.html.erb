@@ -1,0 +1,125 @@
+<div class="menu singleColumn">
+
+	<div class="categoryBox">
+
+		<% @specials.each do |special_hour| %>
+			<% item_size = special_hour.item_size %>
+			<% item = item_size.item %>
+			<% category = item.category %>
+			
+			<% availableClass = "" %>
+			<% if special_hour.isTimeWithin($TIME_ZONE.now) %>
+				<% availableClass = "available" %>
+			<% end %>
+
+			<div class="item clickable <%= availableClass %>" onclick="
+				<%= remote_function ( :url=> {
+						:controller => 'order', :action => 'selectOptions', :id => item.id
+					},
+					:html =>  { :id => "selectOptionsForm" },
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');" ) %>		
+			">
+								
+				<div class="line">
+					<div class="name">
+						
+						<% if item.spicy %>
+							<%= image_tag "/images/spicy.gif" %>									
+						<% end %>
+						<% if item.vegetarian %>
+							<%= image_tag "/images/vegetarian.gif" %>									
+						<% end %>
+						
+						<%= item.name %>
+						
+						(<%= category.name %>)
+					</div>
+				
+					<div class="sizes">													
+						<%= special_hour.weekdays.collect { |weekday| $WEEKDAYS[weekday][:abbr] }.join(', ') %>: <%= special_hour.parsed_start_time.strftime("%I:%M %p") %> - <%= special_hour.parsed_end_time.strftime("%I:%M %p") %>
+						
+						<span class="name"><%= item_size.item_size_name.name %></span>
+						<%= number_to_currency(special_hour.special_price) %>
+					</div>
+				</div>
+				
+				<% if !item.description.empty? %>
+					<div class="line">
+						<div class="description">
+							<%= abbreviate(item.description, 120) %>
+						</div>
+					</div>
+				<% end %>
+			</div>
+
+		<% end %>
+
+
+		<% @discounts.each do |discount| %>
+
+			<% availableClass = "" %>
+			<% if discount.available? %>
+				<% availableClass = "available" %>
+			<% end %>
+
+			<div class="item clickable" onclick="
+				<%= remote_function ( :url=> {
+						:controller => 'order', :action => 'selectDiscount', :id => discount.id
+					},
+					:html =>  { :id => "selectDiscountForm" },
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');" ) %>		
+			">
+				
+				<div class="line">
+					<div class="name">
+						<%= discount.name %>
+					
+						<% if discount.available? %>
+							<span class="red"> - Available Now!</span>
+						<% end %>
+					</div>
+					
+					
+					<div class="sizes">
+						<% if discount.discount_hours.empty? %>
+							Always available!
+						<% else %>
+							<% discount.discount_hours.each do |discount_hour| %>			
+								<%= discount_hour.weekdays.collect { |weekday| $WEEKDAYS[weekday][:abbr] }.join(', ') %>: <%= discount_hour.parsed_start_time.strftime("%I:%M %p") %> to <%= discount_hour.parsed_end_time.strftime("%I:%M %p") %>
+							<% end %>
+						<% end %>
+					</div>
+				</div>
+				<% if discount.description %>
+					<div class="line">
+						<div class="description">
+							<%= discount.description %>
+						
+							<% if !discount.allow_combo %>
+								(cannot combine with other discounts)
+							<% end %>
+							<% if !discount.delivery %>
+								(take out only)
+							<% end %>
+							<% if !discount.take_out %>
+								(delivery only)
+							<% end %>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		<% end %>
+	
+		<% if @specials.empty? && @discounts.empty? %>
+			<div class="spacer">			
+				This restaurant does not have any specials. <%= link_to "Return To Menu", :controller => "restaurant", :action => "showRestaurant" %>.
+			</div>
+		<% end %>
+	</div>
+</div>

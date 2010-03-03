@@ -1,0 +1,65 @@
+
+<%= javascript_include_tag 'item.js' %>
+<%= javascript_include_tag 'order.js' %>
+<%= javascript_include_tag 'category.js' %>
+
+
+<% content_for :sidebar_large do %>
+	<% shadowBox "Search Menu" do %>
+		<div class="search_icon"></div>
+		
+		<%= form_remote_tag( :url => { :controller => 'item', :action => "searchItems" },
+		    :update => "itemList",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "updateSelectedCategory('all');" )%>
+
+			<div class="itemSearch">
+				<%= text_field_tag :item_search, session[:item_search] %>
+			</div>
+
+			<% primaryButtonSmall do %>
+				<%= submit_tag "Search" %>
+			<% end %>
+		</form>
+		
+		<%=link_to_remote( "ALL", :html=>{ :id => "category_all_link", :class => "link" },
+			:url=>{
+				:controller => 'item', :action => 'showAllCategories'
+			},
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:update => "itemList",
+			:success => 'updateSelectedCategory("all"); jQuery("#item_search").val("");' ) %><br />
+		
+		<% @display_items.each do |category_id, category_info| %>
+		
+			<%= link_to_remote( category_info[:name], :html=>{ :id => "category_#{category_id}_link", :class=> "link" },
+				:url=>{
+					:controller => 'item', :action => 'filterByCategory', :id => category_id
+				},
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:update => "itemList",
+				:success => "updateSelectedCategory(#{category_id});" + 'jQuery("#item_search").val("");' ) %><br />
+		<% end %>
+		
+		<%= hidden_field_tag "current_category", session[:category_id] %>
+	<% end %>
+	
+	<div class="legend">
+		<%= image_tag "/images/spicy.gif" %> Spicy
+		<%= image_tag "/images/vegetarian.gif" %> Vegetarian
+	</div>
+	
+	
+<% end %>
+
+
+<div class="restaurant">
+	<%= render "restaurant/restaurantHeader" %>
+	
+	<div id="itemList">
+		<%= render "item/items" %>
+	</div>
+</div>

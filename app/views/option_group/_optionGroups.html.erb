@@ -1,0 +1,37 @@
+
+<% if !@option_groups.empty? %>
+
+	<% form_tag '/option_group/showOptionGroup', :method => :get, :id => "showOptionGroupForm" do -%>
+
+		<%= hidden_field_tag "optionGroupId" %>
+
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<th>Name</th>
+				<th>Options</th>
+				<th>Min</th>
+				<th>Max</th>
+				<th>Quantity Price Increase</th>
+				<th>Price Increase Amount</th>
+			</tr>
+		
+			<% @option_groups.each do |option_group| %>
+				
+				<tr class="clickable" onclick="showOptionGroup(<%= option_group.id %>)">
+					<td><%= option_group.name %>&nbsp;</td>
+					<td><%= abbreviate(option_group.options.collect { |option| option.name }.join(', '), 30) %>&nbsp;</td>
+					<td><%= option_group.min_selected %>&nbsp;</td>
+					<td><%= option_group.max_selected %>&nbsp;</td>
+					<td><%= option_group.quantity_price_increase %>&nbsp;</td>
+					<td><%= number_to_currency(option_group.price_increase) %>&nbsp;</td>
+				</tr>
+			<% end %>
+		
+		</table>
+	<% end -%>
+
+<% else %>
+	<div class="indent">
+		No option groups found.
+	</div>
+<% end %>

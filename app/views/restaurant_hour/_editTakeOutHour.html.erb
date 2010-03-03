@@ -1,0 +1,47 @@
+
+<div class="title">Edit Take Out Hours</div>
+
+<%= error_messages_for :take_out_hour, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'updateTakeOutHour', :id => @take_out_hour.id},
+    :update => { :success => "takeOutHoursList", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="day_id">Days</label>
+		
+		S<%= check_box :take_out_hour, :sunday %>
+		M<%= check_box :take_out_hour, :monday %>
+		T<%= check_box :take_out_hour, :tuesday %>
+		W<%= check_box :take_out_hour, :wednesday %>
+		T<%= check_box :take_out_hour, :thursday %>
+		F<%= check_box :take_out_hour, :friday %>
+		S<%= check_box :take_out_hour, :saturday %>
+	</div>
+
+	<div class="field">
+		<label for="start_time">Start Time</label>
+		<%= select(:take_out_hour, :start_time, @time_options.collect {|p| [ p[:name], p[:id] ] }, { :include_blank => true }) %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="field">
+		<label for="end_time">End Time</label>
+		<%= select(:take_out_hour, :end_time, @time_options.collect {|p| [ p[:name], p[:id] ] }, { :include_blank => true }) %>
+		<span class="red">*</span>
+	</div>
+
+
+	<div class="actions">
+		<% primaryButton do %>
+			<%= submit_tag "Update" %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>			
+	</div>
+
+</form>

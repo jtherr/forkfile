@@ -1,0 +1,24 @@
+<% shadowBox @title do %>
+	
+	<%= error_messages_for :logo, :header_message => nil, :message => nil %>
+	
+	<% form_for(:logo, @logo, :url => {:controller => 'logo', :action=> 'create'}, :html=> {:multipart=>true}) do |form| %>
+	
+		<div class="field">
+			<label>Image File</label>
+			<%= form.file_field :image_file %> 
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Update' %>
+			<% end %>
+
+			<% secondaryButton do %>
+				<%= submit_tag "Cancel" %>
+			<% end %>
+		</div>
+	
+	<% end %>
+
+<% end %>

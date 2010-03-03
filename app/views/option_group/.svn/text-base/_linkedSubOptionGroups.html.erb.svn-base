@@ -1,0 +1,41 @@
+
+<% if !@linked_sub_option_groups.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>Name</th>
+			<th>Min</th>
+			<th>Max</th>
+			<th>Quantity Price Increase</th>
+			<th>Price Increase Amount</th>
+			<th>Action</th>
+		</tr>
+	
+		<% @linked_sub_option_groups.each do |linked_sub_option_group| %>
+		
+			<tr>
+				<td><%= linked_sub_option_group.name %>&nbsp;</td>
+				<td><%= linked_sub_option_group.min_selected %>&nbsp;</td>
+				<td><%= linked_sub_option_group.max_selected %>&nbsp;</td>
+				<td><%= linked_sub_option_group.quantity_price_increase %>&nbsp;</td>
+				<td><%= number_to_currency(linked_sub_option_group.price_increase) %>&nbsp;</td>
+				<td>
+					<%=link_to_remote( "Unlink", :url=>{
+						:action => 'deleteSubOptionGroup', :id => linked_sub_option_group.id
+						},
+						:update => "linkedSubOptionGroups",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();") %>
+					&nbsp;
+				</td>
+			</tr>
+		
+		<% end %>
+	
+	</table>
+
+<% else %>
+	<div class="indent">
+		No sub-option groups are linked.
+	</div>
+<% end %>

@@ -1,0 +1,45 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<div class="indent">
+			Linked Restaurant Owners will be able to view their orders online by via their "My Profile" page. 
+			<br /><br />
+			If the restaurant owner does not have a forkfile.com account, one will need to be created. Once the account is 
+			created, an email will be sent to the restaurant owner to explain how to set their password and access their 
+			orders online. Owners with existing accounts will also receive an informational email.<br /><br />
+		</div>
+	
+		<div id="linkedRestaurantOwners">
+			<%= render :partial => "linkedRestaurantOwners" %>
+		</div>
+
+		<% if @restaurant.active? %>
+			<div class="indent">		
+				<%=link_to_remote( "Link Existing Owner", 
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');",
+					:url=>{
+						:action => "addRestaurantOwner"
+					}) %> | 
+	
+				<%=link_to_remote( "Add Owner Account & Link", 
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');",
+					:url=>{
+						:action => "addRestaurantOwnerAccount"
+					}) %>			
+			</div>
+		<% else %>
+			<div class="indent red">
+				<br />
+				The restaurant must be activated before linking restaurant owners. This is because the owner will receive 
+				an email about this service and must be able to access the restaurant.
+			</div>
+		<% end %>
+	
+	<% end %>
+</div>

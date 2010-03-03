@@ -1,0 +1,78 @@
+
+<%= javascript_include_tag 'notification.js' %>
+
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<% form_for :notification_note, :url => { :controller => 'notification_note', :action => 'search' }, :html => { :method => :get } do |f| -%>
+	
+			<div class="field">
+				<div class="searchLeft">
+					Search Notifications
+					<%= text_field_tag "notification_search", @notification_search %>
+		
+					Status
+					<%= select(:notification, :status, $NOTIFICATION_STATUSES.collect { |key,status| [status[:name], key] }, :selected => @status.to_i) %>
+				</div>
+		
+				<% primaryButtonSmall do %>
+					<%= submit_tag 'Search' %>
+				<% end %>
+			</div>
+			
+		<% end -%>
+	
+	
+	
+	
+		<%= will_paginate @notifications, :params => { :notification_search => @notification_search } %>
+	
+	
+		<% if !@notifications.empty? %>
+		
+			<% form_tag '/notification_note/showNotification', :method => :get, :id => "showNotificationForm" do -%>
+		
+				<%= hidden_field_tag "notificationId" %>
+		
+				<table cellspacing="0" cellpadding="0">
+			
+					<tr>
+						<th>Date</th>
+						<th>Email</th>
+						<th>Restaurant</th>
+						<th>Reason</th>
+						<th>Message</th>
+						<th>Status</th>
+					</tr>
+			
+					<% @notifications.each do |notification| %>
+						<% if !notification.viewed %>
+							<% tr_class = "bold" %>
+						<% end %>
+						
+						<tr class="<%= tr_class %> clickable" onclick="showNotification(<%= notification.id %>)">
+					
+							<td><%= notification.date.strftime("%m-%d-%Y %H:%M:%S") %>&nbsp;</td>
+							<td><%= notification.email %>&nbsp;</td>
+							<td><%= notification.restaurant_name %></td>
+							<td><%= notification.notification_reason.name %>&nbsp;</td>
+							<td><%= abbreviate(notification.message, 30) %>&nbsp;</td>
+							<td><%= $NOTIFICATION_STATUSES[notification.status][:name] %>&nbsp;</td>
+						</tr>
+					<% end %>
+			
+				</table>
+			
+			<% end -%>
+	
+		<% else %>
+			<div class="indent">
+				No notifications found.
+			</div>
+		<% end %>
+		
+		<%= will_paginate @notifications, :params => { :notification_search => @notification_search } %>
+	
+	<% end %>
+</div>

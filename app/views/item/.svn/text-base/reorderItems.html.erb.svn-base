@@ -1,0 +1,61 @@
+
+<% shadowBox @title do %>
+	<div class="reorderItems">
+		<div id="categoryList">
+	
+	
+			<div class="column">
+				<% i = 0 %>
+				<% @categories.each do |category| %>
+					<div class="category">
+						<div class="name" class="handle1">
+							<%= category.name %>
+						</div>
+						
+						<%= link_to "Put into Alphabetical Order", { :controller => "item", :action => "alphaOrder", :id => category.id }, :confirm => "This will resort this column. Are you sure?" %><br /><br />
+					
+						<div id="itemList_<%= category.id %>" class="items">
+							Drop Here
+							<% category.items.find(:all, :order => "position").each do |item| %>
+								<div id="item_<%= item.id %>" class="handle2">
+									<%= item.name %>
+								</div>
+							<% end %>
+							
+						</div>
+					</div>
+					
+					
+					<% if @categories.length.to_f / 2 > i && @categories.length.to_f / 2 <= i + 1 %>
+						</div><div class="column">
+					<% end %>
+					<% i += 1 %>
+				<% end %>
+			</div>
+	
+			<% @categories.each do |category| %>
+				<%= sortable_element "itemList_#{category.id}", 
+					:url => { :controller => "item", :action => "updateOrder" }, 
+					:handle => :handle2, 
+					:tag => 'div',
+					:dropOnEmpty => true,
+					:containment => @itemLists,
+					:constraint => false %>
+			<% end %>
+
+		</div>
+	</div>
+	
+	
+	<div class="indent">
+		<%=link_to_remote( "Reorder Categories", 
+			:update => "popupFormDiv",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:complete => "displayPopup('');",
+			:url=>{
+				:controller => "category", :action => "reorderCategories"
+			}) %>
+	</div>
+<% end %>
+

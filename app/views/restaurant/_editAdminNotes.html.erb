@@ -1,0 +1,25 @@
+<div class="title"><%= @title %></div>
+
+<%= error_messages_for :restaurant, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => { :action => "updateAdminNotes" },
+    :update => { :success => "adminNotes", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Admin Notes</label>
+		<%= text_area :restaurant, :notes %>
+	</div>
+
+	<div class="actions">		
+		<% primaryButton do %>
+			<%= submit_tag 'Update' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

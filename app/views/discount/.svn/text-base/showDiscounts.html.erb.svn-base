@@ -1,0 +1,44 @@
+
+<%= javascript_include_tag 'discount.js' %>
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<div id="discounts">
+			<%= render :partial => "discounts" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Add Discount", :url=>{
+					:controller => 'discount', :action => 'addDiscount'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %> | 
+
+			<%=link_to_remote( "Change Priority", :url=>{
+					:controller => 'discount', :action => 'changePriority'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+		
+		<div class="heading">Discount Groups</div>
+		<div id="discountGroups">
+			<%= render :partial => "discountGroups" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Add Discount Group", :url=>{
+					:controller => 'discount', :action => 'addDiscountGroup'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initDiscountOptions(); displayPopup('');") %>
+		</div>
+		
+	<% end %>
+</div>

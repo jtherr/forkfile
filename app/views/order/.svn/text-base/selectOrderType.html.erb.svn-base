@@ -1,0 +1,103 @@
+
+<%= render "layouts/stepBar" %>
+
+<% shadowBox @title do %>
+
+	<%= javascript_include_tag 'order.js' %>
+
+	<%= error_messages_for :order, :header_message => nil, :message => nil %>
+
+	<% form_for :order, :url => { :action => 'updateOrderType' } do |f| -%>
+	
+		<% delivery_available = isDeliveryAvailable(@restaurant) %>
+		<% take_out_available = isTakeOutAvailable(@restaurant) %>
+
+		<div class="field">
+			<label for="full_name">Your Name</label>
+			<%= text_field :order, :name, :value => session[:order][:name] %>
+			<span class="red">*</span>
+		</div>
+	
+		<div class="field">
+			<label for="phone">Phone</label>
+			<%= text_field :order, :phone, :value => session[:order][:phone] %>
+			<span class="red">*</span>
+		</div>
+	
+		<% if !logged_in? %>
+			<div class="field">
+				<label for="email">Email</label>
+				<%= text_field :order, :email, :value => session[:order][:email] %>
+				<span class="red">*</span>
+			</div>
+		<% end %>
+	
+		<div class="field">
+			<label for="first_name">Order Type</label>
+			<%= radio_button :order, 'order_type', "delivery", :onclick => "showDelivery();", :checked => session[:order][:order_type] == "delivery" && delivery_available, :disabled => !delivery_available %> Delivery
+			<% if !@restaurant.delivery %>
+				(unavailable)
+			<% elsif session[:order][:total_price] != nil && @restaurant.delivery_minimum != nil && session[:order][:total_price].to_f < @restaurant.delivery_minimum  %>
+				(<%= number_to_currency(@restaurant.delivery_minimum) %> minimum not met)
+			<% elsif @restaurant.delivery_charge == 0.00 && (@restaurant.delivery_percent == nil || @restaurant.delivery_percent == 0.00) %>
+				(free)
+			<% elsif @restaurant.delivery_charge != 0.00 && @restaurant.delivery_percent != nil && @restaurant.delivery_percent != 0.00 %>
+				(charge: <%= number_to_currency(@restaurant.delivery_charge)%> and <%= @restaurant.delivery_percent %>%)
+			<% elsif @restaurant.delivery_percent != nil && @restaurant.delivery_percent != 0.00 %>
+				(charge: <%= @restaurant.delivery_percent %>%)
+			<% elsif @restaurant.delivery_charge != 0.00 %>
+				(charge: <%= number_to_currency(@restaurant.delivery_charge) %>)
+			<% end %>
+						
+			<%= radio_button :order, 'order_type', "take_out", :onclick => "hideDelivery();", :checked => session[:order][:order_type] == "take_out" && take_out_available, :disabled => !take_out_available %> Take Out
+			<% if !@restaurant.take_out %>
+				(unavailable)
+			<% end %>
+			
+			
+		</div>
+		
+		<div id="deliveryDiv" style="display: none;">
+		
+			<div class="subtitle">Delivery Address</div>
+		
+			<div class="field">
+				<label for="street1">Street 1</label>
+				<%= text_field :order, :delivery_street1, :value => session[:order][:delivery_street1] %>
+				<span class="red">*</span>
+			</div>
+			
+			<div class="field">
+				<label for="street2">Street 2</label>
+				<%= text_field :order, :delivery_street2, :value => session[:order][:delivery_street2] %>
+			</div>
+			
+			<div class="field">
+				<label for="city">City</label>
+				<%= text_field :order, :delivery_city, :value => session[:order][:delivery_city] %>
+				<span class="red">*</span>
+			</div>
+			
+			<div class="field">
+				<label for="state">State</label>
+				<%= select(:order, :delivery_state_id, @states.collect {|p| [ p.name, p.id ] }, { :include_blank => true, :selected => session[:order][:delivery_state_id].to_i }) %>
+				<span class="red">*</span>
+			</div>
+			
+			<div class="field">
+				<label for="zip">Zip</label>
+				<%= text_field :order, :delivery_zip, :value => session[:order][:delivery_zip] %>
+				<span class="red">*</span>
+			</div>
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Continue' %>
+			<% end %>
+		</div>
+	
+	<% end -%>
+	
+
+<% end %>

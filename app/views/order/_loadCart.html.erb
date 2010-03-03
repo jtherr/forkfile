@@ -1,0 +1,15 @@
+
+<script type="text/javascript">
+	jQuery(document).ready(function() {	
+		if (jQuery("#ajaxCallMade").val() == "true") {
+
+   			var loadingMsg = '<div class="loading"><div class="loading_image"><input type="image" src="/images/loading.gif"></div><div class="loading_label">Loading Your Order...</div></div>';
+			jQuery("#cartDiv").html(loadingMsg);
+	
+			<%= remote_function :url=> {
+					:controller => 'order', :action => "refreshCart"
+				},
+				:update => "cartDiv" %>
+		}
+	})
+</script>

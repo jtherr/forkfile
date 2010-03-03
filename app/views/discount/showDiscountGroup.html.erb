@@ -1,0 +1,18 @@
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<div id="discountGroupParts">
+			<%= render :partial => "discountGroupParts" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Add Discount Group Part", :url=>{
+					:controller => 'discount', :action => 'addDiscountGroupPart'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+
+		</div>
+	<% end %>
+</div>

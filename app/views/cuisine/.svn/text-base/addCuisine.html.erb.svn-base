@@ -1,0 +1,19 @@
+<% shadowBox @title do %>
+
+	<%= error_messages_for :cuisine, :header_message => nil, :message => nil %>
+	<% form_for :cuisine, :url => { :action => 'createCuisine' } do |f| -%>
+	
+		<div class="field">
+			<label for="name">Name</label>
+			<%= f.text_field :name %>
+			<span class="red">*</span>
+		</div>
+	
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Add Cuisine' %>
+			<% end %>
+		</div>
+	<% end -%>
+
+<% end %>

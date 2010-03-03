@@ -1,0 +1,115 @@
+<% shadowBox @title do %>
+
+	<% if admin? %>
+		<div class="spacer">
+			<%= link_to "Back to User Search", :controller => "users", :action => "showUsers" %>
+		</div>
+	<% end %>
+	
+	<div class="subtitle">Contact Information</div>
+	
+	<div class="readonly">
+		<label>Name</label>
+		<div class="text"><%=@user.name %></div>
+	</div>
+
+	<div class="readonly">
+		<label>Phone</label>
+		<div class="text"><%=@user.phone %></div>
+	</div>
+
+	<div class="readonly">
+		<label>Email</label>
+		<div class="text"><%=@user.email %></div>
+	</div>
+	
+	<% if admin? %>
+		<div class="readonly">
+			<label>Privilege Level</label>
+			<div class="text"><%= $USER_PRIVILEGES[@user.privilege_id][:name] %></div>
+		</div>
+	<% end %>
+
+	<div class="subtitle">Address</div>
+
+	<div class="readonly">
+		<label>Street 1</label>
+		<div class="text"><%=@user.street1 %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Street 2</label>
+		<div class="text"><%=@user.street2 %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>City</label>
+		<div class="text"><%=@user.city %></div>
+	</div>
+	
+	<% if @user.state %>
+		<div class="readonly">
+			<label>State</label>
+			<div class="text"><%=@user.state.abbr %></div>
+		</div>
+	<% end %>
+	
+	<div class="readonly">
+		<label>Zip</label>
+		<div class="text"><%=@user.zip %></div>
+	</div>
+	
+	<div class="actions">
+		<%= link_to "Modify Profile", {:action => 'modifyProfile', :id => @user.id }%>
+		
+		<% if current_user.id == @user.id %>
+			| <%= link_to "Change Password", { :controller => "users", :action => 'changePassword' } %>
+		<% end %>
+	</div>
+	
+<% end %>
+
+<% if current_user.id == @user.id %>
+	<% shadowBox "Saved Credit Card" do %>
+	
+		<% if @user.credit_card_type_id %>
+			<div class="readonly">
+				<label>Credit Card</label>
+				<div class="text">
+					<%= @user.credit_card_type.name %>:
+					XXXXXXXXXXXX<%= @user.credit_card_number.slice(-4..-1) %>
+					(Exp: <%= @user.credit_card_expiration_month %> / <%= @user.credit_card_expiration_year %>)
+				</div>
+			</div>
+		<% else %>
+			<div class="spacer">
+				You do not have a credit card saved.
+			</div>
+		<% end %>
+	
+		<div class="actions">
+			<% if @user.credit_card_type_id %>
+				<%= link_to "Change Credit Card", {:controller => 'users', :action => 'changeCreditCard' }%> | 
+				<%= link_to "Remove Credit Card", {:controller => 'users', :action => 'removeCreditCard' }, :confirm => "Are you sure you want to remove this credit card?" %>
+			<% else %>
+				<%= link_to "Add Credit Card", {:controller => 'users', :action => 'changeCreditCard' }%>
+			<% end %>
+		</div>
+	
+	<% end %>
+<% end %>
+
+<% if !@linked_restaurants.empty? %>
+	<% shadowBox "You are the owner of the following restaurants" do %>
+		<div class="spacer">
+			Click a restaurant link to view its orders.
+		</div>
+		
+		<% @linked_restaurants.each do |restaurant| %>
+			<div class="spacer">
+				<%= link_to restaurant.name, :controller => "restaurant_order", :action => "selectRestaurantOrders", :id => restaurant.id %><br />
+			</div>
+		<% end %>
+		
+	<% end %>
+<% end %>

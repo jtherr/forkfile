@@ -1,0 +1,67 @@
+<div class="title"><%= @title %></div>
+
+<% if admin? %>
+	<div class="indent">
+		<%= link_to "Admin Discount View", :controller => "discount", :action => "showDiscounts" %>
+	</div>
+<% end %>	
+
+<div class="readonly">
+	<label>Special Description</label>
+	<div class="text"><%= @discount.description %></div>
+</div>
+
+<div class="readonly">
+	<label>Can combine with other specials</label>
+	<div class="text"><% if @discount.allow_combo %>Yes<% else %>No<% end %></div>
+</div>
+
+<div class="readonly">
+	<label>Order Type Restrictions</label>
+	<div class="text"><% if !@discount.delivery %>Take Out Only<% elsif !@discount.take_out %>Delivery Only<% else %>None<% end %></div>
+</div>
+
+
+<div class="readonly">
+	<label>Availability</label>
+	
+	<div class="text">
+		<% if @discount.discount_hours.empty? %>
+			Always available!
+		<% else %>
+			<% @discount.discount_hours.each do |discount_hour| %>			
+				<%= discount_hour.weekdays.collect { |weekday| $WEEKDAYS[weekday][:abbr] }.join(', ') %>: <%= discount_hour.parsed_start_time.strftime("%I:%M %p") %> to <%= discount_hour.parsed_end_time.strftime("%I:%M %p") %>
+			<% end %>
+		<% end %>
+	</div>
+</div>
+
+
+<div class="discountInstructions">
+	<div class="indent bold">How do I apply this special to my order?</div>
+	
+	<div class="indent">
+		To apply this special, please follow these steps:
+		
+		<ol>
+			<li>Go to this restaurant's menu</li>
+			<li>Add the appropriate items to your order, as described in this special</li>
+			<li>Once the necessary items have been added, your special will automatically apply to your order</li>
+			<li>The name of the applied special will be shown and the discounted price will be reflected</li>
+			<li>You may now add more items or proceed to checkout</li>
+		</ol>
+	</div>
+</div>
+
+
+<div class="actions medium">
+	<% form_tag '/restaurant/showRestaurant' do %>
+		<% primaryButton do %>
+			<%= submit_tag "Go To Menu" %>
+		<% end %>
+	<% end %>
+	
+	<% secondaryButton do %>
+		<%= button_to_function "Cancel", "hidePopup();" %>
+	<% end %>
+</div>

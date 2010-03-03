@@ -1,0 +1,181 @@
+
+<% label_style = "width: 40%; font-weight: bold; float: left;" %>
+<% value_style = "float: left; width: 58%" %>
+
+
+<div style="float: left; width: 100%; padding-bottom: 4px; ">
+	<div style="float: left; width: 33%;">
+		<%= image_tag "http://forkfile.com/images/logo_small.gif" %>
+	</div>
+	
+	<div style="float: left; width: 66%; font-size: 20px; font-weight: bold; text-align: center;">
+		Order Confirmation
+	</div>
+</div>
+
+
+<% order_time = @order.order_time %>
+<% restaurant = @order.restaurant %>
+
+<div style="float: left; width: 100%; border-bottom: 1px solid #808080; padding-bottom: 4px; ">
+	Thank you for your order from forkfile.com! 
+
+	<% if @order.order_type == "take_out" %>
+		Your order will be available for pick-up in an estimated <b><%= restaurant.take_out_time %></b> minutes.
+	<% elsif @order.order_type == "delivery" %>
+		Your order will delivered in an estimated <b><%= restaurant.delivery_time %></b> minutes.
+	<% end %>
+	
+	If you need to change or cancel your order, please contact <%= restaurant.name %> at <%= number_to_phone(restaurant.phone1) %>.
+</div>
+
+<div style="float: left; width: 50%; border-right: 1px solid #808080; padding-top: 5px; ">
+
+	<div style="float: left; width: 100%; border-bottom: 1px solid #808080; padding-bottom: 5px;">
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Restaurant</span><span style="<%= value_style %>"><%= restaurant.name %></span></div>
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Address</span><span style="<%= value_style %>"><%= restaurant.address %></span></div>
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Phone</span><span style="<%= value_style %>"><%= number_to_phone(restaurant.phone1) %></span></div>
+	</div>
+
+	<div style="float: left; width: 100%; border-bottom: 1px solid #808080; padding-bottom: 5px;">
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Order Time</span><span style="<%= value_style %>"><%= $TIME_ZONE.utc_to_local(order_time).strftime("%m/%d/%y  %I:%M %p") %></span></div>
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Order #</span><span style="<%= value_style %>"><%= @order.order_number %></span></div>
+	</div>
+
+	<div style="float: left; width: 100%; border-bottom: 1px solid #808080; padding: 5px 0px 5px 0px;">
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Name</span><span style="<%= value_style %>"><%= @order.name %></span></div>
+		<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Phone</span><span style="<%= value_style %>"><%= number_to_phone(@order.phone) %></span></div>
+		
+		<% if @order.order_type == "delivery" %>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Order Type</span><span style="<%= value_style %>">Delivery</span></div>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Delivery Address</span><span style="<%= value_style %>"><%= @order.address %></span></div>
+		<% else %>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Order Type</span><span style="<%= value_style %>">Take Out</span></div>
+		<% end %>
+	</div>
+	
+	<div style="float: left; width: 100%; padding: 5px 0px 0px 0px;">
+		<% if @order.payment_type == "credit_card" %>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Payment Type</span><span style="<%= value_style %>">Credit Card</span></div>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Credit Card #</span><span style="<%= value_style %>">XXXXXXXXXXXX<%= @order.credit_card_number.slice(-4..-1) %></span></div>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Credit Card Exp</span><span style="<%= value_style %>"><%= @order.credit_card_expiration_month %> / <%= @order.credit_card_expiration_year %></span></div>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Credit Card Name</span><span style="<%= value_style %>"><%= @order.credit_card_first_name %> <%= @order.credit_card_last_name %></span></div>
+		<% else %>
+			<div style="margin-bottom: 3px;"><span style="<%= label_style %>">Payment Type</span><span style="<%= value_style %>">Cash</span></div>
+		<% end %>
+	</div>
+</div>
+
+<div style="float: left; padding: 5px 0px 0px 5px; width: 49%;">
+	<h3>Items</h3>
+	
+		
+	<% sub_total = 0 %>
+	
+	<table border="0" style="width: 100%;">
+		<tr>
+			<th style="text-align: left;">Quantity</th>
+			<th style="text-align: left;">Item</th>
+			<th style="text-align: right;">Price</th>
+		</tr>
+	
+		<% @order.order_items.each do |order_item| %>
+			<% quantity = order_item.quantity %>
+			<% item_size = order_item.item_size %>
+			<% item = Item.find(item_size.item_id) %>
+			<% total_item_price = item_size.current_price %>
+
+
+			<tr>
+				<td><%= quantity %></td>
+					
+				<td>
+					<%= item.name %>
+					
+					<% item_size_name = ItemSizeName.find(item_size.item_size_name_id) %>
+					
+					<% if !item_size_name.name.empty? %>
+						(<%= item_size_name.name %>)
+					<% end %>					
+				
+
+					<% option_groups = item.option_groups %>
+					<% if !option_groups.empty? %>
+								
+						<% option_groups.each do |option_group| %>
+						
+				 			<% total_selected_options = 0 %>
+
+							<% if option_group != nil %>
+									
+								<% options_formatted = [] %>
+								<% order_item.orderOptionsInOptionGroup(option_group.id).each do |order_item_option| %>
+									<% option = order_item_option.option %>
+																			
+									<% option_quantity = order_item_option.quantity %>
+			
+									<% additional_price = option.additional_price_for_option(item_size.item_size_name.id) %>
+			
+									<% option_formatted = "" %>
+			
+									<% if option_quantity && option_quantity.to_i > 1  %>
+										<% option_formatted += "(#{option_quantity}) " %>
+									<% end %>
+								
+								
+									<% option_formatted += option.name %>
+									
+									<% if additional_price > 0 %>
+										<% option_formatted += " (+" + number_to_currency(additional_price) + ")" %>
+									<% end %>
+									
+									<% options_formatted.push(option_formatted) %>
+									<% total_item_price += additional_price * option_quantity.to_f %>
+									<% total_selected_options += option_quantity.to_i %>
+								<% end %>
+								
+								<br>
+								<span style="font-size: 10px;">
+									<%= options_formatted.join(", ") %>
+								</span>
+													
+						        <% if (option_group.quantity_price_increase && option_group.price_increase) %>
+						              <% total_item_price += (total_selected_options - option_group.quantity_price_increase) * option_group.price_increase %>
+						        <% end %>
+							<% end %>
+						<% end %>
+					<% end %>
+				
+						
+					<% if order_item.special_instructions && !order_item.special_instructions.empty? %>
+						<br>
+						<span style="font-size: 10px;">
+							<%= order_item.special_instructions %>
+						</span>
+					<% end %>
+				</td>
+				
+				<td style="text-align: right;">
+					<% total_item_price = total_item_price * quantity %>
+								
+					<%= number_to_currency(total_item_price) %>	
+				</td>
+			</tr>
+		<% end %>
+	</table>
+
+	<% if @order.discount > 0 %>
+		<div style="text-align: right; border-top: 1px solid #808080; margin-top: 5px; padding: 5px 0px 0px 0px;"><b>Discount:</b> - <%= number_to_currency(@order.discount) %></div>
+	<% end %>
+
+	<div style="text-align: right; border-top: 1px solid #808080; margin-top: 5px; padding: 5px 0px 0px 0px;"><b>Sub Total:</b> <%= number_to_currency(@order.sub_total) %></div>
+	
+	<% if @order.order_type == "delivery" %>
+		<div style="text-align: right; padding: 5px 0px 0px 0px;"><b>Delivery Charge:</b> <%= number_to_currency(@order.delivery_charge) %></div>	
+	<% end %>
+
+	<div style="text-align: right; padding: 5px 0px 0px 0px;"><b>Tax: </b> <%= number_to_currency(@order.tax) %></div>
+
+	<div style="border-top: 1px solid #808080; text-align: right; margin-top: 5px; padding: 5px 0px 0px 0px;"><b>Total: </b> <%= number_to_currency(@order.total_price) %></div>
+
+</div>

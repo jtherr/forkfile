@@ -1,0 +1,88 @@
+<div class="indent">
+	This page auto-refreshes every 60 seconds. Orders added in the last 10 minutes will appear bold.
+</div>
+
+<% if !@orders.empty? %>
+	<%= will_paginate @orders %>
+
+
+	<% form_tag '/restaurant_order/showRestaurantOrder', :method => :get, :id => "showRestaurantOrderForm" do -%>
+
+		<%= hidden_field_tag "restaurantOrderId" %>
+
+
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<th>Order Time</th>
+				<th>Order Number</th>
+				<th>Customer Name</th>
+				<th>Order Type</th>
+				<th>Payment Type</th>
+				<th>Items Ordered</th>
+				<th>Total</th>
+			</tr>
+
+			<% @orders.each do |order| %>
+			
+				<% restaurant = order.restaurant.version_updated_at(order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+
+				<% restaurant_active = order.restaurant.active? %>
+
+				<% if $TIME_ZONE.utc_to_local(order.order_time) > $TIME_ZONE.now - 10.minutes %>
+					<% orderStyle = "bold" %>
+				<% end %>
+
+				<tr class="clickable <%= orderStyle %>" onclick="showRestaurantOrder(<%= order.id %>)">
+					<td width="110"><%= $TIME_ZONE.utc_to_local(order.order_time).strftime("%m/%d/%y  %I:%M %p") %></td>
+					<td>
+						<%= order.order_number %>
+					</td>
+					<td>
+						<%= order.name %>
+					</td>
+					<td>
+						<% if order.order_type == "delivery" %>
+							Delivery
+						<% else %>
+							Take Out
+						<% end %>
+					</td>
+					<td>
+						<% if order.payment_type == "credit_card" %>
+							Credit Card
+						<% else %>
+							Cash
+						<% end %>
+					</td>
+					<td>
+						<% items_formatted = [] %>
+						
+						<% order.order_items.each do |order_item| %>
+							<% quantity = order_item.quantity %>
+							<% item_size = order_item.item_size.version_updated_at(order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+							<% item = Item.find(item_size.item_id) %>
+							<% item_versioned = Item.find(item_size.item_id).version_updated_at(order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+	
+							<% item_formatted = "(" + quantity.to_s + ") " + item_versioned.name %>
+							
+							<% item_size_name = ItemSizeName.find(item_size.item_size_name_id) %>
+
+							<% items_formatted.push(item_formatted) %>
+						<% end %>
+						
+						<%= items_formatted.join(", ") %>
+					</td>
+					<td width="50"><%= number_to_currency(order.total_price) %></td>
+				</tr>
+			<% end %>
+		</table>
+
+	<% end -%>
+
+	<%= will_paginate @orders %>
+
+<% else %>
+	<div class="indent">
+		This restaurant does not have any orders.
+	</div>
+<% end %>

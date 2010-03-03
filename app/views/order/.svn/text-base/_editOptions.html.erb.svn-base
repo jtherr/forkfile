@@ -1,0 +1,73 @@
+<div class="title">Edit Options</div>
+
+<%= form_remote_tag( :url => {:action => 'updateExisting', :id => @item_array_id },
+    :update => { :success => "cartDiv", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<% current_price = @item_size.current_price %>
+	<% special = "" %>
+	
+	<% if @item_size.special_available? %>
+		<% special = " SPECIAL!" %>
+	<% end %>
+
+	Item: <%= @item.name %><br />
+	
+	<% item_size_name = @item_size.item_size_name %>
+	<% if !item_size_name.name.empty? %>
+		Size: <%= item_size_name.name %><br />
+	<% end %>
+	Price: <%= number_to_currency(current_price) + special %><br /><br />
+
+	Description: <%= @item.description %><br /><br />
+	
+	
+	<% @option_groups.each do |option_group| %>
+		<div class="option">
+			<b><%= option_group.name %></b>
+			(min: <%= option_group.min_selected %>, max: <%= option_group.max_selected %>)
+		
+			<% if optionGroupInError(option_group.id, @option_groups_in_error) %>
+				<br />Invalid number of options selected
+			<% end %>
+		
+			<br />
+			<% option_group.options.each do |option| %>
+				<% if !option_group.min_selected || option_group.min_selected == 0 || !option_group.max_selected || option_group.max_selected > 1 %>
+					<%= check_box :option, 'selected', { :id => "option_#{option_group.id}_#{option.id}_selected", :name => "option[#{option_group.id}][#{option.id}][selected]", :checked => isSelected(option, @all_selected_options) }  %>
+				<% else %>
+					<%= radio_button :option, 'selected', option.id, { :id => "option_#{option_group.id}_selected", :name => "option[#{option_group.id}][selected]", :checked => isSelected(option, @all_selected_options) }  %>
+				<% end %>
+				<%= option.name %>
+				
+				<% item_size_name_id = @item_size.item_size_name.id %>
+				<% if option.additional_price_for_option(item_size_name_id) > 0 %>
+					(+ <%= number_to_currency(option.additional_price_for_option(item_size_name_id)) %>)
+				<% end %>
+				
+				<br />
+			<% end %>
+		
+		</div>
+	<% end %>
+
+	<br />
+	
+	<div class="quantity">
+		Quantity
+		<%= select :order_item, 'quantity', 1..20, :selected => @quantity.to_i %>
+	</div>
+
+	<div class="buttonsRight">
+		
+		<% primaryButton do %>
+			<%= submit_tag "Update Cart", :onclick => "if (!checkRestaurant()) { return false; };" %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

@@ -1,0 +1,22 @@
+
+<% if @restaurant && logged_in? %>
+	<% favorite = @restaurant.favorite(current_user) %>
+
+	<% if favorite %>
+		<%= link_to_remote( image_tag("yellowStar.gif", :alt => "", :width => '16'), :url=> { 
+				:controller => 'favorite', :action => 'removeFavorite', :id => favorite.id
+			}, 
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:update => "favorite_#{@restaurant.id}") %>
+	<% else %>
+		<%= link_to_remote( image_tag("greyStar.gif", :alt => "", :width => '16'), :url=> { 
+				:controller => 'favorite', :action => 'addFavorite', :id => @restaurant.id 
+			}, 
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:update => "favorite_#{@restaurant.id}") %>
+	<% end %>
+<% end %>
+			
+			

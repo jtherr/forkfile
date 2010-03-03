@@ -1,0 +1,24 @@
+
+<div class="title"><%= @title %></div>
+	
+<div class="reorderDiscounts">
+
+	<div id="discountList">
+		<% i = 0 %>
+		
+		<% @discounts.each do |discount| %>
+			<div id="discount_<%=discount.id %>" class="handle">
+				<%= i %>: 
+				<%= discount.name %>
+			</div>
+			
+			<% i += 1 %>
+		<% end %>
+	</div>
+	
+	<%= sortable_element 'discountList', :url => { :controller => "discount", :action => "updatePriority" }, :handle => :handle, :tag => 'div' %>
+
+	<div class="field">
+		<%=button_to_function "Finished", "window.location.reload(true);" %>
+	</div>
+</div>

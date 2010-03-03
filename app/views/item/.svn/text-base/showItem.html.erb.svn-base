@@ -1,0 +1,52 @@
+<%= javascript_include_tag 'item.js' %>
+
+<div class="halfBox left">
+	<% shadowBox @title do %>
+		<div class="spacer">
+			<%= link_to "<< Back to All Items", :controller => "item", :action => "backToAllItems" %>
+		</div>
+	
+		<div id="itemInfo">
+			<%= render "item/itemInfo" %>
+		</div>
+	<% end %>
+</div>
+	
+<div class="halfBox">
+	<% shadowBox "Item Sizes" do %>
+		<div id="itemSizes">
+			<%= render "item/itemSizes" %>
+		</div>
+		
+		<% if admin? %>
+			<div class="actions">	
+				<%=link_to_remote( "Add Item Size", :url=>{
+						:action => 'addItemSize'
+					},
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');") %>
+			</div>
+		<% end %>
+	<% end %>
+</div>
+
+<div class="tableBox">
+	<% shadowBox "Linked Option Groups" do %>
+	
+		<div id="optionGroups">
+			<%= render :partial => "linkedOptionGroups" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Link Option Group", :url=>{
+					:action => 'linkOptionGroup'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	<% end %>
+</div>

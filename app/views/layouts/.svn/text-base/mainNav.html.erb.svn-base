@@ -1,0 +1,14 @@
+
+<% linkClass = "first" %>
+
+<% @mainNavLinks.each do |link| %>
+	<% if !link[:hidden] %>
+		<% if link[:id] %>
+			<%= link_to link[:name], { :controller => link[:controller], :action => link[:action], :id => link[:id] }, :class => linkClass %>
+		<% else %>
+			<%= link_to link[:name], { :controller => link[:controller], :action => link[:action] }, :class => linkClass %>
+		<% end %>
+		
+		<% linkClass = "" %>
+	<% end %>
+<% end %>

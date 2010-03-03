@@ -1,0 +1,24 @@
+
+<% shadowBox @title do %>
+	
+	<%= error_messages_for :category, :header_message => nil, :message => nil %>
+	<% form_for :category, :url => { :action => 'createCategory' } do |f| -%>
+	
+		<div class="field">
+			<label for="name">Name</label>
+			<%= f.text_field :name %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="description">Description</label>
+			<%= f.text_area :description, :cols => 30, :rows => 3 %>
+		</div>
+			
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Add Category' %>
+			<% end %>
+		</div>
+	<% end -%>
+<% end %>

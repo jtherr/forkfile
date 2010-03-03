@@ -1,0 +1,110 @@
+<div class="heading"><%= @title %></div>
+
+<div class="question">
+	How can I sign up and add my restaurant to Forkfile?
+</div>
+<div class="answer">
+	To add your restaurant to Forkfile, please <b><%= link_to "contact us", :controller => "notification", :action => "restaurantOwners" %></b>.
+	
+	We will request information from you, including your restaurant information and menu. Once we receive all
+	necessary information, we will begin the process of adding your menu to Forkfile. When that is complete,
+	we will notify you and enable your account to receive orders.
+</div>
+
+
+<div class="question">
+	How will my customers find out?
+</div>
+<div class="answer">
+	As the restaurant owner, you know best how to advertise to your customers. Therefore, you are 
+	responsible for informing your customer's of your new online ordering service. Several options 
+	we suggest include the following:
+	
+	<ul>
+		<li>Hang at least one large sign in your restaurant</li>
+		<li>Link to Forkfile.com from your restaurant's website</li>
+		<li>Update your menus to advertise Forkfile as a ordering option</li>
+		<li>Provide Forkfile ads in delivery / take out bags</li>
+	</ul>
+	
+</div>
+
+
+<div class="question">
+	My restaurant is not in any major city.  Can I join Forkfile?
+</div>
+<div class="answer">
+	Yes, all restaurants in the US may join Forkfile.
+</div>
+
+
+
+<div class="question">
+	Will my menu be compatible with the Forkfile system?
+</div>
+<div class="answer">
+	Forkfile is able to incorporate almost any menu into its system. On rare occasions, very complex menu items
+	may not be supported.
+</div>
+
+<div class="question">
+	How do I receive an order?
+</div>
+<div class="answer">
+	Forkfile sends all orders via fax to the number you provide.
+</div>
+
+<div class="question">
+	What should I do if my fax machine stops working?
+</div>
+<div class="answer">
+	Please resolve the issue as soon as possible or contact your Forkfile representative to temporarily disable your account. If any orders are faxed during this time, you will receive a confirmation phone call listing the phone number of the customer. Please follow up with the customer to complete the order.
+</div>
+
+<div class="question">
+	What if an order was faxed to me but I do not notice it?
+</div>
+<div class="answer">
+	Forkfile will follow up each order with an automatic phone call to verify you received the order.
+</div>
+
+<div class="question">
+	How do I cancel my account?
+</div>
+<div class="answer">
+	Please contact your Forkfile representative to cancel your account. You may cancel at any time. There is no contract.
+</div>
+
+<div class="question">
+	My restaurant is closed on certain holidays. How do I prevent orders during those days?
+</div>
+<div class="answer">
+	Please inform your Forkfile representative of all days the restaurant will be closed.
+</div>
+
+<div class="question">
+	One of my menu items was added incorrectly. How can I have this fixed?
+</div>
+<div class="answer">
+	Please contact your Forkfile representative and we will correct the issue. If the price was incorrect and
+	orders were received for this item,	please request a refund and specify all associated order numbers.
+</div>
+
+<div class="question">
+	How do customers pay the restaurant through Forkfile?
+</div>
+<div class="answer">
+	Forkfile does not accept payments from customers. It is the restaurant's responsibility to accept the payment
+	from the customer. If a customer selects credit card as the method of payment, Forkfile will simply forward this
+	information on to the restaurant to process.
+</div>
+
+
+<div class="question">
+	The customer called and changed or canceled the order after submitting through Forkfile. How do I get a refund?
+</div>
+<div class="answer">
+	Please wait until you receive a bill for this period and then contact your Forkfile representative to request a refund.
+	Please specify the associated order number.
+</div>
+

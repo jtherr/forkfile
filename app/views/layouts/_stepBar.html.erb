@@ -1,0 +1,16 @@
+
+<% if @isReviewOrderView %>
+	<% current_step = 3 %>
+<% elsif @isPaymentTypeView %>
+	<% current_step = 2 %>
+<% elsif @isOrderTypeView %>
+	<% current_step = 1 %>
+<% end %>
+
+<% if current_step %>
+	<div class="stepBar">
+		<%= getStep(current_step, 1, "Enter Order Type", "order", "selectOrderType") %>
+		<%= getStep(current_step, 2, "Enter Payment Type", "order", "selectPaymentType") %>
+		<%= getStep(current_step, 3, "Review Your Order", "order", "reviewOrder") %>
+	</div>
+<% end %>

@@ -1,0 +1,43 @@
+<% if admin? %>
+	<% if @newNotifications > 0 %>
+		<% notificationClass = "bold" %>
+	<% end %>
+
+	<%= link_to "Notifications", { :controller => "notification_note", :action => "search" }, :class => notificationClass %>
+	
+	<% if @openNotifications > 0 %>
+		(<%= @openNotifications %>)
+	<% end %>
+	| 
+<% end %>
+
+<% if @isTabView && @cart_items > 0 %>
+	<%= link_to "My Order", :controller => 'order', :action => 'viewCurrentOrder' %> | 
+<% end %>
+
+
+<% if logged_in? %>		
+	<%=link_to "My Profile", :controller => 'users', :action => 'showProfile', :id => current_user.id %> | 
+	<%=link_to "Logout", :controller => 'session', :action => 'logout' %>
+<% else %>
+
+	<% if @isTabView %>
+		<% if @appEnabled && !@isSignUpView %>
+			<%= link_to "Sign Up", { :controller => 'users', :action => 'register' } %>
+			
+			<% if !@isLoginView %>
+				 | 
+			<% end %>
+		<% end %>
+	
+		<% if !@isLoginView %>
+			<%=link_to_remote( "Login", :url=>{
+					:controller => 'session', :action => 'login_popup'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		<% end %>
+	<% end %>
+<% end %>

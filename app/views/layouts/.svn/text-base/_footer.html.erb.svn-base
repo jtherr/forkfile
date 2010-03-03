@@ -1,0 +1,21 @@
+<div class="footer">
+	<center>
+		<div class="container">
+			<div class="mainContainer">
+				
+				<% if !@isSessionExpiredView %>
+					<div class="links">
+						<% if admin? %>
+							<%= link_to "Admin Home", :controller => "main", :action => "adminHome" %> | 
+						<% end %>
+						
+						<%= link_to "Add Your Restaurant", :controller => "notification", :action => "restaurantOwners" %> |
+						<%= link_to "FAQ", :controller => "main", :action => "faq" %> |
+						<%= link_to "Contact Us", :controller => "notification", :action => "contactUs" %> | 
+						<%= link_to "Disclaimer", :controller => "main", :action => "disclaimer" %>					
+					</div>
+				<% end %>
+			</div>
+		</div>
+	</center>
+</div>

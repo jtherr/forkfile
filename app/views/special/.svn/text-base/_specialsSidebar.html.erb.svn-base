@@ -1,0 +1,23 @@
+
+<% shadowBox "Select Day" do %>
+
+	<%=link_to_remote( "Available Now!", :html=>{ :id => "specials_available_link", :class => "link" }, :url=>{
+			:controller => 'special', :action => 'showAvailableSpecials'
+		},
+		:update => "specialsList",
+		:loading => "displayLoadingMsg();",
+		:loaded => "hideLoadingMsg();",
+		:success => "updateSelectedDay('available');" ) %>
+	
+	<% (0..6).each do |key| %>
+		<%=link_to_remote( "#{$WEEKDAYS[key][:name]}", :html=>{ :id => "specials_#{key}_link", :class=> "link" }, :url=>{
+				:controller => 'special', :action => 'filterSpecialsByDay', :id => key
+			},
+			:update => "specialsList",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "updateSelectedDay(#{key});" ) %>
+	<% end %>
+
+	<%= hidden_field_tag "current_day", session[:search_terms][:specials_day_id] %>
+<% end %>

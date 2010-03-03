@@ -1,0 +1,12 @@
+<div class="sessionExpired">
+	<div class="heading">Your session has expired.</div><br /><br />
+	
+	<div class="spacer"><%= link_to "Returning to Home...", :controller => "main", :action => "index" %></div>
+</div>
+
+
+<% form_tag "/main/index", :method => :get, :id => "returnToHomeForm" do %><% end %>
+
+<script type="text/javascript">
+	setTimeout("jQuery('#returnToHomeForm').submit();", 3000);
+</script>

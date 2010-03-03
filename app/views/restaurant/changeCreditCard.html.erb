@@ -1,0 +1,52 @@
+
+<% shadowBox @title do %>
+
+	<%= error_messages_for :restaurant, :header_message => nil, :message => nil %>
+
+	<% form_for :restaurant, :url => { :action => 'updateCreditCard' } do |f| -%>
+
+		<div class="field">
+			<label for="payment_type">Credit Card Type</label>
+			<%= select(:restaurant, :credit_card_type_id, @credit_card_types.collect {|p| [ p.name, p.id ] }, { :include_blank => true, :selected => @credit_card_type_id.to_i }) %>
+		</div>
+	
+		<div class="field">
+			<label for="credit_card_number">Credit Card Number</label>
+			<%= f.text_field :credit_card_number, :value => @credit_card_number %>
+		</div>
+	
+		<div class="field">
+			<label for="credit_card_expiration_month">Credit Card Expiration</label>
+			<%= f.select :credit_card_expiration_month, @months, :selected => @credit_card_expiration_month.to_i, :include_blank => true %>
+			<%= f.select :credit_card_expiration_year, @years, :selected => @credit_card_expiration_year.to_i, :include_blank => true %>
+		</div>
+		
+		<div class="field">
+			<label for="credit_card_code">Credit Card Security Code</label>
+			<%= f.text_field :credit_card_code, :value => @credit_card_code %>
+		</div>
+		
+		<div class="field">
+			<label for="payment_type">First Name on Credit Card</label>
+			<%= f.text_field :credit_card_first_name, :value => @credit_card_first_name %>
+		</div>
+		
+		<div class="field">
+			<label for="payment_type">Last Name on Credit Card</label>
+			<%= f.text_field :credit_card_last_name, :value => @credit_card_last_name %>
+		</div>
+			
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Update' %>
+			<% end %>
+			
+			<% secondaryButton do %>
+				<%= submit_tag 'Cancel' %>
+			<% end %>
+		</div>
+	
+	<% end -%>
+	
+<% end %>
+			

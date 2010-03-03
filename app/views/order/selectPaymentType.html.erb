@@ -1,0 +1,130 @@
+
+<%= render "layouts/stepBar" %>
+
+<% shadowBox @title do %>
+
+	<%= javascript_include_tag 'order.js' %>
+
+	<%= error_messages_for :order, :header_message => nil, :message => nil %>
+
+
+	<% form_for :order, :url => { :action => 'updatePaymentType' } do |f| -%>
+	
+		<div class="field">
+			<label for="payment_type">Payment Type</label>
+			<%= radio_button :order, 'payment_type', "credit_card", :onclick => "showCreditCard();", :checked => session[:order][:payment_type] == "credit_card", :disabled => session[:order][:total_price].to_f < @restaurant.credit_card_minimum %> Credit Card
+
+			<% if session[:order][:total_price].to_f < @restaurant.credit_card_minimum %>
+				(credit card minimum: <%= number_to_currency(@restaurant.credit_card_minimum) %>)
+			<% end %>
+
+			<%= radio_button :order, 'payment_type', "cash", :onclick => "hideCreditCard();", :checked => session[:order][:payment_type] == "cash" %> Cash
+		</div>
+				
+				
+		<div id="creditCardDiv" style="display: none;">
+			<% if current_user != nil && current_user.credit_card_type_id != nil %>
+			
+				<div class="subtitle">Credit Card</div>
+			
+				<div class="spacer">
+					You have a credit card saved in your profile. Would you like to use this credit card or enter a new one?
+				</div>
+				
+				<div class="field">
+					<label for="payment_type">Credit Card Selection</label>
+					<%= radio_button_tag 'credit_card_selection', "saved", @credit_card_selection == "saved", :onclick => "showSavedCreditCard();" %> Use Saved Credit Card
+					<%= radio_button_tag 'credit_card_selection', "new", @credit_card_selection == "new", :onclick => "showNewCreditCard();" %> Enter New Credit Card
+				</div>
+				
+				<div id="savedCreditCard">
+					
+					<div class="readonly">
+						<label>Credit Card Type</label>
+						<div class="text"><%= @user.credit_card_type.name %></div>
+					</div>
+					
+					<div class="readonly">
+						<label>Credit Card Number</label>
+						<div class="text">XXXXXXXXXXXX<%= @user.credit_card_number.slice(-4..-1) %></div>
+					</div>		
+				
+					<div class="readonly">
+						<label>Credit Card Expiration</label>
+						<div class="text"><%= @user.credit_card_expiration_month %> / <%= @user.credit_card_expiration_year %></div>
+					</div>
+					
+					<div class="readonly">
+						<label>Credit Card Code</label>
+						<div class="text"><%= @user.credit_card_code %></div>
+					</div>
+				
+					<div class="readonly">
+						<label>Credit Card Name</label>
+						<div class="text"><%= @user.credit_card_first_name %> <%= @user.credit_card_last_name %></div>
+					</div>
+				</div>
+				
+				<% newCreditCardDisplay = "none" %>				
+			<% else %>
+				<% newCreditCardDisplay = "block" %>
+			<% end %>
+			
+			<div id="newCreditCard" style="display: <%= newCreditCardDisplay %>;">
+				
+				<div class="field">
+					<label for="payment_type">Credit Card Type</label>
+					<%= select(:order, :credit_card_type_id, @credit_card_types.collect {|p| [ p.name, p.id ] }, { :include_blank => true, :selected => session[:order][:new_credit_card_type_id].to_i }) %>
+					<span class="red">*</span>
+				</div>
+			
+				<div class="field">
+					<label for="credit_card_number">Credit Card Number</label>
+					<%= f.text_field :credit_card_number, :value => session[:order][:new_credit_card_number] %>
+					<span class="red">*</span>
+				</div>
+			
+				<div class="field">
+					<label for="credit_card_expiration_month">Credit Card Expiration</label>
+					<%= f.select :credit_card_expiration_month, @months, :selected => session[:order][:new_credit_card_expiration_month].to_i, :include_blank => true %>
+					<%= f.select :credit_card_expiration_year, @years, :selected => session[:order][:new_credit_card_expiration_year].to_i, :include_blank => true %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="credit_card_code">Credit Card Security Code</label>
+					<%= f.text_field :credit_card_code, :value => session[:order][:new_credit_card_code] %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="payment_type">First Name on Credit Card</label>
+					<%= f.text_field :credit_card_first_name, :value => session[:order][:new_credit_card_first_name] %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="payment_type">Last Name on Credit Card</label>
+					<%= f.text_field :credit_card_last_name, :value => session[:order][:new_credit_card_last_name] %>
+					<span class="red">*</span>
+				</div>
+				
+				<% if logged_in? %>
+					<div class="field">
+						<label for="save_to_user_profile">Save Credit Card to My Profile</label>
+						<%= check_box_tag :save_to_user_profile, true, @save_to_user_profile %>
+					</div>
+				<% end %>
+			</div>
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Continue' %>
+			<% end %>
+		</div>
+	
+	<% end -%>
+	
+
+<% end %>

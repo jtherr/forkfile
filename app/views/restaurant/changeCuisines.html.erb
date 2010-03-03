@@ -1,0 +1,36 @@
+<% shadowBox @title do %>
+
+	<% form_for :restaurant_cuisine, :url => { :action => 'updateCuisines' } do |f| -%>
+	
+		<div class="changeCuisines">
+	
+			<div class="column">
+				<% i = 1 %>
+				
+				<% cuisines_per_column = @cuisines.length / 3 %>
+				
+				<% @cuisines.each do |cuisine| %>	
+					<div class="cuisine">
+						<%= check_box "restaurant_cuisine", cuisine.id, {:checked => cuisine.checked(current_restaurant.id)}, "checked", "" %>
+						<%= cuisine.name %>
+					</div>
+					
+					<% if (cuisines_per_column > 0) && (i % (cuisines_per_column) == 0) %>
+						</div><div class="column">
+					<% end %>
+						
+					<% i += 1 %>
+				<% end %>
+				
+			</div>
+		
+		</div>
+	
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Update Cuisines' %>
+			<% end %>
+		</div>
+	<% end -%>
+
+<% end %>

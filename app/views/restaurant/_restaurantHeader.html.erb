@@ -1,0 +1,62 @@
+<div class="restaurantHeader">
+
+	<div class="logo">
+		<%= image_tag(@restaurant.logo_filename, :alt => "", :width => "200" ) %>
+	</div>
+	
+	<div id="favorite_<%= @restaurant.id %>" class="favorite">
+		<% if logged_in? %>
+			<%= render "favorite/favorite" %>
+		<% end %>
+		&nbsp;
+	</div>
+	
+	
+	<div class="info">
+		<div class="line">
+			<div class="name"><%= @restaurant.name %></div>
+
+			<% if @restaurant.isOpen %>
+				<div class="open">OPEN</div>
+			<% else %>
+				<div class="closed">CLOSED</div>
+			<% end %>
+		</div>		
+
+		
+		<div class="line">
+			<div class="cuisines">
+				<%= @restaurant.cuisines.collect { |cuisine| link_to cuisine.name, :controller => "search", :action => "showCuisine", :id => cuisine.id }.join(' | ') %>
+			</div>
+		
+			<div class="properties">
+				<%= @restaurant.getProperties().collect { |property| property }.join(" | ") %>
+			</div>
+		</div>
+
+		
+		<div class="line underline">
+			<div class="address"><%= @restaurant.address_formatted %></div>
+		</div>
+
+		
+		<% if @restaurant.delivery && @restaurant.distance_from([current_address[:lat], current_address[:lng]]).to_f.round(1) > @restaurant.delivery_radius %>
+			<div class="red underline">You are outside of this restaurant's delivery radius of <%= @restaurant.delivery_radius %> miles.</div>
+		<% end %>
+
+			
+		<div class="description">
+			<%= @restaurant.description %>
+		</div>
+
+	</div>
+
+	<div class="views">
+		<%= link_to "Menu", { :action => 'showRestaurant', :id => @restaurant.id }, :class => getSelectedLink('showRestaurant') %>
+		<%= link_to "Specials", { :action => 'showSpecials', :id => @restaurant.id }, :class => getSelectedLink('showSpecials') %>
+		<%= link_to "Directions", { :action => 'showMap', :id => @restaurant.id }, :class => getSelectedLink('showMap') %>
+		<%= link_to "Hours", { :action => 'showHours', :id => @restaurant.id }, :class => getSelectedLink('showHours') %>
+		<%= link_to "More Info", { :action => 'showAdditionalInfo', :id => @restaurant.id }, :class => getSelectedLink('showAdditionalInfo') %>
+	</div>
+	
+</div>

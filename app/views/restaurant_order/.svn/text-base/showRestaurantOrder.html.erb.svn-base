@@ -1,0 +1,190 @@
+
+<div class="indent">
+	<%= link_to "<< Back to All Orders", :action => "showRestaurantOrders" %>
+</div>
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+
+		<div class="full_order">
+			
+			<% sub_total = 0 %>
+			<% restaurant = @order.restaurant.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+			
+			<div class="line">
+				<div class="readonly">
+					<label>Restaurant</label>
+					<div class="text"><%= restaurant.name %></div>
+				</div>
+		
+				<div class="readonly">
+					<label>Account Number</label>
+					<div class="text"><%= restaurant.account_number %></div>
+				</div>
+				
+				<div class="readonly">
+					<label>Order Time</label>
+					<div class="text"><%= $TIME_ZONE.utc_to_local(@order.order_time).strftime("%m/%d/%y  %I:%M %p") %></div>
+				</div>
+	
+				<div class="readonly">
+					<label>Order Number</label>
+					<div class="text"><%= @order.order_number %></div>
+				</div>	
+		
+				<div class="readonly">
+					<label>Customer Name</label>
+					<div class="text"><%= @order.name %></div>
+				</div>
+		
+				<div class="readonly">
+					<label>Customer Phone</label>
+					<div class="text"><%= number_to_phone(@order.phone) %></div>
+				</div>
+				
+				<div class="readonly">
+					<label>Order Type</label>
+					<div class="text">
+			    		<% if @order.order_type == "delivery" %>
+							Delivery
+					    <% else %>
+					    	Take Out
+					    <% end %>
+					</div>
+				</div>
+	
+			    <% if @order.order_type == "delivery" %>
+					<div class="readonly">
+						<label>Delivery Address</label>
+						<div class="text"><%= @order.address %></div>
+					</div>
+			    <% end %>
+			    
+				<div class="readonly">
+					<label>Payment Type</label>
+					<div class="text">
+			    		<% if @order.payment_type == "credit_card" %>
+							Credit Card
+					    <% else %>
+					    	Cash
+					    <% end %>
+					</div>
+				</div>
+				
+				<% if @order.order_time > (Time.now - 3.days) %>
+				
+				    <% if @order.payment_type == "credit_card" %>
+						<div class="readonly">
+							<label>Credit Card Number</label>
+							<div class="text"><%= @order.credit_card_number.to_s %></div>
+						</div>
+						
+						<div class="readonly">
+							<label>Credit Card Expiration</label>
+							<div class="text"><%= @order.credit_card_expiration_month.to_s + "/" + @order.credit_card_expiration_year.to_s %></div>
+						</div>
+						
+						<div class="readonly">
+							<label>Credit Card Code</label>
+							<div class="text"><%= @order.credit_card_code.to_s %></div>
+						</div>
+			
+						<div class="readonly">
+							<label>Credit Card Name</label>
+							<div class="text"><%= @order.credit_card_first_name + " " + @order.credit_card_last_name %></div>
+						</div>
+						
+				    <% end %>
+				
+				<% end %>
+			</div>
+			
+
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Quantity</th>
+					<th>Item</th>
+					<th>Options</th>
+					<th>Notes</th>
+					<th class="price">Price</th>
+				</tr>
+					
+				<% @order.order_items.each do |order_item| %>
+					<tr>
+	
+						<% quantity = order_item.quantity %>
+						<% item_size = order_item.item_size.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+						<% item = Item.find(item_size.item_id) %>
+						<% item_versioned = Item.find(item_size.item_id).version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+						<% item_size_name = ItemSizeName.find(item_size.item_size_name_id) %>
+	
+	
+						<td><%= quantity %></td>
+							
+						<td>
+							<b><%= item_versioned.name %></b>
+								
+							<% if !item_size_name.name.empty? %>
+								(<%= item_size_name.name %>)
+							<% end %>
+						</td>
+	
+						<td>
+			
+							<% option_groups = item.option_groups %>
+							<% if !option_groups.empty? %>
+										
+								<% option_groups_formatted = [] %>
+								
+								<% option_groups.each do |option_group| %>
+									<% option_group_versioned = option_group.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S"))%>
+								
+									<% if option_group_versioned != nil %>
+	
+										<% options_formatted = [] %>
+												
+										<% order_item.orderOptionsInOptionGroup(option_group_versioned.option_group_id).each do |order_item_option| %>
+											<% option = order_item_option.option %>
+											<% option_versioned = order_item_option.option.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+											
+											<% option_formatted = "" %>
+											
+											<% if order_item_option.quantity > 1 %>
+												<% option_formatted += "(#{order_item_option.quantity}) " %>
+											<% end %>
+												
+											<% option_formatted += option_versioned.name %>
+											
+											<% options_formatted.push(option_formatted) %>
+										<% end %>
+	
+	
+										<% option_groups_formatted.push(options_formatted.join(", ")) %>
+									<% end %>
+								<% end %>
+								
+								<%= option_groups_formatted.join("; ") %>
+							<% end %>
+							&nbsp;
+						</td>
+						
+						<td><%= order_item.special_instructions %>&nbsp;</td>
+						<td class="price"><%= number_to_currency(order_item.price) %></td>
+						
+					</tr>
+				<% end %>
+			</table>
+					
+			<div class="subtotal"><b>Sub Total:</b> <%= number_to_currency(@order.sub_total) %></div>
+			
+			<% if @order.order_type == "delivery" %>
+				<div class="delivery"><b>Delivery Charge:</b> <%= number_to_currency(@order.delivery_charge) %></div>	
+			<% end %>
+		
+			<div class="tax"><b>Tax: </b> <%= number_to_currency(@order.tax) %></div>
+		
+			<div class="total"><b>Total: </b> <%= number_to_currency(@order.total_price) %></div>
+			
+		</div>
+	<% end %>
+</div>

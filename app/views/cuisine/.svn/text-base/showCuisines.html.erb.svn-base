@@ -1,0 +1,26 @@
+<div class="tableBox">
+	<% shadowBox @title do %>
+		
+		<table cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<th>Name</th>
+				<th>Actions</th>
+			</tr>
+			
+			<% @cuisines.each do |cuisine| %>
+				<tr>
+					<td><%= cuisine.name %></td>
+					<td>
+						<%=link_to "Edit", :action => "editCuisine", :id => cuisine.id %> | 
+						<%=link_to "Delete", { :action => "deleteCuisine", :id => cuisine.id }, :confirm => "Are you sure you want to delete this cuisine?" %>
+					</td>
+				</tr>
+			<% end %>
+		
+		</table>
+		
+		<div class="indent">
+			<%=link_to "Add Cuisine", :action => "addCuisine" %>
+		</div>
+	<% end %>
+</div>

@@ -1,0 +1,29 @@
+
+<% if @item_size_names %>
+	<div class="field">
+		<label for="item_size_name_id">Item Sizes</label>
+		<%= collection_select(:discount_group_part, :item_size_name_id, @item_size_names, :id, :name, { :include_blank => "ALL ITEM SIZES" }) %>
+		<span class="red">*</span>
+	</div>
+<% end %>
+
+
+<% if @option_groups %>
+	<div class="field">
+		<label for="item_id">Option Groups</label>
+		<%= collection_select(:discount_group_part, :option_group_id, @option_groups, :id, :name, { :include_blank => "NO OPTION GROUP_RESTRICTIONS" }) %>
+		
+		<%= observe_field :discount_group_part_option_group_id, :url => { :action => :processOptionGroup },
+	      	:update => "optionGroup",
+	      	:with => 'option_group_id',
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "updateSizes();" %>
+		
+		<span class="red">*</span>
+	</div>
+<% end %>
+
+<div id="optionGroup">
+	<%= render :partial => "optionGroup" %>
+</div>

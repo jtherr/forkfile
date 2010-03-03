@@ -1,0 +1,150 @@
+
+<% shadowBox "Filters" do %>
+
+	<div class="filter_icon"></div>
+
+	<div id="filter_delivery" class="filter">
+		<div class="checkbox"><%= check_box_tag 'delivery', 'yes', false,
+				:onclick => 'if (this.checked) { enableDeliveryFilter(); } else { disableDeliveryFilter(); }',
+				:checked => session[:search_terms][:delivery] %></div>
+		<label onclick="jQuery('#delivery').click();">Delivers to me</label>
+	</div>
+	<div id="filter_take_out" class="filter">
+		<div class="checkbox"><%= check_box_tag 'take_out', 'yes', false,
+				:onclick => 'if (this.checked) { enableTakeoutFilter(); } else { disableTakeoutFilter(); }',
+				:checked => session[:search_terms][:take_out] %></div>
+		<label onclick="jQuery('#take_out').click();">Take Out</label>
+	</div>	
+	<div id="filter_specials" class="filter">
+		<div class="checkbox"><%= check_box_tag 'specials', 'yes', false,
+				:onclick => 'if (this.checked) { enableSpecialsFilter(); } else { disableSpecialsFilter(); }',
+				:checked => session[:search_terms][:specials] %></div>
+		<label onclick="jQuery('#specials').click();">Has Specials Now</label>
+	</div>
+	<div id="filter_open" class="filter">
+		<div class="checkbox"><%= check_box_tag 'open', 'yes', false,
+				:onclick => 'if (this.checked) { enableOpenFilter(); } else { disableOpenFilter(); }',
+				:checked => session[:search_terms][:open] %></div>
+		<label onclick="jQuery('#open').click();">Open Now</label>
+	</div>
+
+	<script type="text/javascript">
+		function enableDeliveryFilter() {
+			jQuery('#filter_delivery').attr("class", "filter selected");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterByDeliveryOn"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function disableDeliveryFilter() {
+			jQuery('#filter_delivery').attr("class", "filter");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterByDeliveryOff"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function enableTakeoutFilter() {
+			jQuery('#filter_take_out').attr("class", "filter selected");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterByTakeoutOn"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function disableTakeoutFilter() {
+			jQuery('#filter_take_out').attr("class", "filter");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterByTakeoutOff"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function enableSpecialsFilter() {
+			jQuery('#filter_specials').attr("class", "filter selected");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterBySpecialsOn"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function disableSpecialsFilter() {
+			jQuery('#filter_specials').attr("class", "filter");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterBySpecialsOff"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function enableOpenFilter() {
+			jQuery('#filter_open').attr("class", "filter selected");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterByOpenOn"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+		function disableOpenFilter() {
+			jQuery('#filter_open').attr("class", "filter");
+			
+			<%= remote_function :url=> {
+					:controller => 'search', :action => "filterByOpenOff"
+				},
+				:update => "restaurantList",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "initializeMap();" %>
+		}
+	</script>
+
+<% end %>
+
+<% shadowBox "Cuisines" do %>
+
+	<div class="cuisine_icon"></div>
+
+	<%=link_to_remote( "ALL", :html=>{ :id => "cuisine_all_link", :class => "link" }, :url=>{
+			:controller => 'search', :action => 'showAllCuisines'
+		},
+		:update => "restaurantList",
+		:loading => "displayLoadingMsg();",
+		:loaded => "hideLoadingMsg();",
+		:success => "updateSelectedCuisine('all');",
+		:complete => "initializeMap();" ) %>
+	
+	<% @cuisines.each do |cuisine_id, cuisine| %>
+		<%=link_to_remote( "#{cuisine[:name]} (#{cuisine[:count]})", :html=>{ :id => "cuisine_#{cuisine_id}_link", :class=> "link" }, :url=>{
+				:controller => 'search', :action => 'filterByCuisine', :id => cuisine_id
+			},
+			:update => "restaurantList",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "updateSelectedCuisine(#{cuisine_id});",
+			:complete => "initializeMap();" ) %>
+	<% end %>
+<% end %>
+
+<%= hidden_field_tag "current_cuisine", session[:search_terms][:cuisine_id] %>
+

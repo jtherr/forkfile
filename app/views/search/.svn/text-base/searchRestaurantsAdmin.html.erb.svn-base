@@ -1,0 +1,63 @@
+
+<%= javascript_include_tag 'admin.js' %>
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<% form_for :restaurant, :url => { :controller => 'search', :action => 'searchRestaurantsAdmin' }, :html => { :method => :get } do |f| -%>
+	
+			<div class="field">
+				<div class="searchLeft">
+					<label>Search Restaurants</label>
+					<%= text_field_tag "restaurant_search", @restaurant_search %>
+					
+					Status
+					<%= select(:restaurant, :status, @status_options.collect { |key,status| [status[:name], key] }, :selected => @status.to_i) %>
+				</div>
+				
+				<% primaryButtonSmall do %>
+					<%= submit_tag 'Search' %>
+				<% end %>
+			</div>
+			
+		<% end -%>
+	
+	
+		<%= will_paginate @restaurants, :params => { :restaurant_search => @restaurant_search } %>
+	
+		<% if !@restaurants.empty? %>
+	
+			<% form_tag '/search/selectRestaurantAdmin', :method => :get, :id => "showRestaurantForm" do -%>
+		
+				<%= hidden_field_tag "restaurantId" %>
+			
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<th>Name</th>
+						<th>Admin Notes</th>
+						<th>Status</th>
+					</tr>
+				
+					<% @restaurants.each do |restaurant| %>
+						<tr class="clickable" onclick="showRestaurant(<%= restaurant.id %>)">
+							<td><%= restaurant.name %>&nbsp;</td>
+							<td><%= abbreviate(restaurant.notes, 100) %>&nbsp;</td>
+							<td><%= $DB_STATUSES[restaurant.status_id][:name] %>&nbsp;</td>
+						</tr>
+					<% end %>
+			
+				</table>
+			
+			<% end -%>
+		<% else %>
+			<div class="indent">
+				No restaurants found.
+			</div>
+		<% end %>
+	
+		<div class="indent">
+			<%= link_to "Add Restaurant", :controller => "restaurant", :action => "addRestaurant" %><br /><br />
+		</div>
+	
+	<% end %>
+</div>

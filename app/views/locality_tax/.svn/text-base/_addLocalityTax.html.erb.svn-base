@@ -1,0 +1,45 @@
+<div class="title"><%= @title %></div>
+	
+<div class="indent">
+	Additional taxes for a county or city locality.
+</div>
+
+<%= error_messages_for :locality_tax, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => "createLocalityTax"},
+    :update => { :success => "localityTaxes", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="county_name">County</label>
+		<%= text_field :locality_tax, :county_name %>
+	</div>
+
+	<div class="field">
+		<label for="city_name">City</label>
+		<%= text_field :locality_tax, :city_name %>
+	</div>
+
+	<div class="field">
+		<label for="state">State</label>
+		<%= collection_select(:locality_tax, :state_id, @states, :id, :name, { :prompt => true }) %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="field">
+		<label for="meal_tax">Meal Tax</label>
+		<%= text_field :locality_tax, :meal_tax %> %
+	</div>
+
+	<div class="actions">		
+		<% primaryButton do %>
+			<%= submit_tag 'Create' %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

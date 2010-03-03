@@ -1,0 +1,132 @@
+<div class="title">Add Item</div>
+
+<%= error_messages_for :item, :object => @errors, :header_message => nil, :message => nil %>
+
+
+<%= form_remote_tag( :url => {:action => @action},
+    :update => { :success => "itemList", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= text_field :item, :name %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="description">Description</label>
+		<%= text_area :item, :description, :cols => 30, :rows => 3 %>
+	</div>
+	
+	<div class="field">
+		<label for="state">Category</label>
+		<%= collection_select(:item,:category_id,@categories,:id,:name, { :prompt => true }) %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="spicy">Spicy</label>
+		<%= check_box :item, :spicy %>
+	</div>
+	
+	<div class="field">
+		<label for="vegetarian">Vegetarian</label>
+		<%= check_box :item, :vegetarian %>
+	</div>
+	
+	<div class="field">
+		<label for="featured">Featured</label>
+		<%= check_box :item, :featured %>
+	</div>
+	
+
+	<div class="subtitle">SIZES</div>
+	
+	<div id="itemSizesNewDiv">
+
+		<% i = 0 %>
+		<% if !@itemSizes %>
+			<div id="itemSize_0">
+				<div class="newItemSize">
+					<div class="field">
+						<label for="name">Name</label>
+						<%= collection_select("itemSize[0]", :item_size_name_id, @item_size_names, :id, :name) %>
+					</div>
+					
+					<div class="field">
+						<label for="special_only">Special Only</label>
+						<%= check_box "itemSize[0]", :special_only, :onclick => "togglePrice(this, 0);" %>
+					</div>
+
+					<div class="field" id="price_0">
+						<label for="price">Price $</label>
+						<%= text_field "itemSize[0]", :price, :size => 6 %>
+
+						<span class="red">*</span>
+					</div>
+				</div>
+			</div>
+			
+			<% i += 1 %>
+		<% else %>
+			<% @itemSizes.each do |@itemSize| %>
+		
+				<div id="itemSize_<%= i %>">
+					<div class="newItemSize">
+						<div class="field">
+							<label for="name">Name</label>
+							<%= collection_select("itemSize", :item_size_name_id, @item_size_names, :id, :name, {}, { :index => i } ) %>
+						</div>
+						
+						<div class="field">
+							<label for="name">Special Only</label>
+							<%= check_box "itemSize", :special_only, :index => i, :onclick => "togglePrice(this, #{i});" %>
+						</div>
+
+						<% if @itemSize.special_only %>
+							<% price_display = "display: none;" %>
+						<% end %>
+	
+	
+						<div class="field" id="price_<%= i %>" style="<%= price_display %>">
+							<label for="name">Price $</label>
+							<%= text_field "itemSize", :price, :size => 6, :index => i %>
+							<span class="red">*</span>
+						</div>
+						
+						<% if i > 0 %>
+							<%= link_to_function "Remove", "removeSize(#{i})" %>
+						<% end %>
+
+					</div>
+				</div>
+				
+				<% i += 1 %>
+			<% end %>
+		<% end %>
+	
+	</div>
+	
+	
+	<%= hidden_field_tag "item_size_names", @item_size_names.collect { |item_size_name| item_size_name.name }.join(',') %>
+	<%= hidden_field_tag "item_size_ids", @item_size_names.collect { |item_size_name| item_size_name.id }.join(',') %>
+	
+	
+	<div class="actions">
+		<%= link_to_function "Add Size", "addSize()" %>
+	</div>
+	
+	<%= hidden_field_tag "itemSizeNewCounter", "#{i}" %>
+	
+	<div class="actions">		
+		<% primaryButton do %>
+			<%= submit_tag 'Create' %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

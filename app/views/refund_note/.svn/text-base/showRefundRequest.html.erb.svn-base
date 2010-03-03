@@ -1,0 +1,29 @@
+
+<%= javascript_include_tag 'refund.js' %>
+
+
+<% shadowBox @title do %>
+
+	<%= link_to "Back to Refund Request Search", :action => "search" %>
+
+	<div id="refundInfo">
+		<%= render "refund_note/refundInfo" %>
+	</div>
+
+<% end %>
+
+<% shadowBox "Admin Notes" do %>
+	
+	<div id="notesList">
+		<%= render "refund_note/notes" %>
+	</div>
+
+	<%=link_to_remote( "Add Notes", :url=>{
+			:action => "addNotes"
+		},
+		:update => "popupFormDiv",
+		:loading => "displayLoadingMsg();",
+		:loaded => "hideLoadingMsg();",
+		:complete => "initAddNotes(); displayPopup('');") %>
+		
+<% end %>

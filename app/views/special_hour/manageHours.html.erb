@@ -1,0 +1,26 @@
+<div class="tableBox">
+
+	<% shadowBox @title do %>
+	
+		<div class="indent">
+			<b>Item: <%= @item_size.item.name %> (<%= @item_size.item_size_name.name %>)</b>
+		
+			<%= link_to "Show Item", :controller => "item", :action => "showItem", :id => @item_size.item.id %>
+		</div>
+	
+		<div id="hoursList">
+			<%= render "special_hour/hours" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Add", :url=>{
+					:action => "addHour"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	
+	<% end %>
+</div>

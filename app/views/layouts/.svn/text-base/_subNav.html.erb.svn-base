@@ -1,0 +1,20 @@
+
+<div class="restaurantName">
+	<%= current_restaurant.name %>: 
+</div>
+
+<% linkClass = "first" %>
+
+<% @subNavLinks.each do |link| %>
+	<% if link[:controller] == @current_controller && link[:action] == @current_action %>
+		<div class="selected <%= linkClass %>"><%= link[:name] %></div>
+	<% else %>
+		<% if link[:id] %>
+			<%= link_to link[:name], { :controller => link[:controller], :action => link[:action], :id => link[:id]}, :class => linkClass %>
+		<% else %>
+			<%= link_to link[:name], { :controller => link[:controller], :action => link[:action] }, :class => linkClass %>
+		<% end %>
+	<% end %>
+	
+	<% linkClass = "" %>
+<% end %>

@@ -1,0 +1,47 @@
+
+<div class="title">Add Restaurant Hours</div>
+
+<%= error_messages_for :hour, :header_message => nil, :message => nil %>
+
+
+<%= form_remote_tag( :url => {:action => 'createHour'},
+    :update => { :success => "hoursList", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="day_id">Days</label>
+		
+		S<%= check_box :hour, :sunday %>
+		M<%= check_box :hour, :monday %>
+		T<%= check_box :hour, :tuesday %>
+		W<%= check_box :hour, :wednesday %>
+		T<%= check_box :hour, :thursday %>
+		F<%= check_box :hour, :friday %>
+		S<%= check_box :hour, :saturday %>
+	</div>
+	
+	<div class="field">
+		<label for="start_time">Start Time</label>
+		<%= select(:hour, :start_time, @time_options.collect {|p| [ p[:name], p[:id] ] }, { :include_blank => true, :selected => '9:00' }) %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="field">
+		<label for="end_time">End Time</label>
+		<%= select(:hour, :end_time, @time_options.collect {|p| [ p[:name], p[:id] ] }, { :include_blank => true, :selected => '21:00' }) %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag "Create" %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+
+</form>

@@ -1,0 +1,25 @@
+
+<%= javascript_include_tag 'order.js' %>
+
+
+<div class="restaurant">
+	<%= render "restaurant/restaurantHeader" %>
+
+	<div class="tableBox">
+		<% shadowBox nil do %>
+			<div class="heading">Restaurant Hours</div>
+			<%= render "restaurant_hour/hours" %>
+			
+			<% if @restaurant.delivery %>
+				<div class="heading">Delivery Hours</div>
+				<%= render "restaurant_hour/deliveryHours" %>
+			<% end %>
+			
+			<% if @restaurant.take_out %>
+				<div class="heading">Take Out Hours</div>
+				<%= render "restaurant_hour/takeOutHours" %>
+			<% end %>
+		<% end %>
+	</div>
+	
+</div>

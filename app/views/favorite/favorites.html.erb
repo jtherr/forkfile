@@ -1,0 +1,19 @@
+
+<%= javascript_include_tag 'search.js' %>
+
+<%= render "/search/loadRestaurants" %>
+
+
+<% content_for :sidebar do %>
+	<%= render "search/sidebar" %>
+<% end %>
+
+<div class="searchResults">
+	<div id="searchResultList">
+
+		<div id="restaurantList">
+			<%= render "search/restaurantList" %>
+		</div>
+
+	</div>
+</div>

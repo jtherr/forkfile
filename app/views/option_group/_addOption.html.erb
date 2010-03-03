@@ -1,0 +1,73 @@
+<div class="title">Add Option</div>
+
+<%= error_messages_for :option, :object => @errors, :object => @errors, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'createOption' },
+    :update => { :success => "options", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= text_field :option, :name, :size => 20 %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="field">
+		<label for="allow_quantity">Allow Quantity</label>
+		<%= check_box :option, :allow_quantity %>
+	</div>
+	
+	<div class="field">
+		<label for="selected_by_default">Selected by Default</label>
+		<%= check_box :option, :selected_by_default %>
+	</div>
+	
+	<% if @option_sizes || !@item_size_names.empty? %>		
+	
+		<div class="field">
+			<label for="additional_price">Additional Prices: </label>
+
+			<div id="additionalPriceDiv_0" class="text">
+				
+				<% j = 0 %>
+
+				<% if @option_sizes %>
+					<% @option_sizes.each do |@option_size| %>
+						<div id="additionalPrice_0_<%= j %>">
+							<%= collection_select(:option_size, :item_size_name_id, @item_size_names, :id, :name, {}, { :id => "option_size_0__#{j}_item_size_name_id", :name => "option_size[0][#{j}][item_size_name_id]" } ) %>
+							<%= text_field "option_size", :additional_price, :size => 6, :id => "option_size_0__#{j}_additional_price", :name => "option_size[0][#{j}][additional_price]" %>
+						
+							<%= link_to_function "Remove", "removeAdditionalPrice(0,#{j})" %>
+						
+							<br />
+						</div>
+						<% j += 1 %>
+					<% end %>
+				<% end %>
+				
+			</div>
+
+			<%= hidden_field_tag "additionalPriceCounter_0", j %>
+		</div>
+		
+		<div class="actions">
+			<%= link_to_function "Add Additional Price", "addAdditionalPrice(0)" %>
+		</div>
+	
+	<% end %>
+
+	<%= hidden_field_tag "item_size_ids", "#{@itemSizeIdArray.join(',')}" %>
+	<%= hidden_field_tag "item_size_names", "#{@itemSizeNameArray.join(',')}" %>
+
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag 'Create' %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

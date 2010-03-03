@@ -1,0 +1,104 @@
+
+<div class="result <%=@firstRestaurant %>">
+	
+	<div class="logo">
+		<a href="/restaurant/showSpecials/<%= @restaurant.id %>">
+			<%= image_tag(@restaurant.logo_filename, :alt => "", :width => '75') %>
+		</a>
+	</div>
+	
+	<div id="favorite_<%= @restaurant.id %>" class="favorite">
+		<% if logged_in? %>
+			<%= render "favorite/favorite" %>
+		<% end %>
+		&nbsp;
+	</div>
+		
+	<div class="info">
+		<div class="specialsLeft">
+			<div class="line">
+				<div class="name">
+					<%= link_to @restaurant.name, :controller => "restaurant", :action => "showSpecials", :id => @restaurant.id %>
+				</div>
+	
+				<div class="distance">
+					(<%= @restaurant.distance_from([current_address[:lat], current_address[:lng]]).to_f.round(1) %> miles)
+				</div>
+			</div>
+		</div>
+		
+		<div class="specialsRight">
+			<% i = 0 %>
+			
+			<% @specials.each do |special| %>
+				<% item_size = special.item_size %>
+				
+				<div class="line">
+					<div class="itemSize">
+						<%= item_size.item.name %>
+						
+						<% item_size_name = item_size.item_size_name %>
+						
+						<% if !item_size_name.name.empty? %>
+							(<%= item_size_name.name %>)
+						<% end %>
+					</div>
+			
+					<div class="hours">
+						<%= special.parsed_start_time.strftime("%I:%M %p") %> - <%= special.parsed_end_time.strftime("%I:%M %p") %>
+					</div>
+					
+					<div class="price">
+						<%= number_to_currency(special.special_price) %>
+					</div>
+				</div>
+			
+				<% i += 1%>
+				
+				<% if i == 3 %>
+					<% break %>
+				<% end %>
+			<% end %>
+			
+			<% if i < 3 %>
+					
+				<% @discounts.each do |discount| %>
+									
+					<div class="line">
+						<div class="itemSize">
+							<%= discount.name %>
+						</div>
+						
+						<% if session[:search_terms][:specials_day_id] == nil %>
+							<% discount_hour = discount.current_discount_hour %>
+						<% else %>
+							<% discount_hour = discount.discount_hour_on_day(session[:search_terms][:specials_day_id].to_i) %>
+						<% end %>
+				
+						<% if discount_hour != nil %>
+							<div class="hours">
+								<%= discount_hour.parsed_start_time.strftime("%I:%M %p") %> - <%= discount_hour.parsed_end_time.strftime("%I:%M %p") %>
+							</div>
+						<% end %>
+					</div>
+				
+					<% i += 1%>
+					
+					<% if i == 3 %>
+						<% break %>
+					<% end %>
+				<% end %>
+			
+			<% end %>
+						
+			<% if @specials.length + @discounts.length > 3 %>
+				<div class="floatRight alignRight">
+					<b><%= link_to "More...", :controller => "restaurant", :action => "showSpecials", :id => @restaurant.id %></b>
+				</div>
+			<% end %>
+			
+		</div>
+	</div>
+</div>
+
+<% @firstRestaurant = "" %>

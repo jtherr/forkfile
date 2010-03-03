@@ -1,0 +1,27 @@
+
+<%= javascript_include_tag 'restaurantOrder.js' %>
+
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<% if admin? %>
+			<div class="indent">
+				<%= link_to "Show All Orders", :controller => "restaurant_order", :action => "showMonthlyOrders" %>
+			</div>
+		<% end %>
+		
+		<div id="restaurantOrders">
+			<%= render :partial => "restaurantOrders" %>
+		</div>
+	<% end %>
+</div>
+
+
+
+<script type="text/javascript">
+	function refreshOrders() {
+		<%= remote_function(:update => "restaurantOrders",
+      		:url => { :action => "refreshRestaurantOrders" }) %>
+	}
+</script>
+

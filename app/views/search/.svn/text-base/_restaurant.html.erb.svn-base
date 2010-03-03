@@ -1,0 +1,52 @@
+
+
+<div class="result <%=@firstRestaurant %>">
+	<div class="logo">
+		<a href="/restaurant/showRestaurant/<%= @restaurant.id %>">
+			<%= image_tag(@restaurant.logo_filename, :alt => "", :width => '75') %>
+		</a>
+	</div>
+
+	<div id="favorite_<%= @restaurant.id %>" class="favorite">
+		<% if logged_in? %>
+			<%= render "favorite/favorite" %>
+		<% end %>
+		&nbsp;
+	</div>
+
+	<div class="info">
+		
+		<div class="line">
+			
+			<div class="left">							
+				<div class="name">
+					<%=link_to @restaurant.name, :controller => 'restaurant', :action => 'showRestaurant', :id => @restaurant.id %>
+				</div>
+	
+				<div class="distance">
+					(<%= @restaurant.distance_from([current_address[:lat], current_address[:lng]]).to_f.round(1) %> miles)
+				</div>
+			</div>
+
+			<div class="open">
+				<% if @restaurant.isOpen %>
+					<div class="open">OPEN</div>
+				<% else %>
+					<div class="closed">CLOSED</div>
+				<% end %>
+			</div>			
+		</div>
+		
+		<div class="line">
+			<div class="cuisines">
+				<% this_restaurant = Restaurant.find(@restaurant.id) %>
+				<%= this_restaurant.cuisines.collect { |cuisine| cuisine.name }.join(" | ") %>
+			</div>
+			
+			<div class="properties">
+				<%= @restaurant.getProperties().collect { |property| property }.join(" | ") %>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,49 @@
+<% if !@locality_taxes.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>County</th>
+			<th>City</th>
+			<th>State</th>
+			<th>Meal Tax</th>
+			<th>&nbsp;</th>
+		</tr>
+
+		<% @locality_taxes.each do |locality_tax| %>
+
+			<tr>
+				<td><%= locality_tax.county_name %></td>
+				<td><%= locality_tax.city_name %></td>
+				<td><%= locality_tax.state.name %></td>
+				<td>
+					<% if locality_tax.meal_tax %>
+						<%= locality_tax.meal_tax %> %
+					<% end %>
+				</td>
+				<td>
+					<%= link_to_remote( "Edit", :url=>{
+							:controller => 'locality_tax', :action => 'editLocalityTax', :id => locality_tax.id
+						},
+						:update => "popupFormDiv",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:complete => "displayPopup('');") %> | 
+					
+					<%= link_to_remote( "Delete", :url=>{
+							:controller => 'locality_tax', :action => 'deleteLocalityTax', :id => locality_tax.id
+						},
+						:confirm => "Are you sure you want to delete this locality tax?",
+						:update => "localityTaxes",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();") %>
+					
+				</td>
+			</tr>
+		<% end %>
+	</table>
+
+<% else %>
+	<div class="indent">
+		No Locality Taxes have been added.
+	</div>
+<% end %>

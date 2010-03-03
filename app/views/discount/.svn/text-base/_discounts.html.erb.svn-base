@@ -1,0 +1,88 @@
+<% if !@discounts.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Buy</th>
+			<th>Get</th>
+			<th>Hours</th>
+			<th>Allow Combo?</th>
+			<th>Priority</th>
+			<th>&nbsp;</th>
+		</tr>
+
+		<% @discounts.each do |discount| %>
+
+			<tr>
+				<td><%= discount.name %></td>
+				<td><%= abbreviate(discount.description, 30) %>&nbsp;</td>
+				<td>
+					<% if discount.buy_discount_group != nil %>
+						<%= discount.buy_discount_group.name %>
+
+						<% if discount.buy_quantity != nil && discount.buy_quantity > 0 %>
+							(<%= discount.buy_quantity %>) 
+						<% end %>
+					<% elsif discount.buy_amount != nil && discount.buy_amount > 0 %>
+						Amount: <%= number_to_currency(discount.buy_amount) %>;
+					<% else %>
+						Anything
+					<% end %>
+					&nbsp;
+				</td>
+				<td>
+					<% if discount.get_discount_group != nil %>
+						<%= discount.get_discount_group.name %>
+
+						<% if discount.get_quantity != nil && discount.get_quantity > 0 %>
+							(<%= discount.get_quantity %>)
+						<% end %>
+						;
+					<% end %>
+
+					<% if discount.get_for_amount != nil && discount.get_for_amount > 0 %>
+						For Amount: <%= number_to_currency(discount.get_for_amount) %>;
+					<% end %>
+					
+					<% if discount.get_percent_off != nil && discount.get_percent_off > 0 %>
+						Percent Off: <%= discount.get_percent_off %>%;
+					<% end %>
+												
+					<% if discount.get_amount_off != nil && discount.get_amount_off > 0 %>
+						Amount off: <%= number_to_currency(discount.get_amount_off) %>
+					<% end %>
+					&nbsp;
+				</td>
+				<td><% if discount.discount_hours.empty? %>All<% else %>Custom<% end %></td>
+				<td><% if discount.allow_combo %>YES<% else %>no<% end %></td>
+				<td><%= discount.priority %></td>
+				<td>
+					<%= link_to_remote( "Edit", :url=>{
+							:controller => 'discount', :action => 'editDiscount', :id => discount.id
+						},
+						:update => "popupFormDiv",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:complete => "initDiscountOptions(); displayPopup('');") %> | 
+
+					<%= link_to "Hours", :action => "showDiscountHours", :id => discount.id %> |
+					
+					<%= link_to_remote( "Delete", :url=>{
+							:controller => 'discount', :action => 'deleteDiscount', :id => discount.id
+						},
+						:confirm => "Are you sure you want to delete this discount?",
+						:update => "discounts",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();") %>
+					
+				</td>
+			</tr>
+		<% end %>
+	</table>
+
+<% else %>
+	<div class="indent">
+		This restaurant does not have any discounts.
+	</div>
+<% end %>

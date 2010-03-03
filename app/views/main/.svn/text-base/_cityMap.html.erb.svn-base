@@ -1,0 +1,45 @@
+
+<div class="title"><%= @title %></div>
+
+<div class="spacer">
+	This map marks all the cities that have restaurants on Forkfile. Click a marker to identify a city and to find restaurants.
+</div>
+
+<%= hidden_field_tag "city_count", @cities.length %>
+<%= hidden_field_tag "city_names", @cities.collect{|city| "#{city.city}, #{city.state.abbr}" }.join("|#|") %>
+<%= hidden_field_tag "city_num_restaurants", @cities.collect{|city| city.num_restaurants }.join("|#|") %>
+<%= hidden_field_tag "city_lats", @cities.collect{|city| city.lat }.join("|#|") %>
+<%= hidden_field_tag "city_lngs", @cities.collect{|city| city.lng }.join("|#|") %>
+
+
+<div class="cityMap">
+	<div id="map_canvas"></div>
+</div>
+
+<div class="spacer">
+	A few of our major cities include:
+	
+	<% links = [] %>
+	<% @cities.each do |city| %>
+		<% if city.num_restaurants.to_i >= 10 %>
+			<% links.push(link_to "#{city.city}, #{city.state.abbr}", :controller => "search", :action => "lookupCity", :city => "#{city.city}, #{city.state.abbr}") %> 
+		<% end %>
+	<% end %>
+
+	<b>
+		<%= links.collect { |link| link }.join(', ') %>
+	</b>
+</div>
+
+<div class="spacer">
+	<b>Restaurant Owners</b> - we are now adding restaurants anywhere in the US! - <b><%= link_to "Learn More", :controller => "notification", :action => "restaurantOwners" %></b>
+</div>
+
+
+<div class="actions">
+	<% secondaryButton do %>
+		<%=button_to_function "Close", "hidePopup();" %>
+	<% end %>
+</div>
+
+<script type="text/javascript">initializeCityMap();</script>

@@ -1,0 +1,59 @@
+<% if session[:search_terms][:specials_day_id] == nil %>
+	<div class="heading">Current Specials</div>
+	
+	<% if !@restaurants_with_current_specials.empty? %>
+		<% @firstRestaurant = "first" %>
+		
+		
+		<%= will_paginate @restaurants_with_current_specials, :renderer => 'RemoteLinkRenderer', :params => {
+				:controller => 'special', :action => 'refreshSpecials', :search_terms => params[:search_terms] 
+			}, 
+			:remote => { 
+				:update => 'specialsList',
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();"
+			} %>
+	
+		<% @restaurants_with_current_specials.each do |@restaurant| %>
+			<% @specials = @restaurant.current_specials %>
+			<% @discounts = @restaurant.current_discounts %>
+		
+			<%= render :partial => "special", :object => @specials %>
+		<% end %>
+		
+	<% else %>
+		<div class="spacer">
+			No specials are currently available.
+		</div>
+	<% end %>
+<% else %>
+				
+	<div class="heading"><%= $WEEKDAYS[session[:search_terms][:specials_day_id].to_i][:name] %> Specials</div>
+		
+	<%= will_paginate @restaurants_with_any_specials, :renderer => 'RemoteLinkRenderer', :params => {
+			:controller => 'special', :action => 'refreshSpecials', :search_terms => params[:search_terms] 
+		}, 
+		:remote => { 
+			:update => 'specialsList',
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();"
+		} %>
+		
+		
+	<% if !@restaurants_with_any_specials.empty? %>
+		<% @firstRestaurant = "first" %>
+	
+		<% @restaurants_with_any_specials.each do |@restaurant| %>
+			<% @specials = @restaurant.specials_on_day(session[:search_terms][:specials_day_id].to_i) %>
+			<% @discounts = @restaurant.discounts_on_day(session[:search_terms][:specials_day_id].to_i) %>
+		
+			<%= render :partial => "special", :object => @specials %>
+		<% end %>
+		
+	<% else %>
+		<div class="spacer">
+			No specials have been found.
+		</div>
+	<% end %>
+
+<% end %>

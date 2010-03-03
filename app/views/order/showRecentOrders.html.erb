@@ -1,0 +1,77 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<% if !@orders.empty? %>
+		
+			<%= will_paginate @orders %>
+	
+		
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Order Time</th>
+					<th>Restaurant Name</th>
+					<th>Items Ordered</th>
+					<th>Total</th>
+					<th>&nbsp;</th>
+				</tr>
+	
+				<% @orders.each do |order| %>
+				
+					<% restaurant = order.restaurant.version_updated_at(order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+	
+					<% restaurant_active = order.restaurant.active? %>
+	
+					<tr>
+						<td width="110"><%= $TIME_ZONE.utc_to_local(order.order_time).strftime("%m/%d/%y  %I:%M %p") %></td>
+						<td>
+							<% if restaurant_active %>
+								<b><%= link_to restaurant.name, :controller => "restaurant", :action => "showRestaurant", :id => restaurant.restaurant_id %></b>
+							<% else %>
+								<b><%= restaurant.name %></b>
+							<% end %>
+						</td>
+						<td>
+							<% items_formatted = [] %>
+							
+							<% order.order_items.each do |order_item| %>
+								<% quantity = order_item.quantity %>
+								<% item_size = order_item.item_size.version_updated_at(order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+								<% item = Item.find(item_size.item_id) %>
+								<% item_versioned = Item.find(item_size.item_id).version_updated_at(order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+		
+								<% item_formatted = "(" + quantity.to_s + ") " + item_versioned.name %>
+								
+								<% item_size_name = ItemSizeName.find(item_size.item_size_name_id) %>
+								
+								<% if !item_size_name.name.empty? %>
+									<% item_formatted += " (#{item_size_name.name})" %>
+								<% end %>
+								
+								<% items_formatted.push(item_formatted) %>
+							<% end %>
+							
+							<%= items_formatted.join(", ") %>
+						</td>
+						<td width="50"><%= number_to_currency(order.total_price) %></td>
+						<td width="110">
+							<%= link_to "View", :controller => "order", :action => "viewPreviousOrder", :id => order.id %>
+							
+							<% if restaurant_active %>
+								| <%= link_to "Add to Order", :controller => "order", :action => "addPreviousOrder", :id => order.id %>
+							<% end %>
+						</td>
+					</tr>
+				<% end %>
+			</table>
+	
+			<%= will_paginate @orders %>
+	
+		<% else %>
+			<div class="indent">
+				You have not made any orders recently.
+			</div>
+		<% end %>
+	
+	<% end %>
+</div>

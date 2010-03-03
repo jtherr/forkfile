@@ -1,0 +1,39 @@
+<% shadowBox @title do %>
+	
+	<% if @errors %>
+		<div class="red indent"><%= @errors.collect { |error| error }.join("<br />")  %></div>
+	<% end %>
+
+
+	<% form_tag "import", :multipart => true do %>
+	
+		<div class="import">
+			Must be a CSV (comma separated value) file saved from Excel.<br />
+			<br />
+			Must have the following columns, in this order:<br />
+			<br />
+			1. Category Name<br />
+			2. Item Name<br />
+			3. Item Description<br />
+			4. Item Price Label (example: "small" ... okay to leave blank)<br />
+			5. Item Price (format: "$12.34")<br />
+			<br />
+			Repeat 4 and 5 for additional price labels and prices<br />
+			<br />
+			Any categories, item size names, or items that already exist will be ignored.<br /><br />
+		</div>
+	
+		<div class="field">
+			<label>CSV File</label>
+			<%= file_field_tag :csv_file %> 
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Import' %>
+			<% end %>
+		</div>
+	
+	<% end %>
+
+<% end %>

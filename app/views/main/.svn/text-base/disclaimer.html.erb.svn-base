@@ -1,0 +1,101 @@
+<div class="disclaimer">
+
+	<div class="heading"><%= @title %></div>
+	 
+	<div class="section">Use of Site</div>
+	<div class="content">
+		Forkfile.com is a registered entity of Herr Business Solutions, Inc. Upon accessing, registering and using Forkfile.com you are agreeing to all of the terms, conditions, and statements following. The entirety of this site or any portion of this site may not be reproduced, duplicated, copied, sold, resold, or otherwise exploited for any commercial purpose that is not expressly permitted by Herr Business Solutions. Herr Business Solutions and its affiliates reserve the right to refuse service, terminate accounts, and/or cancel orders at its discretion. This includes, but is not limited to, the belief that customer conduct violates applicable law, disrupts our normal business activities or is harmful to the interests of Herr Business Solutions and its affiliates.
+	</div>
+	
+	<div class="section">Disclaimer</div>
+	<div class="content">
+		The Forkfile.com website is provided on an "as is" basis. For this matter, Forkfile.com and Herr Business Solutions, Inc. make no representations or warranties of any kind, express or implied, as to the operation of the site. Furthermore, no representations or warranties are made for the information, content, materials, or products presented therein. Herr Business Solutions also disclaims any liabilities for any damages of any kind arising from the use of the Forkfile.com website or the service it provides. Herr Business Solutions reserves the right to limit purchase and purchase quantity without prior notice to users. In the event of any site error, Herr Business Solutions, Inc. and Forkfile.com can not be held liable for any losses.
+	
+		<br /><br />
+	
+		Forkfile.com is a means for the users of its products to view menus and/or order online from participating restaurants in their respective locations. All menus posted on Forkfile.com are considered public information and may be removed or changed at anytime. At any point in time a restaurant may request to remove their restaurant menu by contacting a Forkfile.com representative. Restaurant owners reserve the right to edit all menu prices and specials at any time by contacting a Forkfile.com representative. For this matter, prices and specials should be checked with the restaurant before completing your order. Forkfile.com does not actually prepare the food you are ordering - we just help you make the decision, so if a restaurant makes a mistake of any kind with the order, please notify the restaurant. Once an order is made, all contact regarding the order itself, its delivery, or pickup should be made with the respective restaurant. Listed bar specials are only for persons of age. To the best of our knowledge, we post the most up to date menu information. All Forkfile.com content is provided solely for informational purposes. We accept no liability in connection with the inclusion or omission of any restaurant or restaurant information from Forkfile.com, and will not be responsible for changes in menus, prices, phone numbers, addresses, ownership, management, and other factual information regarding listed restaurants.
+	
+		<br /><br />
+	
+		Use of this site is entirely at your own risk. All data, information, and content offered by Forkfile.com is provided without warranty of non-infringement or implied warranty of merchantability. Under no circumstances will Forkfile.com or Herr Business Solutions, Inc. be liable for any direct, indirect, consequential, or punitive damages arising from your use of the website. Forkfile.com does not warrant that the functions contained in the materials will be uninterrupted or error-free, that defects will be corrected, or that the website itself or the server that provides it are free of viruses or other potentially harmful components.
+	</div>
+	
+	<div class="section">Limited Permission</div>
+	<div class="content">
+		You may use or download material displayed on this product for noncommercial, personal use only. You must retain all copyright and other proprietary notices displayed on the materials. You may not distribute, modify, transmit, post, or otherwise use the content of this product for public or commercial purposes without the written permission of Herr Business Solutions.
+	
+		<br /><br />
+	
+		Herr Business Solutions reserves the right, without prior notification, to refuse service, terminate accounts, and cancel orders if we believe that your conduct on the site is inappropriate.
+	
+		<br /><br />
+	
+		We reserve the right to make changes to our site and these disclaimers, terms, and conditions at any time.
+	</div>
+	
+	<div class="section">Security</div>
+	<div class="content">
+		Herr Business Solutions will not sell or share your information under any circumstances, with the exception of submitting your order to a restaurant. When you submit an order at Forkfile.com, your order is sent to the restaurant via an encrypted email to a 3rd party fax service (MyFax.com), who then sends the fax securely to the restaurant. Forkfile.com and Herr Business Solutions will not be responsible the security of your information at the restaurant or 3rd party fax service.	</div>
+	
+	<div class="section">Children</div>
+	<div class="content">
+		You may not use the Forkfile.com website if you are under thirteen (13) years of age.
+	</div>
+	
+	<div class="section">Email</div>
+	<div class="content">
+		By registering or placing an order with us, you are consenting to receive e-mails from us regarding your registration or your order. Additionally, we may share your e-mail address with the local restaurant(s) from which you order. We will not, under any circumstances, share your email address with any other businesses or entities.
+	</div>
+	
+	<div class="section">Consuming Raw or Undercooked Food</div>
+	<div class="content">
+		Many of our restaurants may serve raw or undercooked food. Consuming raw or undercooked meats, poultry, seafood, shellfish, or eggs may increase your risk of food borne illness.
+	</div>
+	
+	<div class="section">Risk of Loss</div>
+	<div class="content">
+		All items purchased through Forkfile.com are made pursuant to a delivery contract. Should there be delivery errors; Forkfile.com will offer reasonable assistance in the correction of that error. However, the risk of loss and title for such items pass to you upon our delivery to the carrier. Therefore, you must file any such claims with that delivery carrier.
+	</div>
+		
+	<div class="section">Indemnity</div>
+	<div class="content">
+		You agree to indemnify and hold Herr Business Solutions, its subsidiaries, affiliates, officers, agents, and other partners and employees harmless from any loss, liability, damage, claim, or demand, including reasonable attorneys' fees, made by any third party due to or arising out of your use of the website, including your use of the site to provide a link to another web site or to upload content or other information to the web site.
+	</div>
+	
+	<div class="section">Terms of Purchase</div>
+	<div class="content">
+		The final charges for your order may be different than those stated on the website. Herr Business Solutions does not assume any responsibility or liability for the actions, products, and content of any third parties related to the creation or delivery of your order. You agree to pay all fees and charges incurred in connection with your purchases (including any applicable taxes) at the rates in effect when the charges were incurred. We may require additional verifications or information before accepting any order.
+	</div>
+	
+	<div class="section">Methods of Payment:</div>
+	<div class="content">
+		CASH<br />
+		By selecting "Cash" as a method of payment, you agree to provide the restaurant payment in the form of US Dollars ($) upon receipt of your order.
+		
+		<br /><br />
+		
+		CREDIT CARD<br />
+		By selecting "Credit Card" as a method of payment, you agree that you must be authorized to use the credit card presented as a method of payment. Prior to the purchase of any goods or services on our website, you must provide us with a valid credit card number and associated payment information including all of the following: (i) your name as it appears on the card, (ii) your credit card number, (iii) the credit card type, (iv) the date of expiration and (v) any activation numbers or codes needed to charge your card. This information will be sent to the restaurant to process the payment. Please have the card available when receiving your order from the restaurant. The final charges on your credit card may be different than those stated on the website.
+		
+		<br /><br />
+		
+		CHECK<br />
+		By selecting "Check" as a method of payment you agree to provide the restaurant with a valid check from an official banking institution and those funds are available in the amount of the order. You should contact the restaurant to determine who the check should be payable to. Returned check charges may be applicable for any check not honored per restaurants' individual return check policies. You should contact the restaurant directly regarding their Return Check policy.
+	</div>
+	
+	<div class="section">Order Discrepancy Policy</div>
+	<div class="content">
+		If you are not satisfied with Forkfile.com's service, please contact Forkfile.com immediately via the "Contact Us" link and include the order confirmation number and restaurant name. This applies only to orders not being received by a restaurant or functionality of the website itself. To reiterate, once an order is processed, all order discrepancies should be taken up with the restaurant itself. All sales are final unless order problems/issues are confirmed with our restaurant partners or otherwise determined by Forkfile.com, at its sole discretion, to be actionable. All order problem/issue inquiries must be received within 24 hours of the order date listed on your order confirmation email. No refunds will be issued by Forkfile.com.
+	</div>
+	
+	<div class="section">Limitation of Liability</div>
+	<div class="content">
+		Under no circumstances, including, but not limited to, negligence, shall Herr Business Solutions be liable for any consequential damages that result from the use of, or the inability to use, the materials in this site, even if Forkfile.com or a Forkfile.com authorized representative has been advised of the possibility of such damages. In no event shall Herr Business Solutions have any liability to you for damages, losses and causes of action (whether in contract, tort (including, but not limited to, negligence), or otherwise) for accessing this site.
+	</div>
+	
+	<div class="section">Other</div>
+	<div class="content">
+		All claims, disputes or disagreements which may arise out of the interpretation, performance or in any way relating to your use of this site and any and all other Forkfile.com site(s), shall be submitted exclusively to the jurisdiction of the state or federal courts located in the Arlington County and State of Virginia.
+	</div>
+
+</div>

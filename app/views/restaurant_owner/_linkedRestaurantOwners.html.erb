@@ -1,0 +1,39 @@
+<% if !@restaurant_owners.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		
+		<tr>
+			<th>Owner Name</th>
+			<th>Email</th>
+			<th>Phone</th>
+			<th>Actions</th>
+		</tr>
+		
+		
+		<% @restaurant_owners.each do |restaurant_owner| %>
+			<% owner = restaurant_owner.user %>
+		
+			<tr>
+				<td><%= owner.full_name %>&nbsp;</td>
+				<td><%= owner.email %>&nbsp;</td>
+				<td><%= number_to_phone(owner.phone) %>&nbsp;</td>
+
+				<td>
+					<%=link_to_remote( "Unlink Restaurant Owner", 
+						:update => "linkedRestaurantOwners",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:url=>{
+							:action => "unlinkRestaurantOwner", :id => restaurant_owner.id
+						}) %>
+				</td>
+			</tr>
+		
+		<% end %>
+			
+	</table>
+<% else %>
+	<div class="indent">
+		No Restaurant Owners have been linked.
+	</div>
+<% end %>

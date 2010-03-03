@@ -1,0 +1,25 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<div class="indent">
+			Order confirmations emails will be sent to the owner emails listed here.
+		</div>
+	
+		<div id="ownerEmails">
+			<%= render :partial => "ownerEmails" %>
+		</div>
+
+		<div class="indent">		
+			<%=link_to_remote( "Add Owner Email", 
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');",
+				:url=>{
+					:controller => "restaurant_email", :action => "addOwnerEmail"
+				}) %>
+			
+		</div>
+	
+	<% end %>
+</div>

@@ -1,0 +1,5 @@
+Reason: <%= @notification.notification_reason.name %>
+Email: <%= @notification.email %>
+<% if @notification.order_number %>Order Number: <%= @notification.order_number %><% end %>
+
+<%= @notification.message %>

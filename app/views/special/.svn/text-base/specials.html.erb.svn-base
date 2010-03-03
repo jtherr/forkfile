@@ -1,0 +1,15 @@
+<%= javascript_include_tag 'specials.js' %>
+
+
+<%= render :partial => "loadSpecials" %>
+
+
+<% content_for :sidebar do %>
+	<%= render :partial => "specialsSidebar" %>
+<% end %>
+
+<div id="specialsList">
+	<%= render :partial => "specialsList" %>
+</div>
+	
+			

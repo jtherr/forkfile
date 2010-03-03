@@ -1,0 +1,72 @@
+<% if !@discount_group_parts.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>Categories</th>
+			<th>Items</th>
+			<th>Item Sizes</th>
+			<th>Option Groups</th>
+			<th>&nbsp;</th>
+		</tr>
+
+		<% @discount_group_parts.each do |discount_group_part| %>
+
+			<tr>
+				<td>
+					<%= discount_group_part.category.name %>
+				</td>
+				<td>
+					<% if discount_group_part.item %>
+						<%= discount_group_part.item.name %>
+					<% else %>
+						ALL ITEMS
+					<% end %>
+					&nbsp;
+				</td>
+				<td>
+					<% if discount_group_part.item_size_name %>
+						<%= discount_group_part.item_size_name.name %>
+					<% else %>
+						ALL ITEM SIZES
+					<% end %>
+					&nbsp;
+				</td>
+				<td>
+					<% if discount_group_part.option_group %>
+						<%= discount_group_part.option_group.name %>
+						
+						<% if discount_group_part.option_group_quantity %>
+							(<%= discount_group_part.option_group_quantity %>)
+						<% end %>
+						
+					<% else %>
+						NO OPTION GROUP RESTRICTIONS
+					<% end %>
+					&nbsp;
+				</td>
+				<td>
+					<%=link_to_remote( "Edit", :url=>{
+							:controller => 'discount', :action => 'editDiscountGroupPart', :id => discount_group_part.id
+						},
+						:update => "popupFormDiv",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:complete => "displayPopup('');") %> | 
+					
+					<%=link_to_remote( "Delete", :url=>{
+							:controller => 'discount', :action => 'deleteDiscountGroupPart', :id => discount_group_part.id
+						},
+						:confirm => "Are you sure you want to delete this discount group part?",
+						:update => "discountGroupParts",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();") %>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+
+<% else %>
+	<div class="indent">
+		This restaurant does not have any discount group parts.
+	</div>
+<% end %>

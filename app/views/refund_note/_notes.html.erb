@@ -1,0 +1,23 @@
+
+
+<% if !@notes.empty? %>
+
+	<table cellspacing="0" cellpadding="0">
+
+		<tr>
+			<th>Admin User</th>
+			<th>Date</th>
+			<th>Notes</th>
+		</tr>
+
+		<% @notes.each do |note| %>
+			<tr>
+				<td><%= note.user.full_name %>&nbsp;</td>
+				<td><%= $TIME_ZONE.utc_to_local(note.date.utc).strftime("%m-%d-%Y %H:%M:%S") %>&nbsp;</td>
+				<td><%= note.notes %>&nbsp;</td>
+			</tr>
+		<% end %>
+
+	</table>
+
+<% end %>

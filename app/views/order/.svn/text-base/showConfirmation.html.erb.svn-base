@@ -1,0 +1,15 @@
+
+<% shadowBox @title do %>
+	<div class="spacer">
+		Order Submitted! <br /><br />
+	
+		Your order number is: <b><%= @order.order_number %></b><br /><br />
+	
+		<% if @order.order_type == "take_out" %>
+			Your order will be available for pick-up in an estimated <b><%= @order.restaurant.take_out_time %></b> minutes.
+		<% elsif @order.order_type == "delivery" %>
+			Your order will delivered in an estimated <b><%= @order.restaurant.delivery_time %></b> minutes.
+		<% end %>
+	</div>
+<% end %>
+

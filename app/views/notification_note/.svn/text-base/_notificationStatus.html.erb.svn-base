@@ -1,0 +1,17 @@
+<%= $NOTIFICATION_STATUSES[@notification.status][:name] %>
+
+<% if @notification.status == 0 %>
+	<%=link_to_remote( "Mark as Resolved", :url=>{
+			:action => "resolveNotification"
+		},
+		:update => "notificationStatus",
+		:loading => "displayLoadingMsg();",
+		:loaded => "hideLoadingMsg();") %>
+<% else %>
+	<%=link_to_remote( "Reopen Notification", :url=>{
+			:action => "reopenNotification"
+		},
+		:update => "notificationStatus",
+		:loading => "displayLoadingMsg();",
+		:loaded => "hideLoadingMsg();") %>
+<% end %>

@@ -1,0 +1,31 @@
+<% if !@restaurant_emails.empty? %>
+
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>Email</th>
+			<th>Actions</th>
+		</tr>
+		
+		<% @restaurant_emails.each do |restaurant_email| %>		
+			<tr>
+				<td><%= restaurant_email.email %>&nbsp;</td>
+
+				<td>
+					<%=link_to_remote( "Remove Owner Email", 
+						:update => "ownerEmails",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:url=>{
+							:controller => "restaurant_email", :action => "removeOwnerEmail", :id => restaurant_email.id
+						}) %>
+				</td>
+			</tr>
+		
+		<% end %>
+			
+	</table>
+<% else %>
+	<div class="indent">
+		No owner emails have been added.
+	</div>
+<% end %>

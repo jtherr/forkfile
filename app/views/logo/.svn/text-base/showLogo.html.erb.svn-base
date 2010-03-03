@@ -1,0 +1,13 @@
+<% shadowBox @title do %>
+
+	<%= image_tag(@restaurant.logo_filename, :alt => "", :width => '200') %>
+	
+	<div class="actions">
+		<%=link_to "Change Logo", :controller => 'logo', :action => 'changeLogo' %>
+		
+		<% if @logo %>
+			 | <%=link_to "Delete Logo", { :controller => 'logo', :action => 'delete', :id => @logo.id}, :confirm => "Are you sure you want to delete this logo?" %>
+		<% end %>
+	</div>
+
+<% end %>

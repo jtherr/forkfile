@@ -1,0 +1,248 @@
+
+<%= javascript_include_tag 'admin.js' %>
+
+
+<% content_for :sidebar do %>
+	<%= render :partial => "checklistSidebar" %>
+<% end %>
+
+<% shadowBox @title do %>
+
+	<div class="spacer">
+		<%= link_to "Show All Restaurants", :controller => "search", :action => "searchRestaurantsAdmin", :status => @restaurant.status_id %>
+	</div>
+	
+	<div class="actions">	
+		<%= link_to "Modify", {:action => 'modifyRestaurant', :id => @restaurant.id }%> | 
+		<%= link_to "Remove", {:action => 'removeRestaurant', :id => @restaurant.id }, :confirm => "Are you sure you want to remove this restaurant?" %> | 	
+		<%= link_to "Accepted Credit Cards", { :action => 'changeAcceptedCreditCards' } %> | 
+		<%= link_to "Owner Web Access", { :controller => "restaurant_owner", :action => 'showLinkedRestaurantOwners' } %> | 
+		<%= link_to "Owner Emails", { :controller => "restaurant_email", :action => 'showOwnerEmails' } %>
+	</div>
+	
+		
+	<div class="subtitle">Address</div>
+	
+	<div class="readonly">
+		<label>Address</label>
+		<div class="text"><%= @restaurant.address %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>County</label>
+		<div class="text"><%= @restaurant.county %></div>
+	</div>
+	
+	<div class="subtitle">Contact Information</div>
+	
+	<div class="readonly">
+		<label>Phone 1</label>
+		<div class="text"><%= number_to_phone(@restaurant.phone1, :area_code => true) %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Phone 2</label>
+		<div class="text"><%= number_to_phone(@restaurant.phone2, :area_code => true) %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Send orders via fax</label>
+		<div class="text"><% if @restaurant.fax_enabled %>Yes<% else %>No<% end %></div>
+	</div>
+	
+	<% if !@restaurant.fax.empty? %>
+		<div class="readonly">
+			<label>Fax</label>
+			<div class="text"><%= number_to_phone(@restaurant.fax, :area_code => true) %></div>
+		</div>
+	<% end %>
+	
+	<% if !@restaurant.website.empty? %>
+		<div class="readonly">
+			<label>Website</label>
+			<div class="text"><%= @restaurant.website %></div>
+		</div>
+	<% end %>	
+	
+	<div class="readonly">
+		<label>Description</label>
+		<div class="text"><%= @restaurant.description %></div>
+	</div>	
+	
+	<div class="subtitle">Order Properties</div>
+	
+	<div class="readonly">
+		<label>Cuisines</label>
+		<div class="text"><%= @restaurant.cuisines.collect { |cuisine| cuisine.name }.join(', ') %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Take Out</label> 
+		
+		<div class="text">
+			<% if @restaurant.take_out %>
+				Yes 
+			<% else %>
+				No
+			<% end %>
+		</div>
+	</div>
+	
+	<% if @restaurant.take_out %>
+		<div class="readonly">
+			<label>Average Take Out Time</label>
+			<div class="text"><%= @restaurant.take_out_time %> minutes</div>
+		</div>
+	<% end %>
+	
+	<div class="readonly">
+		<label>Delivery</label> 
+		
+		<div class="text">
+			<% if @restaurant.delivery %>
+				Yes 
+			<% else %>
+				No
+			<% end %>
+		</div>
+	</div>
+	
+	<% if @restaurant.delivery %>
+		<div class="readonly">
+			<label>Delivery Radius</label>
+			<div class="text"><%= @restaurant.delivery_radius %> miles</div>
+		</div>
+		<div class="readonly">
+			<label>Delivery Minimum</label>
+			<div class="text"><%= number_to_currency(@restaurant.delivery_minimum) %></div>
+		</div>
+		<div class="readonly">
+			<label>Delivery Charge</label>
+			<div class="text"><%= number_to_currency(@restaurant.delivery_charge) %></div>
+		</div>
+		<div class="readonly">
+			<label>Delivery Charge Percent</label>
+			<div class="text"><%= @restaurant.delivery_percent %> %</div>
+		</div>
+		<div class="readonly">
+			<label>Average Delivery Time</label>
+			<div class="text"><%= @restaurant.delivery_time %> minutes</div>
+		</div>
+	<% end %>
+	
+	<div class="readonly">
+		<label>Accepted Credit Cards</label>
+		<div class="text"><%= @restaurant.credit_card_types.collect { |credit_card_type| credit_card_type.name }.join(', ') %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Credit Card Minimum</label>
+		<div class="text"><%= number_to_currency(@restaurant.credit_card_minimum) %></div>
+	</div>
+	
+	<div class="subtitle">Account Information</div>
+	
+	<div class="readonly">
+		<label>Account Number</label>
+		<div class="text"><%= @restaurant.account_number %></div>
+	</div>
+		
+	<div class="readonly">
+		<label>Contract Has Been Signed</label> 
+		
+		<div class="text">
+			<% if @restaurant.contract_signed %>
+				Yes 
+			<% else %>
+				No
+			<% end %>
+		</div>
+	</div>
+	
+	<div class="readonly">
+		<label>Owner Web Access</label>
+		<div class="text"><%= @restaurant.owners.collect { |owner| owner.email }.join(", ") %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Owner Emails</label>
+		<div class="text"><%= @restaurant.restaurant_emails.collect { |restaurant_email| restaurant_email.email }.join(", ") %></div>
+	</div>
+	
+	<div class="actions">	
+		<%= link_to "Modify", {:action => 'modifyRestaurant', :id => @restaurant.id }%> | 
+		<%= link_to "Remove", {:action => 'removeRestaurant', :id => @restaurant.id }, :confirm => "Are you sure you want to remove this restaurant?" %> | 	
+		<%= link_to "Accepted Credit Cards", { :action => 'changeAcceptedCreditCards' } %> | 
+		<%= link_to "Owner Web Access", { :controller => "restaurant_owner", :action => 'showLinkedRestaurantOwners' } %> | 
+		<%= link_to "Owner Emails", { :controller => "restaurant_email", :action => 'showOwnerEmails' } %>
+	</div>
+	
+	
+	<div class="subtitle">Status and Activation</div>
+		
+	<div class="readonly">
+		<label>Status</label>
+		<div class="text">
+			<%= $DB_STATUSES[@restaurant.status_id][:name] %>
+		</div>
+	</div>
+	
+	<div class="readonly">
+		<label>Activation Allowed</label>
+		<div class="text">
+			<% if @activation_allowed %>
+				<span class="green"><b>Yes</b></span>
+			<% else %>
+				<span class="red"><b>No</b></span>
+			<% end %>
+		</div>
+	</div>
+	
+	<div class="readonly">
+		<label>Admin Notes</label>
+		<div class="text">
+			<div id="adminNotes">
+				<%= render :partial => "adminNotes" %>
+			</div>
+		</div>
+	</div>
+	
+	<div class="actions medium">
+		<%=link_to_remote( "Edit Admin Notes", :url=>{
+				:action => "editAdminNotes"
+			},
+			:update => "popupFormDiv",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:complete => "displayPopup('');") %>		
+	</div>
+	
+	
+	<div class="actions medium">
+	
+		<% if super_admin? %>
+			<% if @restaurant.status_id != $ACTIVE && @activation_allowed %>				
+				<% form_tag '/restaurant/activate' do %>
+					<% primaryButton do %>
+						<%= submit_tag "Activate", :confirm => "Are you sure you want to activate this restaurant?" %>
+					<% end %>
+				<% end %>
+			<% elsif @restaurant.status_id == $ACTIVE %>
+				<% form_tag '/restaurant/deactivate' do %>
+					<% primaryButton do %>
+						<%= submit_tag "Deactivate", :confirm => "Are you sure you want to deactivate this restaurant?" %>
+					<% end %>
+				<% end %>
+			<% end %>
+		<% end %>
+	
+		<% if @activation_allowed %>
+			<% form_tag '/order/sendTestFax' do %>
+				<% primaryButton do %>
+					<%= submit_tag "Send Test Fax", :confirm => "This will send a test fax to the restaurant. Are you sure?" %>
+				<% end %>
+			<% end %>
+		<% end %>
+	</div>
+
+<% end %>

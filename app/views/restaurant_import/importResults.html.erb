@@ -1,0 +1,61 @@
+<div class="tableBox">
+
+	<% shadowBox nil do %>
+			
+		<div class="heading">Added Categories</div>
+
+		<div class="indent">
+			<% if !@added_categories.empty? %>			
+				<%= @added_categories.collect { |name| name }.join("<br />") %>
+			<% else %>
+				No new categories
+			<% end %>
+		</div>
+
+		<br /><br />
+		
+		<div class="heading">Added Item Size Names</div>
+	
+		<div class="indent">
+			<% if !@added_item_size_names.empty? %>			
+				<%= @added_item_size_names.collect { |name| name }.join("<br />") %>
+			<% else %>
+				No new item size names
+			<% end %>
+		</div>
+			
+		<br /><br />
+
+		<div class="heading">Added Items</div>
+		
+		<div class="indent">Added <%= @added_items.length %> items.</div>
+
+		<% if !@added_items.empty? %>
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Category</th>
+					<th>Item Name</th>
+					<th>Description</th>
+					<th>Prices</th>
+				</tr>
+			
+			
+				<% @added_items.each do |item| %>
+					<tr>
+						<td><%= item[:category] %></td>
+						<td><%= item[:name] %></td>
+						<td><%= item[:description] %></td>
+						<td>
+							<%= item[:prices].collect { |price| "<b>#{price[:label]}</b> #{number_to_currency(price[:value])}" }.join(", ") %>
+						</td>
+					</tr>
+				<% end %>
+				
+			</table>
+		<% else %>
+			<div class="indent">No new items</div>
+		<% end %>
+		
+	<% end %>
+
+</div>

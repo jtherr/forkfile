@@ -1,0 +1,147 @@
+<div class="heading"><%= @title %></div>
+
+<div class="signup">
+	
+	<div class="left">
+		
+		<div class="section">Accept Orders Online</div>
+		<div class="text">
+			Forkfile.com allows your restaurant to create an online menu and accept food orders from local customers. 
+			This enables your customers to easily submit food orders to you without ever picking up the phone. 
+		</div>
+
+		<div class="section">All Restaurants in US Are Eligible</div>
+		<div class="text">
+			Once you sign up your restaurant with Forkfile, we will add your menu, logo, and setup your profile.
+		</div>
+
+		<div class="section">How Does It Work?</div>
+		<div class="text">
+			Forkfile makes online ordering easy. When a customer submits an order through Forkfile, we will instantly fax that order to the fax number you provide. At that point, you make the food and handle the payment.
+		</div>	
+	
+		<div class="cycle"></div>	
+	
+
+		<div class="section">Sign-up Today!</div>
+		<div class="text">
+			Forkfile.com will allow users to view local restaurant menus, compare specials, and place free orders for takeout and delivery. This service includes your restaurant profile:  Dynamic online menu, logo, hours, phone number, directions, and more.
+			<br /><br />
+			Often times, customers lose restaurant phone numbers or misplace their paper menus. Forkfile.com allows customers to find the restaurant menus they want by providing online access to these resources. 
+		</div>
+	
+		<div class="section">Restaurant Benefits</div>
+		<div class="text">
+			<ul>
+				<li>Reach a New Audience</li>
+				<li>Interactive Online Searchable Menu</li>
+				<li>Compete with Restaurants who are Already Online</li>
+				<li>Save Time Processing Food Orders</li>				
+				<li>Increased Order Accuracy</li>				
+				<li>Dynamically Updated Prices and Menu Items</li>				
+				<li>100% Free for Users</li>				
+			</ul>
+		</div>
+	
+	</div>
+	
+	<div class="right">
+		
+		<% shadowBox "Contact Us" do %>
+			<div class="spacer">
+				To sign up your restaurant or just learn more about the Forkfile service, please contact us. We are interested 
+				in hearing from you! Please fill out the form below and a Forkfile representative will contact you shortly.
+			</div>
+		
+			<%= error_messages_for :notification, :header_message => nil, :message => nil %>
+			<% form_for :notification, :url => { :controller => "notification", :action => 'createRestaurantNotification' }, :html => { :class => "captcha" } do |f| -%>
+			
+				<div class="field">
+					<label for="name">Name</label>
+					<%= f.text_field :name %>
+					<span class="red">*</span>
+				</div>
+	
+				<div class="field">
+					<label for="phone">Phone</label>
+					<%= f.text_field :phone %>
+					<span class="red">*</span>
+				</div>
+	
+				<div class="field">
+					<label for="email">Email</label>
+					<%= f.text_field :email %>
+					<span class="red">*</span>
+				</div>
+	
+				<div class="field">
+					<label for="restaurant_name">Restaurant Name</label>
+					<%= f.text_field :restaurant_name %>
+					<span class="red">*</span>
+				</div>
+						
+				<div class="field">
+					<label for="message">Message</label>
+					<%= f.text_area :message, :cols => 35, :rows => 3 %>
+				</div>
+
+				<div class="actions short">						
+					<% primaryButton do %>
+						<%= submit_tag 'Submit' %>
+					<% end %>
+				</div>
+			<% end -%>
+		
+		<% end %>
+
+	
+		<div class="section">Our Mission</div>
+		<div class="text">
+			Our mission is to provide restaurants and customers a new way to find each other through an innovative online service.  Forkfile.com offers restaurants new marketing and ordering capabilities enabling them to be more competitive with industry trends.
+		</div>
+		
+		<div class="section">Costs</div>
+		<div class="text">
+			Forkfile strives to provide lower costs than its competitors. Our costs are as follows:
+			<br/><br />
+			
+			<table border="0" cellpadding="5" cellspacing="0">
+				<tr>
+					<td><b>Order Rate</b></td>
+					<td>5%</td>
+					<td>
+						For every order submitted through Forkfile, we charge this percent of the sub-total.
+						<br/><br/>
+						ie. For a $10 order, we'll charge you $0.50.
+					</td>
+				</tr>
+				<tr>
+					<td><b>Monthly Minimum</b></td>
+					<td>$10</td>
+					<td>
+						You will be charged the monthly minimum if your total monthly order charges are less than $10.
+					</td>
+				</tr>
+				<tr>
+					<td><b>Activation Fee</b></td>
+					<td>$25</td>
+					<td>
+						This one-time fee covers the time required to add your menu to Forkfile.
+					</td>
+				</tr>
+			</table>
+			
+			<br />
+			<b>One Month Free!</b> Your first month with Forkfile is on us!
+		</div>	
+		
+	
+		<div class="section">More Questions?</div>
+		<div class="text">
+			See our <%= link_to "Restaurant Owner FAQ", :controller => "main", :action => "restaurantFaq" %>.
+		</div>
+		
+	</div>
+	
+	
+</div>

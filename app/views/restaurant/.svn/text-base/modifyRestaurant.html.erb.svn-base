@@ -1,0 +1,169 @@
+<% shadowBox @title do %>
+
+	<%= javascript_include_tag 'restaurant.js' %>
+
+
+	<%= error_messages_for :restaurant, :header_message => nil, :message => nil %>
+	<% form_for :restaurant, :url => { :action => 'update' } do |f| -%>
+		
+		<div class="subtitle">Contact Information</div>
+		
+		<div class="field">
+			<label for="name">Restaurant Name</label>
+			<%= f.text_field :name %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="phone1">Phone 1</label>
+			<%= f.text_field :phone1 %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="phone2">Phone 2</label>
+			<%= f.text_field :phone2 %>
+		</div>
+		
+		<div class="field">
+			<label for="fax_enabled">Send orders via fax</label>
+			<%= f.check_box :fax_enabled %>
+		</div>
+		
+		<div class="field">
+			<label for="fax">Fax</label>
+			<%= f.text_field :fax %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="website">Website</label>
+			<%= f.text_field :website %>
+		</div>
+	
+		<div class="field">
+			<label for="email">Email</label>
+			<%= f.text_field :email %>
+		</div>
+	
+		<div class="field">
+			<label for="description">Description</label>
+			<%= f.text_area :description, :cols => 30, :rows => 3 %>
+		</div>
+		
+		<div class="subtitle">Address</div>
+	
+		<div class="field">
+			<label for="street1">Street 1</label>
+			<%= f.text_field :street1 %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="street2">Street 2</label>
+			<%= f.text_field :street2 %>
+		</div>
+		
+		<div class="field">
+			<label for="city">City</label>
+			<%= f.text_field :city %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="state">State</label>
+			<%= collection_select(:restaurant,:state_id,@states,:id,:name, { :prompt => true }) %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="zip">Zip</label>
+			<%= f.text_field :zip %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="county">County</label>
+			<%= f.text_field :county %>
+			<span class="red bold">* County must be provided if restaurant resides in a county *</span>
+		</div>		
+		
+		<div class="subtitle">Order Properties</div>
+								
+		<div class="field">
+			<label for="take_out">Take Out</label>
+			<%= f.check_box :take_out, :onclick => "toggleTakeOut();" %>
+		</div>
+		
+		<div id="takeOutDiv" style="display: none;">
+			<div class="field">
+				<label for="take_out_time">Average Take Out Time</label>
+				<%= f.text_field :take_out_time %> minutes
+				<span class="red">*</span>
+			</div>
+		</div>
+		
+		<div class="field">
+			<label for="delivery">Delivery</label>
+			<%= f.check_box :delivery, :onclick => "toggleDelivery();" %>
+		</div>
+		
+		<div id="deliveryDiv" style="display: none;">
+			<div class="field">
+				<label for="delivery_radius">Delivery Radius</label>
+				<%= f.text_field :delivery_radius %> miles
+				<span class="red">*</span>
+			</div>
+		
+			<div class="field">
+				<label for="delivery_minimum">Delivery Minimum</label>
+				$ <%= f.text_field :delivery_minimum %>
+				<span class="red">*</span>
+			</div>
+		
+			<div class="field">
+				<label for="delivery_charge">Delivery Charge</label>
+				$ <%= f.text_field :delivery_charge %>
+				<span class="red">*</span>
+			</div>
+			
+			<div class="field">
+				<label for="delivery_charge">Delivery Charge Percent</label>
+				<%= f.text_field :delivery_percent %> %
+				<span class="red">*</span>
+			</div>
+			
+			<div class="field">
+				<label for="delivery_time">Average Delivery Time</label>
+				<%= f.text_field :delivery_time %> minutes
+				<span class="red">*</span>
+			</div>
+		</div>
+		
+		<div class="field">
+			<label for="dine_in">Dine In</label>
+			<%= f.check_box :dine_in %>
+		</div>
+		
+		<div class="field">
+			<label for="credit_card_minimum">Credit Card Minimum</label>
+			$ <%= f.text_field :credit_card_minimum %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="subtitle">Account Information</div>
+			
+		<div class="field">
+			<label for="contract_signed">Has this restaurant signed the contract?</label>
+			<%= f.check_box :contract_signed %>
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Update Restaurant' %>
+			<% end %>
+		</div>
+	
+	<% end -%>
+
+<% end %>

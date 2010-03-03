@@ -1,0 +1,137 @@
+<div class="title"><%= @title %></div>
+
+<% if admin? %>
+	<div class="spacer">
+		<%= link_to "Admin Item View", :controller => "item", :action => "showItem", :id => @item.id %>
+	</div>
+<% end %>	
+
+<% if !@item.description.empty? %>
+	<div class="spacer underline">
+		<%= @item.description %>
+	</div>
+<% end %>
+
+<% if !@restaurant.isOpen %>
+	<div class="spacer red bold underline">
+		Sorry, this restaurant is currently closed.
+	</div>
+<% elsif !@category_available %>
+	<div class="spacer red bold underline">
+		Sorry, <%= @item.category.name %> is not currently available.
+	</div>
+<% end %>
+
+<% if @item_size_error %>
+	<div class="spacer red">Item Size must be selected</div>
+<% end %>
+
+<%= form_remote_tag( :url => { :action => @form_action },
+    :update => { :success => "cartDiv", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup(); showStatusMsg('#{escape_javascript(@item.name)} added to order!');" )%>
+
+
+	
+	<% if !@item_sizes.empty? %>
+		<div class="field">
+			<label>Select Item Size</label>
+			
+			<div class="text">
+		
+				<% @item_sizes.each do |item_size| %>
+					<% if item_size.available? %>
+				
+						<% item_size_available = item_size.item_size_name.available? %>
+						<% special_available = item_size.special_available? %>
+					
+						<% itemSizeClass = "" %>
+						<% if !item_size_available %>
+							<% itemSizeClass = "italic gray" %>
+						<% end %>
+						
+						<% special = "" %>
+						
+						<% if special_available %>								
+							<% specialClass = "red" %>
+						<% end %>
+					
+					
+						<%= radio_button :order_item, 'size', item_size.id, { :id => "order_item_size_#{item_size.id}", :name => "order_item[size]", :checked => ((@item_size && item_size.id == @item_size.id) && item_size_available && @category_available),
+							:disabled => (!item_size_available || !@category_available ),
+							:onclick => remote_function ( :url=> {
+									:controller => 'order', :action => "updateItemSize", :id => item_size.id
+								},
+								:update => "options",
+								:loading => "displayLoadingMsg();",
+								:loaded => "hideLoadingMsg();",
+								:success => "displayOptions();",
+								:complete => "updateSizes();" ) } %>
+								
+						
+						<span class="<%= itemSizeClass %> <%= specialClass %>">
+						
+							<b><%= item_size.item_size_name.name %></b>
+							<%= number_to_currency(item_size.current_price) %>
+							<% if special_available %>
+								(SPECIAL)
+							<% end %>
+							
+							<% if !item_size_available || !@category_available %>
+								(Currently Unavailable)
+							<% end %>
+						
+						</span>
+						
+						<br />
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+
+	<% if @item_sizes_available > 0 %>
+		<div class="quantity">
+			<span class="field">
+				<label>Select Item Quantity</label>
+				<%= select :order_item, 'quantity', 1..10, :selected => @quantity.to_i %>
+			</span>
+		</div>
+		
+		<div id="options">
+			<% if @item_size != nil %>
+				<%= render :partial => "options" %>
+			<% end %>
+		</div>
+
+		<div class="spacer">
+			<% if @special_instructions == nil || @special_instructions.empty? %>
+				<%= link_to_function "Add Special Instructions", "addSpecialInstructions()", :id => "addSpecialInstructionsLink" %>
+				<% specialInstructionsDisplay = "display: none;" %>
+			<% end %>
+			
+			<div id="specialInstructionsDiv" style="<%= specialInstructionsDisplay %>" class="field">
+				<label>Special Instructions</label>
+				<%= text_area :order_item, 'special_instructions', :cols => 40, :rows => 3, :value => @special_instructions %>
+			</div>
+		</div>
+	<% end %>
+	
+	<div class="actions">
+		<% if @item_sizes_available > 0 %>
+			<% primaryButton do %>
+				<% if session[:selected_order_item] != nil %>
+					<%= submit_tag "Update Order", :onclick => "if (!checkRestaurant()) { return false; };" %>
+				<% else %>
+					<%= submit_tag "Add to Order", :onclick => "if (!checkRestaurant()) { return false; };" %>
+				<% end %>
+			<% end %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+
+</form>

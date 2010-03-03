@@ -1,0 +1,58 @@
+
+<%= javascript_include_tag 'restaurantOrder.js' %>
+
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+
+		<% form_tag '/restaurant_order/showMonthlyOrders', :method => :get do -%>
+	
+			<div class="field">
+				<div class="searchLeft">
+					Month
+					<%= select :restaurant_orders, :month, @months, :selected => @month.to_i %>
+					Year
+					<%= select :restaurant_orders, :year, @years, :selected => @year.to_i %>
+				</div>
+		
+				<% primaryButtonSmall do %>
+					<%= submit_tag 'Search' %>
+				<% end %>
+			</div>
+			
+		<% end -%>
+
+
+		<% if !@orders.empty? %>
+			<%= will_paginate @orders %>
+		
+			<% form_tag '/restaurant_order/selectRestaurantOrders', :method => :get, :id => "showRestaurantOrdersForm" do -%>
+		
+				<%= hidden_field_tag "id" %>
+		
+		
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<th>Restaurant</th>
+						<th>Number of Orders</th>
+						<th>Combined Sub Total</th>
+					</tr>
+
+					<% @orders.each do |order| %>
+						<tr class="clickable" onclick="showRestaurantOrders(<%= order.restaurant_id %>)">
+							<td><%= order.restaurant.name %></td>
+							<td><%= order.num_orders %></td>
+							<td><%= number_to_currency(order.combined_total) %></td>
+						</tr>
+					<% end %>
+				</table>
+			<% end -%>
+			
+			<%= will_paginate @orders %>
+		<% else %>
+			<div class="indent">
+				No orders found during this month for any restaurant.
+			</div>
+		<% end %>
+	<% end %>
+</div>

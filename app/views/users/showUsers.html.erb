@@ -1,0 +1,58 @@
+
+<%= javascript_include_tag 'user.js' %>
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<% form_for :user, :url => { :controller => 'users', :action => 'searchUsers' }, :html => { :method => :get } do |f| -%>
+	
+			<div class="field">
+				<div class="searchLeft">
+					Search Users
+					<%= text_field_tag "user_search", @user_search %>
+				</div>
+				
+				<% primaryButtonSmall do %>
+					<%= submit_tag 'Search' %>
+				<% end %>
+			</div>
+			
+		<% end -%>
+	
+	
+		<%= will_paginate @users, :params => { :user_search => @user_search } %>
+	
+		<% if !@users.empty? %>
+	
+			<% form_tag '/users/showProfileAdmin', :method => :get, :id => "showProfileForm" do -%>
+		
+				<%= hidden_field_tag "userId" %>
+			
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<th>Email</th>
+						<th>Full Name</th>
+						<th>Address</th>
+						<th>Privilege</th>
+					</tr>
+				
+					<% @users.each do |user| %>
+						<tr class="clickable" onclick="showProfile(<%= user.id %>)">
+							<td><%= user.email %>&nbsp;</td>
+							<td><%= user.full_name %>&nbsp;</td>
+							<td><%= user.address %>&nbsp;</td>
+							<td><%= $USER_PRIVILEGES[user.privilege_id][:name] %>&nbsp;</td>
+						</tr>
+					<% end %>
+			
+				</table>
+			
+			<% end -%>
+		<% else %>
+			No users found.
+		<% end %>
+		
+		<%= will_paginate @users, :params => { :user_search => @user_search } %>
+	
+	<% end %>
+</div>

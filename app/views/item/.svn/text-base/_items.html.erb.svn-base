@@ -1,0 +1,155 @@
+
+<%= hidden_field_tag 'restaurant_id', current_restaurant.id %>
+<% if session[:order] %>
+	<%= hidden_field_tag 'order_restaurant_id', session[:order][:restaurant_id] %>
+<% end %>
+
+
+<% if @singleColumn %>
+	<div class="menu singleColumn">
+<% else %>
+	<div class="menu column left">
+<% end %>
+
+
+	<% i = 0 %>
+	<% firstColumn = true %>
+	
+	<% @display_items.each do |category_id, category_info| %>
+		<% category_available = category_info[:available] %>
+		<% items = category_info[:items] %>
+			
+		<% if !items.empty? %>
+
+			<% i += 2 %>
+
+			<div class="categoryBox">
+				<div class="title">
+					<%= category_info[:name] %>
+					
+					<% if !category_available && @restaurant.isOpen %>
+						<span class="unavailable">
+							(currently unavailable)
+						</span>
+					<% end %>
+					
+					<% if category_info[:description] %>
+						<div class="description">
+							<%= category_info[:description] %>
+							<% i += 1 %>
+						</div>
+					<% end %>
+				</div>
+				
+
+				<% items.each do |item| %>
+					
+					<% featuredClass = "" %>
+					<% if item.featured %>
+						<% featuredClass = "featured" %>
+					<% end %>
+				
+					<div class="item clickable <%= featuredClass %>" onclick="
+						<%= remote_function :url=> {
+								:controller => 'order', :action => 'selectOptions', :id => item.id
+							},
+							:html =>  { :id => "selectOptionsForm" },
+							:update => "popupFormDiv",
+							:loading => "displayLoadingMsg();",
+							:loaded => "hideLoadingMsg();",
+							:complete => "displayPopup('');" %>
+					">
+										
+						<div class="line">
+							<div class="name">
+								
+								<% if item.spicy %>
+									<%= image_tag "/images/spicy.gif" %>									
+								<% end %>
+								<% if item.vegetarian %>
+									<%= image_tag "/images/vegetarian.gif" %>									
+								<% end %>
+								
+								<%= item.name %>
+								
+							</div>
+						
+							<div class="sizes">
+								<% item.item_sizes.each do |item_size| %>
+									
+									<% if item_size.available? %>
+										
+										<% item_size_name = item_size.item_size_name %>
+									
+										<% itemSizeClass = "" %>
+										<% if !category_available || !item_size_name.available? %>
+											<% itemSizeClass = "italic gray" %>
+										<% end %>
+										
+										<% current_price = item_size.current_price %>
+										<% special = "" %>
+										
+										<% if item_size.special_available? %>								
+											<% specialClass = "red" %>
+										<% end %>
+												
+										<span class="<%= itemSizeClass %> <%= specialClass %>">
+											<span class="name"><%= item_size_name.name %></span>
+											<%= number_to_currency(current_price) %>
+										</span>
+									
+									<% end %>
+								<% end %>
+							</div>
+						</div>
+						
+						<% if !item.description.empty? %>
+							<% i += 1 %>
+						
+							<div class="line">
+								<div class="description">
+									<% if @singleColumn %>
+										<%= abbreviate(item.description, 120) %>
+									<% else %>
+										<%= abbreviate(item.description, 57) %>									
+									<% end %>
+								</div>
+							</div>
+						<% end %>
+					</div>
+					
+					<% i += 1 %>
+				
+				<% end %>
+			</div>
+	
+		<% end %>
+		
+		<% if !@singleColumn %>
+			<% if firstColumn && (i >= @height_count.to_f / 2) %>
+				</div><div class="menu column right">
+				<% firstColumn = false %>
+			<% end %>
+		<% end %>
+
+	<% end %>
+	
+	<% if i == 0 %>
+			<div class="categoryBox">
+				<div class="indent">
+					No items have been found. Please try another search.<br /><br />
+					
+					<%=link_to_remote( "Reset Your Search",
+						:url=>{
+							:controller => 'item', :action => 'showAllCategories'
+						},
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:update => "itemList",
+						:success => 'updateSelectedCategory("all"); jQuery("#item_search").val("");' ) %>					
+				</div>
+			</div>
+	<% end %>
+
+</div>
+

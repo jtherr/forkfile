@@ -1,0 +1,61 @@
+<div class="smallGreenBoxLeft">
+	<% shadowBox "Checklist" do %>
+	
+		<% linkClass = "" %>
+		<% if !@restaurant.categories.empty? %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">
+			<%= link_to "Add Categories", { :controller => "category", :action => "addCategory" }, :class => linkClass %><br />
+		</div>
+		
+		<% linkClass = "" %>
+		<% if !@restaurant.restaurant_cuisines.empty? %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">
+			<%= link_to "Add Cuisines", { :controller => "restaurant", :action => "changeCuisines" }, :class => linkClass %><br />
+		</div>
+		
+		<% linkClass = "" %>
+		<% if !@restaurant.restaurant_hours.empty? %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">
+			<%= link_to "Add Hours", { :controller => "restaurant_hour", :action => "manageHours" }, :class => linkClass %><br />
+		</div>
+		
+		<% linkClass = "" %>
+		<% if !@restaurant.items.empty? %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">
+			<%= link_to "Add Items", { :controller => "item", :action => "showAllItems" }, :class => linkClass %><br />
+		</div>
+		
+		<% linkClass = "" %>
+		<% if !@restaurant.credit_card_types.empty? %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">					
+			<%= link_to "Add Credit Card Types", { :action => "changeAcceptedCreditCards" }, :class => linkClass %><br />
+		</div>
+
+		<% linkClass = "" %>
+		<% if @restaurant.contract_signed %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">					
+			<%= link_to "Contract Signed", { :action => "modifyRestaurant", :id => @restaurant.id }, :class => linkClass %><br />
+		</div>
+
+		<% linkClass = "" %>
+		<% if @restaurant.fax_enabled || !@restaurant.restaurant_emails.empty? %>
+			<% linkClass = "strikethrough" %>
+		<% end %>
+		<div class="indent">					
+			<%= link_to "Select Fax/Email Notifications", { :action => "modifyRestaurant", :id => @restaurant.id }, :class => linkClass %><br />
+		</div>
+
+	<% end %>
+</div>

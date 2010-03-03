@@ -1,0 +1,121 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<div class="full_order">
+			
+			<% sub_total = 0 %>
+			<% restaurant = @order.restaurant.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+			
+	
+			<div class="line">
+				<div class="name">
+					<% if @order.restaurant.active? %>
+						<%= link_to restaurant.name, :controller => "restaurant", :action => "showRestaurant", :id => restaurant.restaurant_id %>
+					<% else %>
+						<%= restaurant.name %>
+					<% end %>
+				</div>
+				
+				<div class="date">
+					<b>Order Time:</b> <%= $TIME_ZONE.utc_to_local(@order.order_time).strftime("%m/%d/%y  %I:%M %p") %>
+				</div>
+			</div>
+			
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Quantity</th>
+					<th>Item</th>
+					<th>Options</th>
+					<th class="price">&nbsp;</th>
+				</tr>
+					
+				<% @order.order_items.each do |order_item| %>
+					<tr>
+	
+						<% quantity = order_item.quantity %>
+						<% item_size = order_item.item_size.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+						<% item = Item.find(item_size.item_id) %>
+						<% item_versioned = Item.find(item_size.item_id).version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+						<% item_size_name = ItemSizeName.find(item_size.item_size_name_id) %>
+	
+	
+						<td><%= quantity %></td>
+							
+						<td>
+							<b><%= item_versioned.name %></b>
+								
+							<% if !item_size_name.name.empty? %>
+								(<%= item_size_name.name %>)
+							<% end %>
+						</td>
+	
+						<td>
+			
+							<% option_groups = item.option_groups %>
+							<% if !option_groups.empty? %>
+										
+								<% option_groups_formatted = [] %>
+								
+								<% option_groups.each do |option_group| %>
+									<% option_group_versioned = option_group.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S"))%>
+								
+									<% if option_group_versioned != nil %>
+	
+										<% options_formatted = [] %>
+												
+										<% order_item.orderOptionsInOptionGroup(option_group_versioned.option_group_id).each do |order_item_option| %>
+											<% option = order_item_option.option %>
+											<% option_versioned = order_item_option.option.version_updated_at(@order.order_time.strftime("%Y-%m-%d %H:%M:%S")) %>
+											
+											<% option_formatted = "" %>
+											
+											<% if order_item_option.quantity > 1 %>
+												<% option_formatted += "(#{order_item_option.quantity}) " %>
+											<% end %>
+												
+											<% option_formatted += option_versioned.name %>
+											
+											<% options_formatted.push(option_formatted) %>
+										<% end %>
+	
+	
+										<% option_groups_formatted.push(options_formatted.join(", ")) %>
+									<% end %>
+								<% end %>
+								
+								<%= option_groups_formatted.join("; ") %>
+							<% end %>
+							&nbsp;
+						</td>
+						
+						<td class="price">&nbsp;</td>
+					</tr>
+				<% end %>
+			</table>
+					
+			<% if @order.discount != nil && @order.discount > 0 %>
+				<div class="subtotal"><b>Discount:</b> - <%= number_to_currency(@order.discount) %></div>
+			<% end %>
+			
+			<div class="subtotal"><b>Sub Total:</b> <%= number_to_currency(@order.sub_total) %></div>
+			
+			<% if @order.order_type == "delivery" %>
+				<div class="delivery"><b>Delivery Charge:</b> <%= number_to_currency(@order.delivery_charge) %></div>	
+			<% end %>
+		
+			<div class="tax"><b>Tax: </b> <%= number_to_currency(@order.tax) %></div>
+		
+			<div class="total"><b>Total: </b> <%= number_to_currency(@order.total_price) %></div>
+			
+			<% if @order.restaurant.active? %>
+				<div class="actions">					
+					<% form_tag "/order/addPreviousOrder/#{@order.id}", :method => :get do %>
+						<% primaryButton do %>
+							<%= submit_tag "Add to Current Order" %>
+						<% end %>
+					<% end %>			
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+</div>

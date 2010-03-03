@@ -1,0 +1,40 @@
+
+
+<div class="title"><%= @title %></div>
+
+<%= error_messages_for :refund_note, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'createNotes'},
+    :update => { :success => "notesList", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" + remote_function( :update => "refundInfo",
+  		:url => { :action => "renderRefundInfo" },
+		:loading => "displayLoadingMsg();",
+		:loaded => "hideLoadingMsg();") )%>
+
+	<div class="field">
+		<label for="email">Notes</label>
+		<%= text_area :refund_note, :notes, :cols => 30, :rows => 3 %>
+	</div>
+	
+	<div class="field">
+		<label for="status">Refund Status</label>
+		<%= select(:refund, :status, $REFUND_STATUSES.collect { |key,status| [status[:name], key] }) %>
+	</div>
+
+	<div id="grant_amount_div" class="field" style="display: none;">
+		<label for="grant_amount">Grant Amount</label>
+		<%= text_field :refund, :grant_amount %>
+	</div>
+	
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag "Add Notes" %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

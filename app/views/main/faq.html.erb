@@ -1,0 +1,87 @@
+<div class="heading"><%= @title %></div>
+
+<div class="question">
+	I am a restaurant owner interested in adding my menu to Forkfile. Where do I start?
+</div>
+<div class="answer">
+	Please visit our <%= link_to "Restaurant Owners", :controller => "notification", :action => "restaurantOwners" %> page for more information and to contact us.
+</div>
+
+
+<div class="question">
+	How much does using forkfile cost?
+</div>
+<div class="answer">
+	Not a penny! Ordering food from restaurants via forkfile.com comes at no additional cost whatsoever. Forkfile is quick, convenient, and allows users access to menus at no fee over ordered items.
+</div>
+
+<div class="question">
+	How does forkfile.com work?
+</div>
+<div class="answer">
+	After choosing a restaurant you would like to order from, select your choices from their menu, and enter your billing information. Once this is completed, a secure order will instantly be sent to the desired restaurant to be processed. Just as if you were ordering at the restaurant itself, your selection from the menu will be prepared for pickup or delivery depending on your selection. Forkfile brings you the menus so you can forget about keeping a drawer-full of miscellaneous or outdated ones.
+</div>
+
+<div class="question">
+	How do I find restaurants in my area?
+</div>
+<div class="answer">
+	Simply enter your zip code or address in the search bar on the <%= link_to "home page", :controller => "main", :action => "index" %>. In no time at all, a list of available restaurants will become available for you to order from.
+</div>
+
+<div class="question">
+	What payments does forkfile accept?
+</div>
+<div class="answer">
+	All payments are processed at the restaurants of your choice. Therefore, if the restaurant takes Visa, Mastercard or cash - those are the acceptable forms of payment for your order. Forkfile will make it clear what payments can be used when you are ordering. If you are ordering delivery and plan to pay cash upon receipt of your order, that is fine.
+</div>
+
+<div class="question">
+	Can my information be trusted with forkfile?
+</div>
+<div class="answer">
+	When you submit a food order at forkfile.com, we send your order to the restaurant through a secure fax. Your information will not be sold or shared under any circumstances.
+</div>
+
+<div class="question">
+	Do I have to register/create an account to use forkfile?
+</div>
+<div class="answer">
+	Yes, you must register to submit an order. This takes very little time and is to your benefit for future purchases. Again, you can rest assured that your all of your personal information is wholly secure.  You do not need to register to find restaurants and view menus.
+</div>
+
+<div class="question">
+	What if I have discrepancies with my order?
+</div>
+<div class="answer">
+	If, for whatever reason, you would like to change your order, cancel it, or need to alter your payment method, please contact the restaurant immediately. They will already have received the order and will be best to cater to your needs. If you necessitate a refund on your order, please contact the restaurant as well. If you have any other questions regarding your order, please <%= link_to "contact us", :controller => "notification", :action => "contactUs" %>.
+</div>
+
+<div class="question">
+	I forgot my password. What should I do to retrieve it?
+</div>
+<div class="answer">
+	Please 
+	
+	<%= link_to_remote ( "click here", :url=>{
+				:controller => "users", :action => "forgotPassword"
+			},
+			:update => "popupFormDiv",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:complete => "displayPopup('');") %>
+	
+	if you have forgot your password. After entering your email address that coincides with your forkfile account, you will receive an email containing instructions to reset your password. You may also access the "forgot password" link from the "login" link.
+</div>
+
+<div class="question">
+	If I don't see a restaurant I would like to order from, what should I do?
+</div>
+<div class="answer">
+	Please let us know if there is a restaurant in your area you don't see on forkfile! We are looking to add as many establishments as possible and would love to cater to your wants. Recommend the restaurant via the  <%= link_to "Contact Us", :controller => "notification", :action => "contactUs" %> link.
+</div>
+
+ 
+<div class="question">
+	Any other questions? <%= link_to "Contact us!", :controller => "notification", :action => "contactUs" %>
+</div>

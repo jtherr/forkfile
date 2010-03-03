@@ -1,0 +1,50 @@
+<%= javascript_include_tag 'item.js' %>
+
+<% shadowBox @title do %>
+	
+	<div class="spacer">
+		<%= link_to "Back to All Option Groups", :controller => "option_group", :action => "showOptionGroups" %>
+	</div>
+
+	<div class="field_section">
+		<div id="optionGroupInfo">
+			<%= render "option_group/optionGroupInfo" %>
+		</div>
+		
+		<% if admin? %>
+		
+			<div class="actions">		
+				<%=link_to_remote( "Edit", :url=>{
+						:action => 'editOptionGroup', :id => @option_group.id
+					},
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');") %> | 
+					
+				<%= link_to "Remove", { :action => "deleteOptionGroup", :id => @option_group.id }, :confirm => "Are you sure you want to delete this option group?" %>
+			</div>
+		<% end %>
+	</div>
+	
+<% end %>
+	
+<div class="tableBox">
+	<% shadowBox "Options" do %>
+			
+		<div id="options">
+			<%= render "option_group/options" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Add Option", :url=>{
+					:action => 'addOption'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>	
+	
+	<% end %>
+</div>

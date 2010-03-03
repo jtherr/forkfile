@@ -1,0 +1,25 @@
+<% shadowBox @title do %>
+	<%= error_messages_for :user, :header_message => nil, :message => nil %>
+
+	<% form_for :user, :url => { :controller => 'users', :action => 'setPassword' } do |f| -%>
+
+		<%= f.hidden_field :forgot_password_code, :value => @forgot_password_code %>
+
+		<div class="field">
+			<label for="password">Password</label>
+			<%= f.password_field :password %>
+		</div>
+		
+		<div class="field">
+			<label for="password_confirmation">Confirm Password</label>
+			<%= f.password_field :password_confirmation %>
+		</div>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Set Password' %>
+			<% end %>
+		</div>
+	<% end -%>
+
+<% end %>

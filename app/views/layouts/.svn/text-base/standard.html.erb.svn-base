@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="cache-control" content="public" />
+	
+	<title>
+		Forkfile
+		<% if @title %>
+			 - <%= @title %>
+		<% end %>
+	</title>
+	
+	<%= javascript_include_tag 'jquery.js' %>
+	<script type="text/javascript">jQuery.noConflict();</script>
+	
+	<%= javascript_include_tag :defaults %>
+	<%= javascript_include_tag 'main.js' %>
+
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+	<%= stylesheet_link_tag 'main' %>
+	
+	<!--[if lte IE 6]>
+		<link type="text/css" rel="stylesheet" media="screen" href="/stylesheets/ie6_only.css" />
+	<![endif]-->
+	
+
+</head>
+<body id="body">
+	
+	<% form_tag "ajax_#{@current_controller}_#{@current_action}", :method => :get do %>
+		<%= hidden_field_tag "ajaxCallMade", "false" %>
+	<% end -%>
+		
+	<div id="blockingCover" style="display: none;"></div>
+	<div id="processingCover" style="display: none;"></div>
+	
+	<div id="popupContainer" style="display: none;">
+		<% roundedBoxPopup nil do %>	
+			<div id="popupFormDiv">
+				<%= yield :popup %>
+			</div>
+		<% end %>
+	</div>
+	
+	<div id="loadingMsg" style="display: none;"></div>		
+
+	<div class="header">
+		<center>
+			<div class="headerTop">
+				<div class="container">
+					<div class="mainContainer">
+
+						<% if @appEnabled && !@isSessionExpiredView %>
+							<div class="browsingNear">
+								<% if !address_stored? %>								
+									<%= link_to_remote( "Enter Your Address", :url=>{
+											:controller => "search", :action => "changeSearchAddress" 
+										},
+										:update => "popupFormDiv",
+										:loading => "displayLoadingMsg();",
+										:loaded => "hideLoadingMsg();",
+										:complete => "displayPopup('');") %>
+								<% else %>								
+									<%= link_to_remote( abbreviate(current_address[:full], 50) + " (Change)", :url=>{
+											:controller => "search", :action => "changeSearchAddress" 
+										},
+										:update => "popupFormDiv",
+										:loading => "displayLoadingMsg();",
+										:loaded => "hideLoadingMsg();",
+										:complete => "displayPopup('');") %>
+								<% end %>
+							</div>
+	
+							<% if address_stored? %>
+								<div class="searchBox">
+									<% form_tag '/search/basicSearch', :method => :get, :onsubmit => "checkSearchBox();" do %>							
+									
+										<div class="keywords">
+											<%= text_field :search, "keywords", :value => session[:search_terms][:keywords], :onfocus => "focusSearchBox();", :onblur => "initSearchBox();" %>
+										</div>
+										
+										<% primaryButtonSmall do %>
+											<%= submit_tag 'GO' %>
+										<% end %>
+									<% end -%>
+								</div>
+							<% end %>
+						<% end %>
+
+						<div class="links">
+							<%= render "layouts/headerLinks" %>
+						</div>
+	
+					</div>
+				</div>
+			</div>
+		
+			<div class="headerBottom">
+				<div class="container">
+					<div class="mainContainer">
+	
+						<a href="/main/returnToHome"><div class="title"></div></a>
+
+						<% if request.ssl? %>
+							<div class="secure">This Page is Secure</div>						
+						<% end %>
+	
+						<% if !@isSessionExpiredView && address_stored? %>
+														
+							<div class="mainNav">
+								<a href="/search/browse" class="<%= isRestaurantsTabSelected() %>">
+									Restaurants
+								</a>
+								<a href="/special/specials" class="<%= isSpecialsTabSelected() %>">
+									Specials
+								</a>
+								<% if logged_in? %>
+									<a href="/favorite/favorites" class="<%= isFavoritesTabSelected() %>">
+										<%= image_tag("yellowStar.gif", :alt => "", :width => '16') %> Favorites
+									</a>
+									<a href="/order/showRecentOrders" class="<%= isRecentOrdersTabSelected() %>">
+										Past Orders
+									</a>
+								<% end %>
+							</div>
+															
+						<% end %>
+												
+						<div class="headerLine"></div>
+						
+					</div>
+				</div>
+			</div>
+		
+		</center>
+	</div>
+
+	<div class="mainBody">
+		<center>
+			<div class="container">
+				<div id="mainContainer" class="mainContainer">
+
+					<% if flash[:notice] == nil %>
+						<% statusBoxStyle = "display: none;" %>
+					<% end %>							
+					
+					<div id="statusBox" style="<%= statusBoxStyle %>">
+						<div id="statusMsg" class="statusMsg"><%= flash[:notice] %></div>
+					</div>			
+				
+									
+					<% if @subNavLinks.length > 1 %>
+						<div class="subNav">
+							<% roundedSubNavBarWhite do %>
+								<%= render "layouts/subNav" %>
+							<% end %>
+						</div>
+					<% end %>
+
+
+					<% if @displaySidebar %>
+						<div class="sidebar">
+							<%= yield :sidebar %>
+						</div>
+					<% end %>
+	
+					<% if @isCartView %>
+						<div class="sidebarLarge">
+							<div class="sidebar">
+								<% if @isRestaurantView %>
+									<div class="returnToBrowse">
+										<% if session[:search_terms][:return_to] == "restaurants" %>
+											<%= link_to "<< Return to Restaurants", :controller => "search", :action => "returnToRestaurants" %>
+										<% elsif session[:search_terms][:return_to] == "specials" %>
+											<%= link_to "<< Return to Specials", :controller => "restaurant", :action => "returnToSpecials" %>
+										<% elsif session[:search_terms][:return_to] == "favorites" %>
+											<%= link_to "<< Return to Favorites", :controller => "restaurant", :action => "returnToFavorites" %>
+										<% end %>
+									</div>
+								<% end %>
+							
+								<div class="orderBox">
+									<% shadowBox "My Order" do %>
+										<div class="cart_icon"></div>
+									
+										<div id="cartDiv">
+											<%= render "/order/loadCart" %>
+
+											<%= render "/order/showCart" %>
+										</div>
+									<% end %>
+								</div>
+			
+								<%= yield :sidebar_large %>
+							</div>
+						</div>
+					<% end %>
+	
+	
+					<div class="body <%= @bodyClass %>">
+						<%= yield  %>
+					</div>					
+						
+				</div>
+			</div>
+		</center>
+	</div>
+
+	<%= render "layouts/footer" %>
+
+	<% if ENV['RAILS_ENV'] == "production" %>
+		<%= render "layouts/googleAnalytics" %>
+	<% end %>
+
+	<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAA7gHKE2glimAbO9gjEFQXBSU_lrIQ2PEr18Z0FYwo9T9a31PKRSoSmIBz8Rz8IoaaonLEAM-jskyZg&sensor=false"
+            type="text/javascript"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+
+<div class="readonly">
+	<label>Name</label>
+	<div class="text"><%=@option_group.name %></div>
+</div>
+
+<div class="readonly">
+	<label>Min Selected</label>
+	<div class="text"><%=@option_group.min_selected %></div>
+</div>
+
+<div class="readonly">
+	<label>Max Selected</label>
+	<div class="text"><%=@option_group.max_selected %></div>
+</div>
+
+<div class="readonly">
+	<label>Quantity for Price Increase</label>
+	<div class="text"><%=@option_group.quantity_price_increase %></div>
+</div>
+
+<div class="readonly">
+	<label>Price Increase</label>
+	<div class="text"><%= number_to_currency(@option_group.price_increase) %></div>
+</div>
+
+<div class="readonly">
+	<label>Linked Items</label>
+	<div class="text"><%=@option_group.items.collect { |item| link_to item.name, :controller => "item", :action => "showItem", :id => item.id }.join(", ") %></div>
+</div>

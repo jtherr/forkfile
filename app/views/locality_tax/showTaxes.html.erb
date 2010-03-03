@@ -1,0 +1,23 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+		<div class="indent">
+			Additional taxes for a county or city locality.
+		</div>
+	
+		<div id="localityTaxes">
+			<%= render :partial => "localityTaxes" %>
+		</div>
+		
+		<div class="indent">
+			<%=link_to_remote( "Add Locality Tax", :url=>{
+					:controller => 'locality_tax', :action => 'addLocalityTax'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+		
+	<% end %>
+</div>

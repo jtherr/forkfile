@@ -1,0 +1,72 @@
+
+<div class="title">Edit Exception</div>
+
+<%= error_messages_for :hour_exception, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'updateHourException', :id => @hour_exception },
+    :update => { :success => "hourExceptionsList", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();",
+	:complete => "initHourException();" )%>
+
+	<div class="field">
+		<label for="recurring_type">Recurring Type</label>
+		<%= select(:hour_exception, :recurring_type, $RECURRING_DATE_TYPES.collect { |key, privilege| [privilege[:name], key] }, {}, { :onchange => "toggleRecurringType();" } ) %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="from_date">From Date</label>
+		<%= text_field :hour_exception, :from_date, :value => @hour_exception.from_date.strftime("%m/%d/%Y") %>
+		<span class="red">*</span>
+	</div>
+
+	<div id="to_date_div" class="field">
+		<% if @hour_exception.to_date != nil %>
+			<% to_date_formatted = @hour_exception.to_date.strftime("%m/%d/%Y") %>
+		<% end %>
+		
+		<label for="from_date">To Date</label>
+		<%= text_field :hour_exception, :to_date, :value => to_date_formatted %>
+	</div>		
+	
+	<div class="field">
+		<label for="closed">Closed</label>
+		<%= check_box :hour_exception, :closed, :onclick => "toggleClosed();" %>
+	</div>
+	
+	
+	<div id="times">
+		<div class="field">
+			<% if @hour_exception.from_time != nil %>
+				<% from_time_formatted = @hour_exception.from_time.hour.to_s + ":" + @hour_exception.from_time.strftime("%M") %>
+			<% end %>
+
+			<label for="from_time">From Time</label>
+			<%= select(:hour_exception, :from_time, @time_options.collect {|p| [ p[:name], p[:id] ] }, { :include_blank => true, :selected => from_time_formatted }) %>
+			<span class="red">*</span>
+		</div>
+	
+		<div class="field">
+			<% if @hour_exception.to_time != nil %>
+				<% to_time_formatted = @hour_exception.to_time.hour.to_s + ":" + @hour_exception.to_time.strftime("%M") %>
+			<% end %>
+							
+			<label for="to_time">To Time</label>
+			<%= select(:hour_exception, :to_time, @time_options.collect {|p| [ p[:name], p[:id] ] }, { :include_blank => true, :selected => to_time_formatted }) %>
+			<span class="red">*</span>
+		</div>
+	</div>
+
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag "Update" %>
+		<% end %>
+	
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+
+</form>

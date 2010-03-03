@@ -1,0 +1,54 @@
+
+<% @item.item_sizes.each do |item_size| %>
+
+	<div class="field_section">
+
+		<div class="readonly">
+			<label>
+				<% item_size_name = item_size.item_size_name %>
+				
+				<%= item_size_name.name %>
+				
+				<% if item_size_name.name == "" %>
+					<i>blank</i>
+				<% end %>
+				
+			</label> 
+			<div class="text">
+				<% if !item_size.special_only %>
+					<%= number_to_currency(item_size.price) %>
+				<% else %>
+					Only available as a special
+				<% end %>
+				
+				<% if !item_size.special_hours.empty? %>
+					(SPECIALS AVAILABLE)
+				<% end %>
+			</div>
+		</div>
+		
+
+		<% if admin? %>
+			<div class="actions">				
+				<%=link_to_remote( "Edit", :url=>{
+						:action => 'editItemSize', :id => item_size.id
+					},
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');") %> | 
+					
+				<%=link_to "Manage Specials", :controller => 'special_hour', :action => 'manageHours', :id => item_size.id %> | 
+						
+				<%=link_to_remote( "Remove", :url=>{
+						:action => 'deleteItemSize', :id => item_size.id
+					},
+					:confirm => 'Are you sure you want to delete this item size?',
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:update => "itemSizes") %>
+				</div>
+		<% end %>
+	</div>
+
+<% end %>

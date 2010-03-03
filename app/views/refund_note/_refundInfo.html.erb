@@ -1,0 +1,59 @@
+
+
+
+<div class="readonly">
+	<label>Request Date</label>
+	<div class="text"><%= @refund.request_date.strftime("%m-%d-%Y %H:%M:%S") %></div>
+</div>
+
+<div class="readonly">
+	<label>Email</label>
+	<div class="text"><%= @refund.email %></div>
+</div>
+
+<div class="readonly">
+	<label>Restaurant</label>
+	<div class="text"><%= @refund.restaurant.name %></div>
+</div>
+
+<div class="readonly">
+	<label>Order Number</label>
+	<div class="text"><%= @refund.order.order_number %></div>
+</div>
+
+<div class="readonly">
+	<label>Reason</label>
+	<div class="text"><%= @refund.reason %></div>
+</div>
+
+<div class="readonly">
+	<label>Request Amount</label>
+	<div class="text"><%= number_to_currency(@refund.request_amount) %></div>
+</div>
+
+<% if (@refund.status == 1 || @refund.status == 3) && @refund.grant_date != nil %>
+	<div class="readonly">
+		<label>Grant Date</label>
+		<div class="text"><%= @refund.grant_date.strftime("%m-%d-%Y %H:%M:%S") %></div>
+	</div>
+
+	<div class="readonly">
+		<label>Grant Amount</label>
+		<div class="text"><%= number_to_currency(@refund.grant_amount) %></div>
+	</div>
+<% end %>
+
+<div class="readonly">
+	<label>Status</label>
+	<div class="text">
+		<%= $REFUND_STATUSES[@refund.status][:name] %>
+		
+		<%=link_to_remote( "Change Status", :url=>{
+				:action => "changeStatus"
+			},
+			:update => "popupFormDiv",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:complete => "initAddNotes(); displayPopup('');") %>
+	</div>
+</div>

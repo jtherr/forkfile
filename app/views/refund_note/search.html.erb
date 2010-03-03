@@ -1,0 +1,75 @@
+
+<%= javascript_include_tag 'refund.js' %>
+
+
+<% shadowBox @title do %>
+
+	<% form_for :refund_note, :url => { :controller => 'refund_note', :action => 'search' }, :html => { :method => :get } do |f| -%>
+
+		<div class="field">
+			<div class="searchLeft">
+				Search Refund Requests
+				<%= text_field_tag "refund_search", @refund_search %>
+	
+				Status
+				<%= select(:refund, :status, $REFUND_STATUSES.collect { |key,status| [status[:name], key] }, :selected => @status.to_i) %>
+			</div>
+	
+			<% primaryButtonSmall do %>
+				<%= submit_tag 'Search' %>
+			<% end %>
+		</div>
+		
+	<% end -%>
+
+
+	<%= will_paginate @refunds, :params => { :refund_search => @refund_search } %>
+
+	<% if !@refunds.empty? %>
+
+		<% form_tag '/refund_note/showRefundRequest', :method => :get, :id => "showRefundForm" do -%>
+	
+			<%= hidden_field_tag "refundId" %>
+
+			<table cellspacing="0" cellpadding="0">
+		
+				<tr>
+					<th>Request Date</th>
+					<th>Email</th>
+					<th>Restaurant</th>
+					<th>Order Number</th>
+					<th>Reason</th>
+					<th>Request Amount</th>
+					<th>Status</th>
+				</tr>
+		
+				<% @refunds.each do |refund| %>
+					<% if !refund.viewed %>
+						<% tr_class = "bold" %>
+					<% end %>
+					
+					<tr class="<%= tr_class %> clickable" onclick="showRefundRequest(<%= refund.id %>)">
+				
+						<td><%= refund.request_date.strftime("%m-%d-%Y %H:%M:%S") %>&nbsp;</td>
+						<td><%= refund.email %>&nbsp;</td>
+						<td><%= refund.restaurant.name %>&nbsp;</td>
+						<td><%= refund.order.order_number %>&nbsp;</td>
+						<td><%= abbreviate(refund.reason, 30) %>&nbsp;</td>
+						<td><%= number_to_currency(refund.request_amount) %>&nbsp;</td>
+						<td><%= $REFUND_STATUSES[refund.status][:name] %>&nbsp;</td>
+					</tr>
+				<% end %>
+		
+			</table>
+	
+		<% end -%>
+		
+	<% else %>
+		<div class="indent">
+			No refunds found.
+		</div>
+	<% end %>
+
+	<%= will_paginate @refunds, :params => { :refund_search => @refund_search } %>
+
+<% end %>

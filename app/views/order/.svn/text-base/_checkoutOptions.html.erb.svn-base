@@ -1,0 +1,70 @@
+<div class="title"><%= @title %></div>
+
+<div class="checkoutOptions">
+	<div class="co_top">
+		<div class="co_left">
+			<div class="subtitle">I already have an account.</div>
+			
+			<% if ENV['RAILS_ENV'] != 'development' %>
+				<%= form_tag ({ :controller => 'session', :action => 'create', :protocol => "https://", :only_path => false }) %>
+			<% else %>
+				<%= form_tag ({ :controller => 'session', :action => 'create' }) %>
+			<% end %>
+			
+				<div class="field">
+					<label for="email">Email</label>
+					<%= text_field :session, 'email', :value => @user_email, :class => "fixed_width" %>
+				</div>
+				
+				<div class="field">
+					<label for="password">Password</label>
+					<%= password_field :session, 'password', :class => "fixed_width" %>
+				</div>
+				
+				<div class="field">
+					<label>Remember Me</label>
+					<%= check_box :session, 'remember_me' %>
+				</div>
+				
+				<div class="actions short">						
+					<% primaryButton do %>
+						<%= submit_tag 'Login' %>
+					<% end %>
+				</div>
+				
+			</form>
+		</div>
+		
+		<div class="co_right">
+			<div class="subtitle">I don't have an account yet.</div>
+
+			<div class="description">
+				Experience all of the benefits of a Forkfile account. Signing up is easy and free!<br /><br />
+				
+				<b><%= link_to "Learn More", :controller => "users", :action => "orderRegister" %></b>
+			</div>
+	
+			<div class="actions short">
+				<% form_tag '/users/orderRegister' do %>
+					<% primaryButton do %>
+						<%= submit_tag "Sign Up" %>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+	
+	<div class="co_bottom">
+		<div class="actions">
+			<% form_tag '/order/checkout' do %>
+				<% secondaryButton do %>
+					<%= submit_tag "Continue as a Guest" %>
+				<% end %>
+				
+				<% secondaryButton do %>
+					<%=button_to_function "Cancel", "hidePopup();" %>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
+</div>

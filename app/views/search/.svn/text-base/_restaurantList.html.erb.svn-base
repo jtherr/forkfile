@@ -1,0 +1,79 @@
+
+
+<% if !@restaurants.empty?%>
+	<% if !session[:search_terms][:favorites] %>
+		<div class="indent">
+			<%= link_to_function "View Results on Map", "showResultMap()" %>
+		</div>
+	<% end %>
+
+	<%= will_paginate @restaurants, :renderer => 'RemoteLinkRenderer', :params => {
+			:controller => 'search', :action => 'paginate', :search_terms => params[:search_terms] 
+		}, 
+		:remote => { 
+			:update => 'restaurantList',
+			:complete => "initializeMap();",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();"
+		} %>
+	
+	<% @firstRestaurant = "first" %>
+	
+	<% @restaurants.each do |@restaurant| %>
+		<% if logged_in? %>
+			<% @favorite = getFavorite(@restaurant, @favorites) %>
+		<% end %>
+	
+		<%= render "search/restaurant" %>
+		
+		<% @firstRestaurant = "" %>
+	<% end %>
+	
+	<%= will_paginate @restaurants, :renderer => 'RemoteLinkRenderer', :params => {
+			:controller => 'search', :action => 'paginate', :search_terms => params[:search_terms] 
+		}, 
+		:remote => { 
+			:update => 'restaurantList',
+			:complete => "initializeMap();",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();"
+		} %>	
+	
+	<% if !session[:search_terms][:favorites] %>
+		<%= hidden_field_tag "user_lat", current_address[:lat] %>
+		<%= hidden_field_tag "user_lng", current_address[:lng] %>
+		<%= hidden_field_tag "user_address", current_address[:full] %>
+		<%= hidden_field_tag "restaurant_count", @restaurants.length %>
+		<%= hidden_field_tag "restaurant_names", @restaurants.collect{|restaurant| restaurant.name }.join("|#|") %>
+		<%= hidden_field_tag "restaurant_ids", @restaurants.collect{|restaurant| restaurant.id }.join("|#|") %>
+		<%= hidden_field_tag "restaurant_addresses_formatted", @restaurants.collect{|restaurant| escape_javascript(restaurant.address_formatted) }.join("|#|") %>
+		<%= hidden_field_tag "restaurant_addresses", @restaurants.collect{|restaurant| escape_javascript(restaurant.address) }.join("|#|") %>
+		<%= hidden_field_tag "restaurant_lats", @restaurants.collect{|restaurant| restaurant.lat }.join("|#|") %>
+		<%= hidden_field_tag "restaurant_lngs", @restaurants.collect{|restaurant| restaurant.lng }.join("|#|") %>
+	<% end %>
+
+<% end %>
+
+<% if @restaurants.empty? %>
+	<div class="indent">
+		<% if session[:search_terms][:favorites] %>
+			You have not added any favorite restaurants! To add a favorite, activate the star next to any restaurant name.
+		<% else %>
+			No restaurants have been found. Please try another search.<br /><br />
+			
+			We are currently serving Arlington, VA.<br /><br />
+			
+			<%= link_to "Reset Your Search", :controller => "search", :action => "lookupCity", :city => current_address[:full] %> | 
+			
+			<%= link_to "Search Arlington, VA", :controller => "search", :action => "lookupCity", :city => "Arlington, VA" %> | 			
+		
+			<%= link_to_remote( "Enter a New Address", :url=>{
+					:controller => "search", :action => "changeSearchAddress" 
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		<% end %>	
+	</div>
+<% end %>

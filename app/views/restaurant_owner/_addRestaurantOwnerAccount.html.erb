@@ -1,0 +1,73 @@
+<div class="title"><%= @title %></div>
+
+<div class="indent">
+	NOTE: An email will be sent to the restaurant owner describing the access you are granting and instructing
+	them how to set their password.
+</div>
+
+<%= error_messages_for :user, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'createRestaurantOwnerAndLink' },
+    :update => { :success => "linkedRestaurantOwners", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="first_name">First Name</label>
+		<%= text_field :user, :first_name %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="last_name">Last Name</label>
+		<%= text_field :user, :last_name %>
+	</div>
+	
+	<div class="field">
+		<label for="street1">Street 1</label>
+		<%= text_field :user, :street1 %>
+	</div>
+	
+	<div class="field">
+		<label for="street2">Street 2</label>
+		<%= text_field :user, :street2 %>
+	</div>
+	
+	<div class="field">
+		<label for="city">City</label>
+		<%= text_field :user, :city %>
+	</div>
+	
+	<div class="field">
+		<label for="state">State</label>
+		<%= collection_select(:user, :state_id, @states, :id, :name, { :prompt => true }) %>
+	</div>
+	
+	<div class="field">
+		<label for="zip">Zip</label>
+		<%= text_field :user, :zip %>
+	</div>
+
+	<div class="field">
+		<label for="phone">Phone</label>
+		<%= text_field :user, :phone %>
+	</div>
+	
+	<div class="field">
+		<label for="email">Email</label>
+		<%= text_field :user, :email %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag 'Create & Link' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+	
+</form>

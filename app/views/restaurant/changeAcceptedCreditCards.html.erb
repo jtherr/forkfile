@@ -1,0 +1,18 @@
+<% shadowBox @title do %>
+
+	<% form_for :restaurant_credit_card, :url => { :action => 'updateAcceptedCreditCards' } do |f| -%>
+	
+		<% @credit_card_types.each do |credit_card_type| %>	
+			<%= check_box "restaurant_credit_card", credit_card_type.id, {:checked => credit_card_type.checked(current_restaurant.id)}, "checked", "" %>
+			<%= credit_card_type.name %>
+			<br />
+		<% end %>
+		
+		<div class="actions">			
+			<% primaryButton do %>
+				<%= submit_tag 'Update Accepted Credit Cards' %>
+			<% end %>
+		</div>
+	<% end -%>
+
+<% end %>

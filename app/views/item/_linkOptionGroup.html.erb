@@ -1,0 +1,27 @@
+<div class="title"><%= @title %></div>
+
+<%= error_messages_for :item_option_group, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'createItemOptionGroup' },
+    :update => { :success => "optionGroups", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="option_group">Option Group</label>
+		<%= collection_select(:item_option_group, :option_group_id, @option_groups, :id, :name, { :prompt => true }) %>
+		<span class="red">*</span>
+	</div>
+			
+	<div class="actions">
+		<% primaryButton do %>
+			<%= submit_tag 'Link' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+	
+</form>

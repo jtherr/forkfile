@@ -1,0 +1,6 @@
+
+<% shadowBox @title do %>
+	<div class="indent">
+		We will address your submission as soon as possible.  Thank you for contacting us!
+	</div>
+<% end %>

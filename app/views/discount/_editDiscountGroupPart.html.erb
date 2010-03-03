@@ -1,0 +1,38 @@
+<div class="title"><%= @title %></div>
+
+<%= error_messages_for :discount_group_part, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => "updateDiscountGroupPart", :id => @discount_group_part.id },
+    :update => { :success => "discountGroupParts", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="category_id">Category</label>
+		<%= collection_select(:discount_group_part, :category_id, @categories, :id, :name, { :include_blank => true } ) %>
+		
+		<%= observe_field :discount_group_part_category_id, :url => { :action => :processCategory },
+	      	:update => "items",
+	      	:with => 'category_id',
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "updateSizes();" %>
+		  
+		<span class="red">*</span>
+	</div>
+
+	<div id="items">
+		<%= render :partial => "items" %>
+	</div>
+
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag 'Update' %>
+		<% end %>
+	
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

@@ -1,0 +1,49 @@
+<% shadowBox @title do %>
+
+	<%= javascript_include_tag 'item.js' %>
+	
+	
+	<% content_for :sidebar do %>
+		<div class="sidebar">
+			Categories<br /><br />
+			
+			<%=link_to_remote( "ALL", :url=>{
+					:controller => 'item', :action => 'showAllCategories'
+				},
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:update => "itemList" ) %><br />
+			
+			<% @categories.each do |category| %>
+				<%=link_to_remote( category.name, :url=>{
+						:controller => 'item', :action => 'filterByCategory', :id => category.id
+					},
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:update => "itemList" ) %><br />
+			<% end %>
+		</div>
+	<% end %>
+	
+
+	
+	<div id="itemList">
+		<%= render "item/items" %>
+	</div>
+	
+	
+	<% if admin? %>
+	
+		<br />
+		
+		<%=link_to_remote( "Add Menu Item", :url=>{
+				:controller => 'item', :action => 'addItem'
+			},
+			:update => "popupFormDiv",
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:complete => "displayPopup('');") %>
+	
+	<% end %>
+
+<% end %>

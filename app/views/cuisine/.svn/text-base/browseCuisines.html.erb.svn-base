@@ -1,0 +1,43 @@
+
+<div class="browseCuisines">
+	<% shadowBox "Cuisines" do %>
+	
+		<div class="line">
+			<% i=0 %>
+			<% @cuisines.each do |cuisine_id, cuisine| %>
+				<div class="cuisine">
+					<div class="top">
+						<div class="name">
+							<b><%= cuisine[:name] %></b>
+							(<%= cuisine[:count] %>)
+						</div>
+						
+						<div class="showAll">
+							<%= link_to "Show All", :controller => 'search', :action => 'showCuisine', :id => cuisine_id %>
+						</div>
+					</div>
+					
+					<% restaurantsForCuisine = getRestaurantsForCuisine(@restaurants, cuisine_id) %>
+					<% restaurantsForCuisine.each do |restaurant| %>
+						<div class="restaurant">
+							<%= link_to restaurant.name, :controller => 'restaurant', :action => 'showRestaurant', :id => restaurant.id %>
+						</div>
+					<% end %>
+				</div>
+				
+				<% if i%2 == 1 %>
+					</div><div class="line">
+				<% end %>
+				
+				<% i+=1 %>
+			<% end %>
+		</div>
+	
+		<% if admin? %>
+			<div class="indent">
+				<%= link_to "Manage All Cuisines", :controller => "cuisine", :action => "showCuisines" %>
+			</div>
+		<% end %>
+	
+	<% end %>
+</div>

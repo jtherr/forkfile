@@ -1,0 +1,130 @@
+10
+
+dir
+453
+svn+ssh://173.45.244.58/home/jtherr/repository/GET_FUD_V1/trunk/app/views
+svn+ssh://173.45.244.58/home/jtherr/repository
+
+
+
+2009-09-17T00:33:35.288201Z
+452
+jtherr
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b777705e-7334-4a50-a5c8-d3eede963a93
+
+billing
+dir
+
+category
+dir
+
+category_hour
+dir
+
+cuisine
+dir
+
+discount
+dir
+
+favorite
+dir
+
+fax_mailer
+dir
+
+item
+dir
+
+item_size_name
+dir
+
+item_size_name_hour
+dir
+
+layouts
+dir
+
+locality_tax
+dir
+
+logo
+dir
+
+main
+dir
+
+notification
+dir
+
+notification_mailer
+dir
+
+notification_note
+dir
+
+option_group
+dir
+
+order
+dir
+
+phone
+dir
+
+refund
+dir
+
+refund_note
+dir
+
+restaurant
+dir
+
+restaurant_email
+dir
+
+restaurant_hour
+dir
+
+restaurant_import
+dir
+
+restaurant_order
+dir
+
+restaurant_owner
+dir
+
+search
+dir
+
+session
+dir
+
+special
+dir
+
+special_hour
+dir
+
+user_mailer
+dir
+
+users
+dir
+

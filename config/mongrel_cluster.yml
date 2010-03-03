@@ -1,0 +1,9 @@
+--- 
+prefix: /GET_FUD_V1
+cwd: /dev/GET_FUD_V1
+log_file: log/mongrel.log
+port: "8000"
+environment: production
+address: 127.0.0.1
+pid_file: tmp/pids/mongrel.pid
+servers: 3

@@ -1,0 +1,21 @@
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+	
+		<div id="itemSizeNameList">
+			<%= render :partial => "itemSizeNames" %>
+		</div>
+		
+		
+		<div class="indent">
+			<%=link_to_remote( "Add Item Size", :url=>{
+					:action => "addItemSizeName"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	<% end %>
+</div>

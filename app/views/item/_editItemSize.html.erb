@@ -1,0 +1,42 @@
+<div class="title">Edit Item Size</div>
+
+
+<%= error_messages_for :item_size, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'updateItemSize', :id => @item_size.id },
+    :update => { :success => "itemSizes", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= collection_select(:item_size, :item_size_name_id, @item_size_names, :id, :name) %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field">
+		<label for="special_only">Special Only</label>
+		<%= check_box :item_size, :special_only, :onclick => "togglePrice(this, 0);" %>
+	</div>
+	
+	<% if @item_size.special_only %>
+		<% price_display = "display: none;" %>
+	<% end %>
+	
+	<div class="field" id="price_0" style="<%= price_display %>">
+		<label for="description">Price</label>
+		$ <%= text_field :item_size, :price, :size => 6 %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag 'Update' %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

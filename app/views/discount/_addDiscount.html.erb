@@ -1,0 +1,142 @@
+<div class="title"><%= @title %></div>
+
+<%= error_messages_for :discount, :header_message => nil, :message => nil %>
+
+
+<%= form_remote_tag( :url => {:action => "createDiscount"},
+    :update => { :success => "discounts", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();",
+	:complete => "initDiscountOptions();" )%>
+
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= text_field :discount, :name %>
+		<span class="red">*</span>
+	</div>
+
+	<div class="field">
+		<label for="description">Description</label>
+		<%= text_area :discount, :description, :cols => 30, :rows => 3 %>
+	</div>
+
+	<div class="field">
+		<label for="allow_combo">Allow Combo</label>
+		<%= check_box :discount, :allow_combo %>
+	</div>
+
+	<div class="field">
+		<label for="take_out">Take Out</label>
+		<%= check_box :discount, :take_out %>
+	</div>
+	
+	<div class="field">
+		<label for="delivery">Delivery</label>
+		<%= check_box :discount, :delivery %>
+	</div>
+	
+
+	<div class="heading">BUY</div>
+
+	<div class="field">
+		<label></label>
+		<%= radio_button :discount, 'buy_options', "anything", :onclick => "updateBuyOptions();" %>Anything
+		<%= radio_button :discount, 'buy_options', "amount", :onclick => "updateBuyOptions();" %>Amount
+		<%= radio_button :discount, 'buy_options', "items", :onclick => "updateBuyOptions();" %>Items			
+	</div>
+
+	<div id="buy_amount_div" style="display: none;">
+		<div class="field">
+			<label for="buy_amount">Buy Amount</label>
+			$ <%= text_field :discount, :buy_amount %>
+			<span class="red">*</span>
+		</div>
+	</div>
+
+	<div id="buy_items_div" style="display: none;">
+		<div class="field">
+			<label for="buy_discount_group">Buy Discount Group</label>
+			<%= collection_select(:discount, :buy_discount_group_id, @discount_groups, :id, :name, { :include_blank => true }) %>
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label for="buy_match_all_parts">Match All Discount Group Parts</label>
+			<%= check_box :discount, :buy_match_all_parts, :onclick => "updateBuyQuantity();" %>
+		</div>
+
+		<div class="field" id="buy_quantity_div">
+			<label for="buy_quantity">Buy Quantity</label>
+			<%= text_field :discount, :buy_quantity %> items 
+			<span class="red">*</span>
+		</div>
+	</div>
+	
+	<div class="heading">GET</div>
+	
+	<div class="field">
+		<label></label>
+		<%= radio_button :discount, 'get_options', "amount_off", :onclick => "updateGetOptions();" %>Amount Off
+		<%= radio_button :discount, 'get_options', "percent_off", :onclick => "updateGetOptions();" %>Percent Off
+		<%= radio_button :discount, 'get_options', "items", :onclick => "updateGetOptions();" %>Items		
+	</div>
+	
+	
+	<div id="get_items_div" style="display: none;">
+		<div class="field">
+			<label for="get_discount_group">Get Discount Group</label>
+			<%= collection_select(:discount, :get_discount_group_id, @discount_groups, :id, :name, { :include_blank => true }) %>
+			<span class="red">*</span>
+		</div>
+				
+		<div class="field">
+			<label for="get_match_all_parts">Match All Discount Group Parts</label>
+			<%= check_box :discount, :get_match_all_parts, :onclick => "updateGetQuantity();" %>
+		</div>		
+		
+		<div class="field" id="get_quantity_div">
+			<label for="get_quantity">Get Quantity</label>
+			<%= text_field :discount, :get_quantity %> items 
+			<span class="red">*</span>
+		</div>
+		
+		<div class="field">
+			<label></label>
+			<%= radio_button :discount, 'get_items_options', "for_amount", :onclick => "updateGetItemsOptions();" %>For Amount
+			<%= radio_button :discount, 'get_items_options', "amount_off", :onclick => "updateGetItemsOptions();" %>Amount Off
+			<%= radio_button :discount, 'get_items_options', "percent_off", :onclick => "updateGetItemsOptions();" %>Percent Off
+		</div>
+		
+		
+		<div class="field" id="get_for_amount_div" style="display: none;">
+			<label for="get_for_amount">Get For Amount</label>
+			$ <%= text_field :discount, :get_for_amount %>
+			<span class="red">*</span>
+		</div>
+	</div>
+	
+	<div class="field" id="get_amount_off_div" style="display: none;">
+		<label for="get_amount_off">Get Amount Off</label>
+		$ <%= text_field :discount, :get_amount_off %>
+		<span class="red">*</span>
+	</div>
+	
+	<div class="field" id="get_percent_off_div" style="display: none;">
+		<label for="get_percent_off">Get Percent Off</label>
+		<%= text_field :discount, :get_percent_off %> %
+		<span class="red">*</span>
+	</div>
+			
+
+	<div class="actions">					
+		<% primaryButton do %>
+			<%= submit_tag 'Create' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

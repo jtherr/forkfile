@@ -1,0 +1,52 @@
+<div class="title">Edit Option Group</div>
+
+<div class="indent">
+	If min is not provided, zero will be assumed. If max is not provided, infinite will be assumed.
+	<br /><br />
+	If "quantity for price increase" / "price increase" is used, EVERY option AFTER the quantity will cost that price.
+	(ie. if 2 / $1, every option added after 2 are selected will cost $1)
+</div>
+
+<%= error_messages_for :option_group, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'updateOptionGroup', :id => @option_group.id },
+    :update => { :success => "optionGroupInfo", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<%= text_field :option_group, :name %>
+	</div>
+	
+	<div class="field">
+		<label for="min_selected">Min Selected</label>
+		<%= text_field :option_group, :min_selected %>
+	</div>
+	
+	<div class="field">
+		<label for="max_selected">Max Selected</label>
+		<%= text_field :option_group, :max_selected %>
+	</div>
+	
+	<div class="field">
+		<label for="quantity_price_increase">Quantity for Price Increase</label>
+		<%= text_field :option_group, :quantity_price_increase %>
+	</div>
+	
+	<div class="field">
+		<label for="price_increase">Price Increase $</label>
+		<%= text_field :option_group, :price_increase %>
+	</div>
+
+	<div class="actions">			
+		<% primaryButton do %>
+			<%= submit_tag 'Update' %>
+		<% end %>
+		
+		<% secondaryButton do %>
+			<%= button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+</form>

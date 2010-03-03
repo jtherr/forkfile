@@ -1,0 +1,132 @@
+
+<div class="signup">
+	<div class="heading">Personalize Your Experience</div>
+	
+	<div class="left">
+		<div class="section">Sign Up Today To Order Online</div>
+		<div class="text">
+			By signing up with Forkfile, you will be able to take advantage of these great benefits, all at completely no cost to you.
+		</div>
+	
+	
+		<div class="section">Save Your Favorite Restaurants</div>
+		<div class="text">			
+			Click on the star next to any restaurant name to save it as a favorite.
+			Access all your favorite restaurants via the "Favorites" tab.
+		</div>
+
+		<div class="section">Lookup Your Past Orders</div>
+		<div class="text">			
+			The "Past Orders" tab allows you to view all your recent orders. You can even reapply a past 
+			order to your current order.
+		</div>
+
+		<div class="section">Speed Up Orders</div>
+		<div class="text">			
+			Forkfile saves all your user information, so whenever you checkout, you won't
+			need to enter all that information again.
+		</div>
+
+		<div class="section">Is My Information Secure?</div>
+		<div class="text">			
+			Forkfile uses SSL encryption to secure all pages that include sensitive information, such as passwords and credit cards. Your information
+			is secure with us.
+		</div>
+		
+		<div class="section">More Questions?</div>
+		<div class="text">			
+			See our <%= link_to "FAQ", :controller => "main", :action => "faq" %>.
+		</div>
+		
+		<div class="section">Restaurant Owners</div>
+		<div class="text">			
+			If you are a restaurant owner and want to learn more about adding your restaurant to Forkfile, <b><%= link_to "click here", :controller => "notification", :action => "restaurantOwners" %></b>.
+		</div>
+	</div>
+	
+	
+	<div class="right">
+		<% shadowBox @title do %>
+		
+			<%= error_messages_for :user, :header_message => nil, :message => nil %>
+			<% form_for :user, :url => { :action => 'create' }, :html => { :class => "captcha" } do |f| -%>
+			
+				<div class="subtitle">Contact Information</div>
+		
+				<div class="field">
+					<label for="name">Name</label>
+					<%= f.text_field :name %>
+					<span class="red">*</span>
+				</div>
+				
+				<div class="field">
+					<label for="phone">Phone</label>
+					<%= f.text_field :phone %>
+				</div>
+				
+				<div class="subtitle">Address</div>
+				
+				<div class="field">
+					<label for="street1">Street 1</label>
+					<%= f.text_field :street1 %>
+				</div>
+				
+				<div class="field">
+					<label for="street2">Street 2</label>
+					<%= f.text_field :street2 %>
+				</div>
+				
+				<div class="field">
+					<label for="city">City</label>
+					<%= f.text_field :city %>
+				</div>
+				
+				<div class="field">
+					<label for="state">State</label>
+					<%= collection_select(:user,:state_id,@states,:id,:name, { :prompt => true }) %>
+				</div>
+				
+				<div class="field">
+					<label for="zip">Zip</label>
+					<%= f.text_field :zip %>
+				</div>
+			
+				<div class="subtitle">Account Information</div>
+			
+				<div class="field">
+					<label for="email">Email</label>
+					<%= f.text_field :email %>
+					<span class="red">*</span>
+				</div>
+			
+				<div class="field">
+					<label for="password">Password</label>
+					<%= f.password_field :password %>
+					<span class="red">* (8 character min)</span>
+				</div>
+				
+				<div class="field">
+					<label for="password_confirmation">Confirm Password</label>
+					<%= f.password_field :password_confirmation %>
+					<span class="red">*</span>
+				</div>
+						
+				<div class="actions short">				
+					<% primaryButton do %>
+						<% if session[:next_controller] == "order" %>
+							<%= submit_tag 'Sign Up & Checkout' %>
+						<% else %>
+							<%= submit_tag 'Sign Up' %>
+						<% end %>
+					<% end %>
+					
+					<% secondaryButton do %>
+						<%= submit_tag 'Cancel' %>
+					<% end %>
+				</div>
+				
+			<% end -%>
+		
+		<% end %>
+
+</div>

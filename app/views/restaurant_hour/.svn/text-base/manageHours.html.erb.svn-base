@@ -1,0 +1,84 @@
+
+<link type="text/css" href="http://jqueryui.com/latest/themes/base/ui.all.css" rel="stylesheet" />
+<script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.core.js"></script>
+<script type="text/javascript" src="http://jqueryui.com/latest/ui/ui.datepicker.js"></script>
+
+
+<%= javascript_include_tag 'restaurant_hours.js' %>
+
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<div id="hoursList">
+			<%= render :partial => "hours" %>
+		</div>
+			
+		<div class="indent">
+			<%=link_to_remote( "Add Hours", :url=>{
+					:action => "addHour"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	
+		<br /><br />
+
+		<div class="heading">Delivery Hours</div>
+
+		<div id="deliveryHoursList">
+			<%= render :partial => "deliveryHours" %>
+		</div>
+			
+		<div class="indent">
+			<%=link_to_remote( "Add Delivery Hours", :url=>{
+					:action => "addDeliveryHour"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	
+		<br /><br />
+
+
+		<div class="heading">Take Out Hours</div>
+
+		<div id="takeOutHoursList">
+			<%= render :partial => "takeOutHours" %>
+		</div>
+			
+		<div class="indent">
+			<%=link_to_remote( "Add Take Out Hours", :url=>{
+					:action => "addTakeOutHour"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	
+		<br /><br />
+	
+		<div class="heading">Exceptions</div>
+	
+		<div id="hourExceptionsList">
+			<%= render :partial => "hourExceptions" %>
+		</div>
+			
+		<div class="indent">
+			<%=link_to_remote( "Add Exception", :url=>{
+					:action => "addHourException"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup(''); initHourException();") %>
+		</div>
+	
+	
+	<% end %>
+</div>

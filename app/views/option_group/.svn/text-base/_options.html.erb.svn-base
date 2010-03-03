@@ -1,0 +1,58 @@
+
+<table border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<th>Name</th>
+		<th>Additional Price(s)</th>
+		<th>Allow Quantity</th>
+		<th>Selected By Default</th>
+		<th>Action</th>
+	</tr>
+	
+
+	<% @option_group.options.each do |option| %>
+		<tr>
+			<td><%=option.name %>&nbsp;</td>
+			
+			<td>
+				<% @item_size_names.each do |item_size_name| %>
+					<% additionalPrice = getAdditionalPrice(option.id, item_size_name.id) %>
+					<% if additionalPrice != nil && additionalPrice > 0 %>
+						
+						<% if item_size_name.name == "" %>
+							<b><i>blank:</i></b>
+						<% else %>
+							<b><%= item_size_name.name %>:</b>
+						<% end %>
+						
+						<%= number_to_currency(additionalPrice) %>
+					<% end %>
+				<% end %>&nbsp;
+			</td>
+			
+			<td><% if option.allow_quantity %>YES<% end %>&nbsp;</td>
+
+			<td><% if option.selected_by_default %>YES<% end %>&nbsp;</td>
+						
+			<td>
+
+				<%=link_to_remote( "Edit", :url=>{
+						:action => 'editOption', :id => option.id
+					},
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:complete => "displayPopup('');") %> | 
+			
+				<%=link_to_remote( "Remove", :url=>{
+						:action => 'deleteOption', :id => option.id
+					},
+					:confirm => 'Are you sure you want to delete this option?',
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:update => "options") %>
+
+			</td>
+		</tr>
+	<% end %>
+
+</table>

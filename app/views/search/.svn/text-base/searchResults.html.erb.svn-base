@@ -1,0 +1,35 @@
+
+<%= javascript_include_tag 'search.js' %>
+<%= javascript_include_tag 'map.js' %>
+
+<%= render "/search/loadRestaurants" %>
+
+
+<% content_for :sidebar do %>
+	<%= render "search/sidebar" %>
+<% end %>
+
+	
+<div class="searchResults">
+	<div id="searchResultList">
+		<div id="restaurantList">
+			<%= render :partial => "restaurantList" %>
+		</div>
+	</div>
+
+	<div id="searchResultMap" class="map" style="display: none;">		
+		<div class="indent">
+			<%= link_to_function "View Results in List", "showResultList()" %>
+		</div>
+
+		<div id="map_canvas"></div>
+		
+		<div id="directions" style="display: none">
+			<div class="indent">
+				<a href="javascript: showResultMap();">Hide Directions</a>
+			</div>
+			
+			<div id="directions_panel"></div>
+		</div>
+	</div>
+</div>

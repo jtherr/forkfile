@@ -1,0 +1,141 @@
+<div class="tableBox">
+	
+	<% shadowBox @title do %>
+	
+		<div class="full_order">
+			
+			<% restaurant = Restaurant.find(session[:order][:restaurant_id]) %>
+		
+			<div class="line">
+				<div class="name">
+					<%= restaurant.name %>
+				</div>
+			</div>
+			
+			
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th>Quantity</th>
+					<th>Item</th>
+					<th>Options</th>
+					<th class="price">Price</th>
+				</tr>
+		
+					
+				<% session[:order][:items].each do |item| %>
+				
+					<tr>
+				
+						<% quantity = item[:quantity].to_i %>
+						<% item_size = ItemSize.find(item[:item_size_id]) %>
+		
+	
+						<td><%= quantity %></td>
+							
+						<td>
+							<b><%= item_size.item.name %></b>
+							
+							<% item_size_name = item_size.item_size_name %>
+		
+							<% if !item_size_name.name.empty? %>
+								(<%= item_size_name.name %>)
+							<% end %>
+						</td>
+						
+						<td>
+							<% option_groups_formatted = [] %>
+							
+							<% if !item[:option_groups].empty? %>
+								<% item[:option_groups].each do |option_group_id, selected_options| %>
+									<% option_group = OptionGroup.find(option_group_id) %>
+								
+									<% options_formatted = [] %>
+								
+									<% selected_options.each do |selected_option| %>
+										<% option_formatted = "" %>
+									
+										<% option = Option.find(selected_option[:option_id]) %>
+	
+										<% if selected_option[:quantity].to_i > 1  %>
+											<% option_formatted = "(#{selected_option[:quantity].to_i}) " %>
+										<% end %>
+												
+										<% option_formatted += option.name %>
+										<% additional_price = option.additional_price_for_option(item_size.item_size_name.id) %>
+	
+										<% if additional_price > 0 %>
+											<% option_formatted += "(+ #{number_to_currency(additional_price)})" %>
+										<% end %>
+	
+										<% options_formatted.push(option_formatted) %>
+									<% end %>
+									
+									<% option_groups_formatted.push(options_formatted.join(", ")) %>
+								<% end %>
+							<% end %>
+							
+							<%= option_groups_formatted.join("; ") %>
+							&nbsp;
+						</td>
+						
+						<% total_item_price = item_size.current_price.to_f * quantity %>
+						<% item[:option_groups].each do |option_group_id, selected_options| %>
+							<% selected_options.each do |selected_option| %>
+								<% option = Option.find(selected_option[:option_id]) %>
+		
+								<% additional_price = option.additional_price_for_option(item_size.item_size_name.id) * quantity * selected_option[:quantity].to_i %>
+								<% total_item_price += additional_price %>
+							<% end %>
+						<% end %>					
+						
+						<td class="price"><%= number_to_currency(total_item_price) %></td>					
+					</tr>
+				<% end %>
+	
+			</table>		
+			
+			
+			<% if session[:order][:discount] > 0 %>
+				<div class="subtotal"><b>Discount:</b> - <%= number_to_currency(session[:order][:discount]) %></div>
+			<% end %>
+			
+			<div class="subtotal"><b>Sub Total:</b> <%= number_to_currency(session[:order][:sub_total]) %></div>
+			
+			<% if session[:order][:order_type] == "delivery" %>
+				<div class="delivery"><b>Delivery Charge:</b> <%= number_to_currency(session[:order][:delivery_charge]) %></div>	
+			<% end %>
+		
+			<div class="tax"><b>Tax: </b> <%= number_to_currency(session[:order][:tax]) %></div>
+		
+			<div class="total"><b>Total: </b> <%= number_to_currency(session[:order][:total_price]) %></div>
+			
+			<div class="actions medium">	
+				<% if logged_in? %>			
+					<% form_tag '/order/checkout', :method => :get do %>
+						<% primaryButton do %>
+							<%= submit_tag "Checkout" %>
+						<% end %>
+					<% end %>
+				<% else %>
+					<%= form_remote_tag( :url => { :controller => "order", :action => "checkoutOptions" },
+					    :update => "popupFormDiv",
+						:loading => "displayLoadingMsg();",
+						:loaded => "hideLoadingMsg();",
+						:complete => "displayPopup('');" ) %>
+				
+						<% primaryButton do %>
+							<%= submit_tag "Checkout" %>
+						<% end %>
+					</form>
+				<% end %>
+				
+				<% form_tag "/restaurant/showRestaurant/#{session[:order][:restaurant_id]}", :method => :get do %>
+					<% secondaryButton do %>
+						<%= submit_tag "Modify Order" %>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+	
+	<% end %>
+</div>

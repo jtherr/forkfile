@@ -1,0 +1,84 @@
+
+<%= javascript_include_tag 'order.js' %>
+
+
+<div class="restaurantInfo">
+	<div class="restaurant">
+	
+		<%= render "restaurant/restaurantHeader" %>
+
+		<% shadowBox nil do %>
+				
+			<% if !@restaurant.phone1.empty? %>
+				<div class="readonly">
+					<label>Phone 1</label>
+					<div class="text"><%= number_to_phone(@restaurant.phone1, :area_code => true) %></div>
+				</div>
+			<% end %>
+
+			<% if !@restaurant.phone2.empty? %>
+				<div class="readonly">
+					<label>Phone 2</label>
+					<div class="text"><%= number_to_phone(@restaurant.phone2, :area_code => true) %></div>
+				</div>
+			<% end %>
+
+			<% if !@restaurant.fax.empty? %>
+				<div class="readonly">
+					<label>Fax</label>
+					<div class="text"><%= number_to_phone(@restaurant.fax, :area_code => true) %></div>
+				</div>
+			<% end %>
+
+			<% if !@restaurant.website.empty? %>
+				<div class="readonly">
+					<label>Website</label>
+					<div class="text"><%= link_to @restaurant.website, @restaurant.website_url %></div>
+				</div>
+			<% end %>
+			
+			<div class="readonly">
+				<label>Take Out</label> 
+				
+				<div class="text">
+					<% if @restaurant.take_out %>
+						Yes 
+					<% else %>
+						No
+					<% end %>
+				</div>
+			</div>
+			
+			<div class="readonly">
+				<label>Delivery</label> 
+				
+				<div class="text">
+					<% if @restaurant.delivery %>
+						Yes 
+					<% else %>
+						No
+					<% end %>
+				</div>
+			</div>
+			
+			<% if @restaurant.delivery %>
+				<div class="readonly">
+					<label>Delivery Radius</label>
+					<div class="text"><%= @restaurant.delivery_radius %> miles</div>
+				</div>
+				<div class="readonly">
+					<label>Delivery Charge</label>
+					<div class="text"><%= number_to_currency(@restaurant.delivery_charge) %></div>
+				</div>
+				<% if @restaurant.delivery_percent != nil && @restaurant.delivery_percent > 0 %>
+					<div class="readonly">
+						<label>Delivery Percent</label>
+						<div class="text"><%= @restaurant.delivery_percent %>%</div>
+					</div>
+				<% end %>
+			<% end %>
+	
+		<% end %>
+		
+	</div>
+</div>

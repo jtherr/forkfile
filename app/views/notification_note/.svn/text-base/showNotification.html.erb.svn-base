@@ -1,0 +1,85 @@
+
+
+<% shadowBox @title do %>
+
+	<div class="spacer">
+		<%= link_to "Back to Notification Search", :action => "search" %>
+	</div>
+
+	<div class="readonly">
+		<label>Date</label>
+		<div class="text"><%= @notification.date.strftime("%m-%d-%Y %H:%M:%S") %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Reason</label>
+		<div class="text"><%= @notification.notification_reason.name %></div>
+	</div>
+	
+	<% if @notification.restaurant_name %>
+	
+		<div class="readonly">
+			<label>Restaurant Name</label>
+			<div class="text"><%= @notification.restaurant_name %></div>
+		</div>
+			
+		<div class="readonly">
+			<label>Name</label>
+			<div class="text"><%= @notification.name %></div>
+		</div>
+	
+		<div class="readonly">
+			<label>Phone</label>
+			<div class="text"><%= @notification.phone %></div>
+		</div>
+
+	<% end %>
+	
+	
+	<div class="readonly">
+		<label>Email</label>
+		<div class="text"><%= @notification.email %></div>
+	</div>
+
+	<% if @notification.order_number %>
+		<div class="readonly">
+			<label>Order Number</label>
+			<div class="text"><%= @notification.order_number %></div>
+		</div>
+	<% end %>
+
+	<div class="readonly">
+		<label>Message</label>
+		<div class="text"><%= @notification.message %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Status</label>
+		<div class="text">
+			<div id="notificationStatus">
+				<%= render "notification_note/notificationStatus" %>
+			</div>	
+		</div>
+	</div>
+
+<% end %>
+
+
+<div class="tableBox">
+	<% shadowBox "Admin Notes" do %>
+		
+		<div id="notesList">
+			<%= render "notification_note/notes" %>
+		</div>
+	
+		<div class="indent">
+			<%=link_to_remote( "Add Notes", :url=>{
+					:action => "addNotes"
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	<% end %>
+</div>

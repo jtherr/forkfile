@@ -1,0 +1,111 @@
+
+<div class="home">
+
+	<!--[if lte IE 6]>
+		<div class="spacer red bold">
+			We noticed you are using an old version of Internet Explorer. For optimal performance of Forkfile.com,
+			please upgrade to at least IE7. The latest versions of all major browsers are also supported.
+		</div>
+	<![endif]-->
+
+
+	<% if @appEnabled %>
+		<div class="top">
+			<div class="getStarted">Enter Your Address</div>
+			
+			<div class="search">
+				<% form_tag '/main/searchAddressFromHome', :method => :get do %>
+					<% if @address_invalid %>
+						<div class="red">Address is invalid or no restaurants were found. Please try again.<br /><br /></div>
+					<% end %>
+					
+					<%= text_field :search, "address", :value => @address, :class=> "large" %>
+					
+					<% primaryButton do %>
+						<%= submit_tag 'Search' %>
+					<% end %>
+					
+					<div class="example">e.g. '19283' or '123 Main St, Somewhere, ST, 19283'</div>
+					
+				<% end -%>
+			</div>
+
+			<div class="now_serving">				
+				<%=link_to_remote( "Where are our restaurants?", :url=>{
+						:controller => 'main', :action => 'showCityMap'
+					},
+					:update => "popupFormDiv",
+					:loading => "displayLoadingMsg();",
+					:loaded => "hideLoadingMsg();",
+					:success => "displayPopup('');",
+					:complete => "updateSizes();" ) %>
+			</div>
+		</div>
+	<% end %>
+
+	
+	<div class="bottom">
+		<div class="left">
+			
+			<% if !logged_in? %>
+				<% shadowBox "Personalize Your Experience" do %>
+					Sign up for Forkfile to save your favorite restaurants and view your past orders!
+					
+					<div class="links">
+						<%= link_to "Learn More", :controller => "users", :action => "register" %> | 
+						<%= link_to "Sign Up", :controller => "users", :action => "register" %>
+					</div>
+				<% end %>
+			
+				<% shadowBox "Add Your Restaurant" do %>
+					Restaurant owners, add your restaurant to Forkfile to accept orders online!
+					
+					<div class="links">
+						<%= link_to "Learn More", :controller => "notification", :action => "restaurantOwners" %> | 
+						<%= link_to "Sign Up", :controller => "notification", :action => "restaurantOwners" %>
+					</div>
+				<% end %>
+			<% else %>
+				<div class="tableBox">
+					<% shadowBox "Recently Viewed" do %>
+						<div class="viewingHistory">
+							<% if session[:viewing_history] != nil %>
+								<% session[:viewing_history].each do |restaurant_id| %>
+									<% restaurant = Restaurant.find(restaurant_id) %>
+									<div class="restaurant">
+										<div class="name">
+											<%=link_to restaurant.name, :controller => 'restaurant', :action => 'showRestaurant', :id => restaurant.id %>
+										</div>
+										
+										<div class="distance">
+											(<%= restaurant.distance_from([current_address[:lat], current_address[:lng]]).to_f.round(1) %> miles)
+										</div>
+										
+										<% if restaurant.isOpen %>
+											<div class="open">Open</div>
+										<% else %>
+											<div class="closed">Closed</div>
+										<% end %>
+									</div>
+								<% end %>
+							<% else %>
+								<div class="indent">
+									You haven't viewed any restaurants yet. Enter your address above to get started!
+								</div>
+							<% end %>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+		
+		<div class="right">
+			<div class="fork_image">
+				<%= image_tag getRandomForkImage(), :width => 315 %>
+			</div>
+		</div>
+	</div>
+
+
+
+</div>

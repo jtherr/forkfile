@@ -1,0 +1,24 @@
+
+<%= javascript_include_tag 'directions.js' %>
+<%= javascript_include_tag 'item.js' %>
+<%= javascript_include_tag 'order.js' %>
+
+<div class="restaurant">
+	<%= render "restaurant/restaurantHeader" %>
+
+	<%= hidden_field_tag "user_lat", current_address[:lat] %>
+	<%= hidden_field_tag "user_lng", current_address[:lng] %>
+	<%= hidden_field_tag "restaurant_lat", @restaurant.lat %>
+	<%= hidden_field_tag "restaurant_lng", @restaurant.lng %>
+	<%= hidden_field_tag "user_address", current_address[:full] %>
+	<%= hidden_field_tag "restaurant_address", escape_javascript(@restaurant.address) %>
+
+	<div class="map">
+		<div id="map_canvas"></div>
+		
+		<div id="directions" style="display: none">
+			<div id="directions_panel"></div>
+		</div>
+	</div>
+	
+</div>

@@ -1,0 +1,27 @@
+<div class="title"><%= @title %></div>
+	
+<%= error_messages_for :restaurant_owner, :header_message => nil, :message => nil %>
+
+<%= form_remote_tag( :url => {:action => 'linkRestaurantOwner' },
+    :update => { :success => "linkedRestaurantOwners", :failure => "popupFormDiv" },
+	:loading => "displayLoadingMsg();",
+	:loaded => "hideLoadingMsg();",
+	:success => "hidePopup();" )%>
+
+	<div class="field">
+		<label for="name">Owner's Email Address</label>
+		<%= text_field_tag :email %>
+		<span class="red">* (must have forkfile.com account)</span>
+	</div>
+	
+	<div class="actions">
+		<% primaryButton do %>
+			<%= submit_tag 'Create' %>
+		<% end %>
+
+		<% secondaryButton do %>
+			<%=button_to_function "Cancel", "hidePopup();" %>
+		<% end %>
+	</div>
+	
+</form>

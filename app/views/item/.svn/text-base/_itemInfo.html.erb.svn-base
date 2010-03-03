@@ -1,0 +1,55 @@
+
+<div class="field_section">
+	<% if @item.status_id == $DELETED %>
+		<div class="red bold">This item has been deleted</div>
+	<% end %>
+
+
+	<div class="readonly">
+		<label>Name</label>
+		<div class="text"><%= @item.name %></div>
+	</div>
+
+	<div class="readonly">
+		<label>Description</label>
+		<div class="text"><%= @item.description %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Category</label>
+		<div class="text"><%= @item.category.name %></div>
+	</div>
+
+
+	<div class="readonly">
+		<label>Spicy</label>
+		<div class="text"><% if @item.spicy %>Yes<% else %>No<% end %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Vegetarian</label>
+		<div class="text"><% if @item.vegetarian %>Yes<% else %>No<% end %></div>
+	</div>
+	
+	<div class="readonly">
+		<label>Featured</label>
+		<div class="text"><% if @item.featured %>Yes<% else %>No<% end %></div>
+	</div>
+
+
+	<div class="actions">
+		<% if admin? %>
+			<%=link_to_remote( "Edit", :url=>{
+					:action => 'editItem', :id => @item.id
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+				
+			<% if @item.status_id != $DELETED %>
+				| <%= link_to "Remove Item", { :controller => "item", :action => "deleteItemAndShowAll", :id => @item.id }, :confirm => "Are you sure you want to remove this item?" %>
+			<% end %>
+		<% end %>	
+	</div>
+</div>

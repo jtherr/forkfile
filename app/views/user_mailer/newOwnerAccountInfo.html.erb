@@ -1,0 +1,19 @@
+Hello <%= @user.full_name %>,
+<br /><br />
+Thank you for adding your restaurant to forkfile.com! We have created a Forkfile account for you that has web
+access enabled for <%= @restaurant.name %>. This means that you can access your orders online from our website.
+<br /><br />
+The first thing you need to do is click on this link and set your password:
+<br /><br />
+<%= @url %>
+<br /><br />
+Once you do that, you are all set to view your orders! To access your orders from the forkfile.com website, login using 
+your email and password, and then click on "My Profile" at the top right of any page. There is a section called 
+"You are the owner of the following restaurants". <%= @restaurant.name %> will be listed here. When you click on the 
+restaurant link, you will be navigated to your orders page. Select an order to see more information.
+<br /><br />
+As always, please contact us if you have any questions.
+<br /><br />
+Thank you,<br />
+The Forkfile Team<br />
+support@forkfile.com

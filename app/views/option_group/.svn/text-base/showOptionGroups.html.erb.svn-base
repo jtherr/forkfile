@@ -1,0 +1,23 @@
+
+<%= javascript_include_tag 'option_group.js' %>
+<%= javascript_include_tag 'item.js' %>
+
+
+<div class="tableBox">
+	<% shadowBox @title do %>
+	
+		<div id="optionGroups">
+			<%= render :partial => "optionGroups" %>
+		</div>
+	
+		<div class="indent">
+			<%=link_to_remote( "Add Option Group", :url=>{
+					:action => 'addOptionGroup'
+				},
+				:update => "popupFormDiv",
+				:loading => "displayLoadingMsg();",
+				:loaded => "hideLoadingMsg();",
+				:complete => "displayPopup('');") %>
+		</div>
+	<% end %>
+</div>

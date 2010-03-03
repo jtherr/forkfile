@@ -1,0 +1,34 @@
+
+<% shadowBox @title do %>
+
+	<div class="indent"><%= link_to "Notifications", :controller => "notification_note", :action => "search" %> (NEW: <%= @newNotifications %>, OPEN: <%= @openNotifications %>)</div>
+
+	<div class="indent"><%= link_to "Orders", :controller => "restaurant_order", :action => "showMonthlyOrders" %></div>
+
+	<div class="indent"><%= link_to "Users", :controller => "users", :action => "showUsers" %></div>
+	<div class="indent"><%= link_to "Cuisines", :controller => "cuisine", :action => "showCuisines" %></div>
+	<div class="indent"><%= link_to "Locality Taxes", :controller => "locality_tax", :action => "showTaxes" %></div>
+
+
+	<div class="heading">Restaurants</div>
+	
+	<div class="indent">
+		<%= link_to "ALL", :controller => "search", :action => "searchRestaurantsAdmin", :status => 0 %> | 
+		<%= link_to "Active", :controller => "search", :action => "searchRestaurantsAdmin", :status => $ACTIVE %> | 
+		<%= link_to "Inactive", :controller => "search", :action => "searchRestaurantsAdmin", :status => $INACTIVE %> | 
+		<%= link_to "Pending Approval", :controller => "search", :action => "searchRestaurantsAdmin", :status => $PENDING_APPROVAL %>
+		(<%= @pendingApprovalCount %>)
+	</div>
+
+	<div class="indent"><%= link_to "Add Restaurant", :controller => "restaurant", :action => "addRestaurant" %></div>
+
+<% end %>
+
+
+<% if ENV['RAILS_ENV'] == "production" %>
+	<script type="text/javascript">
+		jQuery(document).ready(function() {
+			pageTracker._setVar('forkfileAdmin');
+		});
+	</script>
+<% end %>

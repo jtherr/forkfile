@@ -1,0 +1,20 @@
+
+<% if @items %>
+	<div class="field">
+		<label for="item_id">Items</label>
+		<%= collection_select(:discount_group_part, :item_id, @items, :id, :name, { :include_blank => "ALL ITEMS" }) %>
+		
+		<%= observe_field :discount_group_part_item_id, :url => { :action => :processItem },
+	      	:update => "optionGroups",
+	      	:with => 'item_id',
+			:loading => "displayLoadingMsg();",
+			:loaded => "hideLoadingMsg();",
+			:success => "updateSizes();" %>
+		
+		<span class="red">*</span>
+	</div>
+<% end %>
+
+<div id="optionGroups">
+	<%= render :partial => "optionGroups" %>	
+</div>
